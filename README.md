@@ -4,7 +4,7 @@
 
 ## 提交
 
-1. [需求获取](docs/Requirements)
+1. [需求获取](docs/Requirements.md)
 2. 面向对象需求分析
 3. 结构化需求分析
 4. 面向对象设计
