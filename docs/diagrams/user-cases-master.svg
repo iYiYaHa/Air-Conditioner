@@ -22,12 +22,12 @@
   <g id="clust2" class="cluster">
    <title>clusteryuml_a1___</title>
    <polygon id="svg_2" points="15,-161 15,-284 87,-284 87,-161 15,-161" fill="none"/>
-   <text id="svg_3" font-size="10px" font-family="Verdana" y="-170.8" x="51" text-anchor="middle">a1管理员</text>
+   <text id="svg_3" font-size="10px" font-family="Verdana" y="-170.8" x="51" text-anchor="middle">管理员</text>
   </g>
   <g id="clust3" class="cluster">
    <title>clusteryuml_a2___</title>
    <polygon id="svg_4" points="15,-30 15,-153 87,-153 87,-30 15,-30" fill="none"/>
-   <text id="svg_5" font-size="10px" font-family="Verdana" y="-39.8" x="51" text-anchor="middle">a2从控机</text>
+   <text id="svg_5" font-size="10px" font-family="Verdana" y="-39.8" x="51" text-anchor="middle">从控机</text>
   </g>
   <g id="clust4" class="cluster">
    <title>clusterSystem</title>
@@ -54,7 +54,7 @@
    <title>yuml_c1______</title>
    <ellipse id="svg_19" fill-opacity="0.2" ry="23.1702" rx="82.9636" filter="url(#shadow)" fill="black" cy="-364" cx="217"/>
    <ellipse id="svg_20" stroke="black" ry="23.1702" rx="82.9636" fill="url(#lightgrey)" cy="-364" cx="217"/>
-   <text id="svg_21" font-size="10px" font-family="Verdana" y="-362.3" x="217" text-anchor="middle">c1运行状态切换</text>
+   <text id="svg_21" font-size="10px" font-family="Verdana" y="-362.3" x="217" text-anchor="middle">运行状态切换</text>
   </g>
   <g id="edge1" class="edge">
    <title>yuml_a1___-&gt;yuml_c1______</title>
@@ -65,7 +65,7 @@
    <title>yuml_c2______</title>
    <ellipse id="svg_24" fill-opacity="0.2" ry="23.1702" rx="82.9636" filter="url(#shadow)" fill="black" cy="-299" cx="217"/>
    <ellipse id="svg_25" stroke="black" ry="23.1702" rx="82.9636" fill="url(#lightgrey)" cy="-299" cx="217"/>
-   <text id="svg_26" font-size="10px" font-family="Verdana" y="-297.3" x="217" text-anchor="middle">c2选项配置更改</text>
+   <text id="svg_26" font-size="10px" font-family="Verdana" y="-297.3" x="217" text-anchor="middle">选项配置更改</text>
   </g>
   <g id="edge2" class="edge">
    <title>yuml_a1___-&gt;yuml_c2______</title>
@@ -76,7 +76,7 @@
    <title>yuml_c3____</title>
    <ellipse id="svg_29" fill-opacity="0.2" ry="23.1702" rx="62.4516" filter="url(#shadow)" fill="black" cy="-234" cx="217"/>
    <ellipse id="svg_30" stroke="black" ry="23.1702" rx="62.4516" fill="url(#lightgrey)" cy="-234" cx="217"/>
-   <text id="svg_31" font-size="10px" font-family="Verdana" y="-232.3" x="217" text-anchor="middle">c3报表管理</text>
+   <text id="svg_31" font-size="10px" font-family="Verdana" y="-232.3" x="217" text-anchor="middle">报表管理</text>
   </g>
   <g id="edge3" class="edge">
    <title>yuml_a1___-&gt;yuml_c3____</title>
@@ -87,7 +87,7 @@
    <title>yuml_c4_______</title>
    <ellipse id="svg_34" fill-opacity="0.2" ry="23.1702" rx="92.7622" filter="url(#shadow)" fill="black" cy="-169" cx="217"/>
    <ellipse id="svg_35" stroke="black" ry="23.1702" rx="92.7622" fill="url(#lightgrey)" cy="-169" cx="217"/>
-   <text id="svg_36" font-size="10px" font-family="Verdana" y="-167.3" x="217" text-anchor="middle">c4从控机状态监测</text>
+   <text id="svg_36" font-size="10px" font-family="Verdana" y="-167.3" x="217" text-anchor="middle">从控机状态监测</text>
   </g>
   <g id="edge4" class="edge">
    <title>yuml_a1___-&gt;yuml_c4_______</title>
@@ -115,7 +115,7 @@
    <title>yuml_c5____</title>
    <ellipse id="svg_51" fill-opacity="0.2" ry="23.1702" rx="62.4516" filter="url(#shadow)" fill="black" cy="-104" cx="217"/>
    <ellipse id="svg_52" stroke="black" ry="23.1702" rx="62.4516" fill="url(#lightgrey)" cy="-104" cx="217"/>
-   <text id="svg_53" font-size="10px" font-family="Verdana" y="-102.3" x="217" text-anchor="middle">c5信息获取</text>
+   <text id="svg_53" font-size="10px" font-family="Verdana" y="-102.3" x="217" text-anchor="middle">信息获取</text>
   </g>
   <g id="edge5" class="edge">
    <title>yuml_a2___-&gt;yuml_c5____</title>
@@ -126,7 +126,7 @@
    <title>yuml_c6_____</title>
    <ellipse id="svg_56" fill-opacity="0.2" ry="23.1702" rx="72.6644" filter="url(#shadow)" fill="black" cy="-39" cx="217"/>
    <ellipse id="svg_57" stroke="black" ry="23.1702" rx="72.6644" fill="url(#lightgrey)" cy="-39" cx="217"/>
-   <text id="svg_58" font-size="10px" font-family="Verdana" y="-37.3" x="217" text-anchor="middle">c6从控机调控</text>
+   <text id="svg_58" font-size="10px" font-family="Verdana" y="-37.3" x="217" text-anchor="middle">从控机调控</text>
   </g>
   <g id="edge6" class="edge">
    <title>yuml_a2___-&gt;yuml_c6_____</title>
@@ -137,7 +137,7 @@
    <title>yuml_i1_____</title>
    <ellipse id="svg_61" fill-opacity="0.2" ry="23.1702" rx="70.922" filter="url(#shadow)" fill="black" cy="-364" cx="502"/>
    <ellipse id="svg_62" stroke="black" ry="23.1702" rx="70.922" fill="url(#lightgrey)" cy="-364" cx="502"/>
-   <text id="svg_63" font-size="10px" font-family="Verdana" y="-362.3" x="502" text-anchor="middle">i1主控机开机</text>
+   <text id="svg_63" font-size="10px" font-family="Verdana" y="-362.3" x="502" text-anchor="middle">主控机开机</text>
   </g>
   <g id="edge7" class="edge">
    <title>yuml_c1______-&gt;yuml_i1_____</title>
@@ -151,7 +151,7 @@
    <title>yuml_i2_____</title>
    <ellipse id="svg_69" fill-opacity="0.2" ry="23.1702" rx="70.922" filter="url(#shadow)" fill="black" cy="-429" cx="502"/>
    <ellipse id="svg_70" stroke="black" ry="23.1702" rx="70.922" fill="url(#lightgrey)" cy="-429" cx="502"/>
-   <text id="svg_71" font-size="10px" font-family="Verdana" y="-427.3" x="502" text-anchor="middle">i2主控机关机</text>
+   <text id="svg_71" font-size="10px" font-family="Verdana" y="-427.3" x="502" text-anchor="middle">主控机关机</text>
   </g>
   <g id="edge8" class="edge">
    <title>yuml_c1______-&gt;yuml_i2_____</title>
@@ -165,7 +165,7 @@
    <title>yuml_i3______</title>
    <ellipse id="svg_77" fill-opacity="0.2" ry="23.1702" rx="81.135" filter="url(#shadow)" fill="black" cy="-234" cx="502"/>
    <ellipse id="svg_78" stroke="black" ry="23.1702" rx="81.135" fill="url(#lightgrey)" cy="-234" cx="502"/>
-   <text id="svg_79" font-size="10px" font-family="Verdana" y="-232.3" x="502" text-anchor="middle">i3报表导入导出</text>
+   <text id="svg_79" font-size="10px" font-family="Verdana" y="-232.3" x="502" text-anchor="middle">报表导入导出</text>
   </g>
   <g id="edge9" class="edge">
    <title>yuml_c3____-&gt;yuml_i3______</title>
@@ -179,7 +179,7 @@
    <title>yuml_i4____</title>
    <ellipse id="svg_85" fill-opacity="0.2" ry="23.1702" rx="60.623" filter="url(#shadow)" fill="black" cy="-299" cx="502"/>
    <ellipse id="svg_86" stroke="black" ry="23.1702" rx="60.623" fill="url(#lightgrey)" cy="-299" cx="502"/>
-   <text id="svg_87" font-size="10px" font-family="Verdana" y="-297.3" x="502" text-anchor="middle">i4报表查询</text>
+   <text id="svg_87" font-size="10px" font-family="Verdana" y="-297.3" x="502" text-anchor="middle">报表查询</text>
   </g>
   <g id="edge10" class="edge">
    <title>yuml_c3____-&gt;yuml_i4____</title>
@@ -207,7 +207,7 @@
    <title>yuml_i1____</title>
    <ellipse id="svg_101" fill-opacity="0.2" ry="23.1702" rx="60.623" filter="url(#shadow)" fill="black" cy="-39" cx="502"/>
    <ellipse id="svg_102" stroke="black" ry="23.1702" rx="60.623" fill="url(#lightgrey)" cy="-39" cx="502"/>
-   <text id="svg_103" font-size="10px" font-family="Verdana" y="-37.3" x="502" text-anchor="middle">i1调节温度</text>
+   <text id="svg_103" font-size="10px" font-family="Verdana" y="-37.3" x="502" text-anchor="middle">调节温度</text>
   </g>
   <g id="edge12" class="edge">
    <title>yuml_c6_____-&gt;yuml_i1____</title>
@@ -221,7 +221,7 @@
    <title>yuml_i2____</title>
    <ellipse id="svg_109" fill-opacity="0.2" ry="23.1702" rx="60.623" filter="url(#shadow)" fill="black" cy="-104" cx="502"/>
    <ellipse id="svg_110" stroke="black" ry="23.1702" rx="60.623" fill="url(#lightgrey)" cy="-104" cx="502"/>
-   <text id="svg_111" font-size="10px" font-family="Verdana" y="-102.3" x="502" text-anchor="middle">i2调节风速</text>
+   <text id="svg_111" font-size="10px" font-family="Verdana" y="-102.3" x="502" text-anchor="middle">调节风速</text>
   </g>
   <g id="edge13" class="edge">
    <title>yuml_c6_____-&gt;yuml_i2____</title>
