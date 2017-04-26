@@ -524,7 +524,7 @@
 
 ![UC_S_002_System_Sequence_Diagram](diagrams/UC_S_002_System_Sequence_Diagram.svg)
 
-## 7. 系统操作契约
+## 7. 系统操作契约 
 
 ### 7.1 主控机系统操作契约
 
