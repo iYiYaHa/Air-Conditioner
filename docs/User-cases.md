@@ -538,11 +538,11 @@
 
 #### 6.1.5 用例UC_M_005系统顺序图
 
-
+![U C M 005 System Sequence Diagram](diagrams/UC_M_005_System_Sequence_Diagram.svg)
 
 #### 6.1.6 用例UC M 006系统顺序图
 
-
+![U C M 006 System Sequence Diagram](diagrams/UC_M_006_System_Sequence_Diagram.svg)
 
 #### 6.1.7 用例UC_M_007系统顺序图
 
