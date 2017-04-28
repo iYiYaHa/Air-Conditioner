@@ -4,14 +4,16 @@
 >
 > 李俊宁 董星彤 张有杰 赵亮 左旭彤
 >
-> 2017 年 04 月 18 日
+> 2017 年 04 月 28 日
 
 ## Table of Contents
 
 [TOC]
 
-> 迭代历史：
->
+[page-break]
+
+## 迭代历史
+
 > - v0.1 | 2017/4/17 | John Lee | 创建文档
 > - v0.2 | 2017/4/17 | 张有杰 | 完成主控机用例描述部分
 > - v0.3 | 2017/4/18 | 赵亮 | 完成文档介绍、项目背景
@@ -34,9 +36,10 @@
 > - v1.11 | 2017/4/27 | 董星彤 | 修改用例图
 > - v1.12 | 2017/4/27 | 董星彤 | 增加领域模型
 > - v1.13 | 2017/4/27 | 左旭彤 | 修改领域模型
+> - v2.0 | 2017/4/28 | John Lee | 发布文档
 
-1. 用例图加边界
-2. 领域模型的图不清楚，让董星彤重新生成一下
+[page-break]
+
 ## 1. 文档介绍
 
 ### 1.1 文档目的
@@ -87,30 +90,11 @@
 
 ![Master-User-Cases](diagrams/user-cases-master.svg)
 
-<!--[a运维人员]-(a1切换运行状态)
-[a运维人员]-(a5选项配置更改)
-(a1切换运行状态)>(a2启动主控机)
-(a1切换运行状态)>(a3关闭主控机)
-[a运维人员]-(a4监测从控机状态)
-[b财务人员]-(b1管理报表)
-(b1管理报表)<(b2导出报表)
-[c前台]-(c1维护房客信息)
-[d从控机]-(d2获取信息)
-(d2获取信息)>(d3统计能耗费用)
-(d2获取信息)<(d4认证房客身份)
-[d从控机]-(d5调控从控机)
-(d5调控从控机)<(d6调节温度)
-(d5调控从控机)<(d7调节风速)-->
+[page-break]
 
 ### 3.2 从控机用例图
 
 ![Slave-User-Cases](diagrams/user-cases-slave.svg)
-
-<!--[e用户]-(e1控制空调)
-(e1控制空调)>(e2开启从控机)
-(e1控制空调)<(e3调节温度)
-(e1控制空调)<(e4调节风速)
-[f时钟]-(f1触发从控机自动更新)-->
 
 ## 4. 用例说明
 
@@ -510,13 +494,13 @@
 | | *b. 系统崩溃，等待系统管理员处理突发事件
 | | *c. 时钟在任意时刻发送脉冲失败，等待系统重启
 | 特殊需求 | 无 |
-| 发生频率 | 每隔周期T发生
-
+| 发生频率 | 每隔周期 T 发生
 
 ## 5. 领域模型
 
 ![Slave-User-Cases](diagrams/domain_model.svg)
 
+[page-break]
 
 ## 6. 系统顺序图
 
@@ -524,51 +508,115 @@
 
 #### 6.1.1 用例UC_M_001系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_M_001_System_Sequence_Diagram](diagrams/UC_M_001_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.1.2 用例UC_M_002系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_M_002_System_Sequence_Diagram](diagrams/UC_M_002_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.1.3 用例UC_M_003系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_M_003_System_Sequence_Diagram](diagrams/UC_M_003_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.1.4 用例UC_M_004系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_M_004_System_Sequence_Diagram](diagrams/UC_M_004_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.1.5 用例UC_M_005系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![U C M 005 System Sequence Diagram](diagrams/UC_M_005_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.1.6 用例UC M 006系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![U C M 006 System Sequence Diagram](diagrams/UC_M_006_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.1.7 用例UC_M_007系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_M_007_System_Sequence_Diagram](diagrams/UC_M_007_System_Sequence_Diagram.svg)
+
+[page-break]
 
 ### 6.2 从控机系统顺序图
 
 #### 6.2.1 用例UC_S_001系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_S_001_System_Sequence_Diagram](diagrams/UC_S_001_System_Sequence_Diagram.svg)
+
+[page-break]
 
 #### 6.2.1.1 用例UC_S_001_1系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_S_001_1_System_Sequence_Diagram](diagrams/UC_S_001_1_System_Sequence_Diagram.svg)
 
-#### 6.2.1.2 用例UC_S_001_2系统顺序图
+[page-break]
 
-#### 6.2.1.3 用例UC_S_001_3系统顺序图
+#### 6.2.1.2 用例UC_S_001_2 & UC_S_001_3系统顺序图
+
+[img=max-width:80%]
+
+[align-center]
 
 ![UC_S_001_2&3_System_Sequence_Diagram](diagrams/UC_S_001_2&3_System_Sequence_Diagram.svg)
 
+[page-break]
+
 #### 6.2.2 用例UC_S_002系统顺序图
 
+[img=max-width:80%]
+
+[align-center]
+
 ![UC_S_002_System_Sequence_Diagram](diagrams/UC_S_002_System_Sequence_Diagram.svg)
+
+[page-break]
 
 ## 7. 系统操作契约
 
