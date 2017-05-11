@@ -6,6 +6,6 @@
 
 1. [需求获取](docs/Requirements.md)
 2. [面向对象需求分析](docs/User-cases.md)
-3. 结构化需求分析
+3. [结构化需求分析](docs/Requirements-Spec.md)
 4. 面向对象设计
 5. 结构化设计
