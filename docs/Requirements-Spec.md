@@ -1393,7 +1393,7 @@ ENDIF
 
 ### 系统数据模型
 
-![E R Diagram](ER-diagram.svg)
+![E R Diagram](diagrams/ER-diagram.svg)
 
 ### 系统性能要求
 
