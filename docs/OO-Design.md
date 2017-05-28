@@ -21,6 +21,7 @@
 > - v0.5 | 2017/5/28 | 张有杰 | 主控机部分用例
 > - v0.6 | 2017/5/28 | 张有杰 | 添加文档说明及部分系统操作说明
 > - v0.7 | 2017/5/28 | 赵  亮 | 添加主控机操作契约及协作图
+> - v0.8 | 2017/5/28 | 赵  亮 | 添加部分操作名称及说明
 
 ## 文档说明
 
@@ -95,6 +96,24 @@
 | 操作名称 | 操作说明 |
 | -- | -- |
 | output_table(TimePoint timebegin,TimePoint timeend) | 输出起始时间点到终止时间点之间的报表信息 |
+
+### 维护房客信息
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| AddGuest(guest:GuestInfo) | 添加房客信息 |
+| RemoveGuest (guest:GuestId) | 删除房客信息 |
+| ViewGuestList ():list | 查看房客信息 |
+
+### 汇报获取状态
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| Auth (guest:GuestInfo) | 查看房客权限 |
+| Request (req:GuestRequest):ClientInfo | 接受从控机请求 |
+| Pulse (room:RoomInfo):ClientInfo | 定时刷新获取从控机房间信息 |
+| AddEnergy (room:RoomId energy:Energy) | 添加房间号及能耗信息 |
+| Cost GetCost (room:RoomId) | 反馈房间号及费用 |
 
 ### 调控请求
 
