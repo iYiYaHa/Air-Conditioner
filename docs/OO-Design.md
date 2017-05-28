@@ -17,6 +17,7 @@
 > - v0.1 | 2017/5/24 | John Lee | 创建文档
 > - v0.2 | 2017/5/27 | 董星彤 | 更新用例图，增加主控机导出报表和调节请求用例的协作图
 > - v0.3 | 2017/5/28 | John Lee | 增加 类图
+> - v0.4 | 2017/5/28 | 左旭彤 | 增加从控机操作契约和协作图
 
 
 ## 文档说明
@@ -79,6 +80,27 @@ UC_M_007操作契约
 | 后置条件 | 1. （概念类）房间空调信息的属性被修改，存储了新的请求； |
 
 ![change_request-collaboration-diagram](diagrams/change_request-collaboration-diagram.svg)
+
+UC_S_001操作契约
+
+| 操作 | BootSlave() |
+|:--|:--|
+| 交叉引用 | 从控机调控 UC_S_001 |
+| 前置条件 | 主控机已经被人工开启，用户去操作控制面板，从控机之前没有收到请求 |
+| 后置条件 | 1.从控机与主控机建立关联 |
+| | 2.从控机的状态被改变，变为开机状态
+
+
+![bootslave-diagram](diagrams/bootslave-diagram.svg)
+
+| 操作 | AdjustTandW() |
+|:--|:--|
+| 交叉引用 | 从控机调控 UC_S_001 |
+| 前置条件 | 主控机和从控机都已经被人工开启，用户去操作控制面板 |
+| 后置条件 | 1.从控机与房客建立“关联” |
+| | 2. 房间温度或者风速被改变
+
+![Adjust_tempreture_wind-diagram](diagrams/Adjust_tempreture_wind-diagram.svg)
 
 ## 用例实现方案设计——创建设计类图
 
