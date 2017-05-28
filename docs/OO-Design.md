@@ -19,7 +19,7 @@
 > - v0.3 | 2017/5/28 | John Lee | 增加 类图
 > - v0.4 | 2017/5/28 | 左旭彤 | 增加从控机操作契约和协作图
 > - v0.5 | 2017/5/28 | 张有杰 | 主控机部分用例
-> - v0.6 | 2017/5/28 | 张有杰 | 添加文档说明
+> - v0.6 | 2017/5/28 | 张有杰 | 添加文档说明及部分系统操作说明
 
 ## 文档说明
 
@@ -88,6 +88,21 @@
 | DisplayInfo(ClientInfo client) | 选择目标从控机，监控显示其信息 |
 | CloseMonitorMenu() | 关闭从控机监控菜单 |
 
+### 管理报表
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| output_table(TimePoint timebegin,TimePoint timeend) | 输出起始时间点到终止时间点之间的报表信息 |
+
+### 接收从控机调控请求
+
+### 从控机调控
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| BootSlave()  | 启动从控机 |
+| AdjustTandW() | 从控机发出调节请求 |
+
 ## 软件体系结构设计
 
 系统采用分层的体系结构，其软件分层结构如下所示：
@@ -95,8 +110,6 @@
 ![BUPT-Illformed-MVC](diagrams/bupt-mvc.png)
 
 ## 用例实现方案设计——类职责分配
-
-### 用例
 
 ### 选项配置更改
 
@@ -247,6 +260,10 @@
 
 ![DisplayInfo](diagrams/DisplayInfo.svg)
 
+#### CloseMonitorMenu()
+
+> 操作契约
+
 | 操作 | CloseMonitorMenu() |
 | :-- | :-- |
 | 交叉引用 | 监测从控机状态 UC_M_003 |
@@ -260,9 +277,11 @@
 
 ![CloseMonitorMenu](diagrams/CloseMonitorMenu.svg)
 
-#### fn(param:type)
+### 管理报表
 
-UC_M_004操作契约
+#### output_table(TimePoint timebegin,TimePoint timeend)
+
+> 操作契约
 
 | 操作 | output_table(TimePoint timebegin,TimePoint timeend) |
 | :-- | :-- |
@@ -274,9 +293,15 @@ UC_M_004操作契约
 | | 4. 报表的内容属性被修改，存储了查询结果； |
 | | 5. 报表被输出（打印或输出为某种格式） |
 
+> 协作图
+
 ![output_table-collaboration-diagram](diagrams/output_table-collaboration-diagram.svg)
 
-UC_M_007操作契约
+### 接收从控机调控请求
+
+#### change_request(req:GuestRequest)
+
+> 操作契约
 
 | 操作 | change_request(req:GuestRequest) |
 | :-- | :-- |
@@ -284,11 +309,17 @@ UC_M_007操作契约
 | 前置条件 | 主控机处于开启状态，从控机向主控机发出调控请求 |
 | 后置条件 | 1. （概念类）房间空调信息的属性被修改，存储了新的请求； |
 
+> 协作图
+
 ![change_temp-collaboration-diagram](diagrams/change_temp-collaboration-diagram.png)
 
 ![change_request-collaboration-diagram](diagrams/change_request-collaboration-diagram.svg)
 
-UC_S_001操作契约
+### 从控机调控
+
+#### BootSlave() 
+
+> 操作契约
 
 | 操作 | BootSlave() |
 |:--|:--|
@@ -296,9 +327,14 @@ UC_S_001操作契约
 | 前置条件 | 主控机已经被人工开启，用户去操作控制面板，从控机之前没有收到请求 |
 | 后置条件 | 1.从控机与主控机建立关联 |
 | | 2.从控机的状态被改变，变为开机状态
-
+ 
+> 协作图
 
 ![bootslave-diagram](diagrams/bootslave-diagram.svg)
+
+#### AdjustTandW()
+
+> 操作契约
 
 | 操作 | AdjustTandW() |
 |:--|:--|
@@ -306,6 +342,8 @@ UC_S_001操作契约
 | 前置条件 | 主控机和从控机都已经被人工开启，用户去操作控制面板 |
 | 后置条件 | 1.从控机与房客建立“关联” |
 | | 2. 房间温度或者风速被改变
+
+> 协作图
 
 ![Adjust_tempreture_wind-diagram](diagrams/Adjust_tempreture_wind-diagram.svg)
 
@@ -324,15 +362,15 @@ UC_S_001操作契约
 
 [EnergyCostManager|+AddEnergy (room:RoomId energy:Energy); +Energy GetEnergy (room:RoomId); +Cost GetCost (room:RoomId)],
 [GuestManager|+AddGuest (guest:GuestInfo); +RemoveGuest (guest:GuestId); +AuthGuest (guest:GuestInfo); +GetGuestList ():list\<GuestInfo\>]->[DBFacade],
-[ScheduleManager|-AdjustSchedule (); -CheckAlive ()| +SetConfig (config:Config); +Config GetConfig (); +Request (req:GuestRequest); +Pulse (room:RoomInfo); +GetClientList ():list\<ClientInfo\>]->[LogManager],
-[ScheduleManager]->[[EnergyCostManager],
 [LogManager|+AddOnOff (onOff:LogOnOff); +AddRequest (LogRequest:request); +EndRequest (room:RoomId); +GetOnOff (from:TimePoint to:TimePoint):list\<LogOnOff\>; +GetRequest (from:TimePoint to:TimePoint):list\<LogRequest\>]->[DBFacade],
+[ScheduleManager|-AdjustSchedule (); -CheckAlive ()| +SetConfig (config:Config); +Config GetConfig (); +Request (req:GuestRequest); +Pulse (room:RoomInfo); +GetClientList ():list\<ClientInfo\>]->[EnergyCostManager],
+[ScheduleManager]->[LogManager],
 
-[GuestInfoController|+AddGuest(guest:GuestInfo); +RemoveGuest (guest:GuestId); +ViewGuestList ():list\<GuestInfo\>]->[ScheduleManager],
-[GuestInfoController]->[GuestManager],
+[GuestInfoController|+AddGuest(guest:GuestInfo); +RemoveGuest (guest:GuestId); +ViewGuestList ():list\<GuestInfo\>]->[GuestManager],
 [ConfigController|+SetConfig (config:Config); +ViewConfig ():Config]->[ScheduleManager],
 [LogController|+GetDayOnOff (date:TimePoint):list\<LogOnOff\>; +GetWeekOnOff (date:TimePoint):list\<LogOnOff\>; +GetMonthOnOff (date:TimePoint):list\<LogOnOff\>; +GetDayRequest (date:TimePoint):list\<LogRequest\>; +GetWeekRequest (date:TimePoint):list\<LogRequest\>; +GetMonthRequest (date:TimePoint):list\<LogRequest\>]->[LogManager],
 [ClientController|+Auth (guest:GuestInfo); +Request (req:GuestRequest):ClientInfo; +Pulse (room:RoomInfo):ClientInfo; +ViewClientList ():list\<ClientInfo\>]->[ScheduleManager],
+[ClientController]->[GuestManager],
 
 [GuestView|+Show (); +Hide (); +OnAdd (); +OnDel ()]->[GuestInfoController],
 [ConfigView|+Show (); +Hide (); +OnSet ()]->[ConfigController],
