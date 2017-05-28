@@ -77,6 +77,7 @@ UC_M_007操作契约
 | 交叉引用 | 从控机调控UC_M_007 |
 | 前置条件 | 主控机处于开启状态，从控机向主控机发出调控请求 |
 | 后置条件 | 1. （概念类）房间空调信息的属性被修改，存储了新的请求； |
+
 ![change_request-collaboration-diagram](diagrams/change_request-collaboration-diagram.svg)
 
 ## 用例实现方案设计——创建设计类图
