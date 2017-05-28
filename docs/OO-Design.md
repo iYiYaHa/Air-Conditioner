@@ -103,15 +103,15 @@ UC_M_007操作契约
 
 [EnergyCostManager|+AddEnergy (room:RoomId energy:Energy); +Energy GetEnergy (room:RoomId); +Cost GetCost (room:RoomId)],
 [GuestManager|+AddGuest (guest:GuestInfo); +RemoveGuest (guest:GuestId); +AuthGuest (guest:GuestInfo); +GetGuestList ():list\<GuestInfo\>]->[DBFacade],
-[ScheduleManager|-AdjustSchedule (); -CheckAlive ()| +SetConfig (config:Config); +Config GetConfig (); +Request (req:GuestRequest); +Pulse (room:RoomInfo); +GetClientList ():list\<ClientInfo\>]->[LogManager],
-[ScheduleManager]->[[EnergyCostManager],
 [LogManager|+AddOnOff (onOff:LogOnOff); +AddRequest (LogRequest:request); +EndRequest (room:RoomId); +GetOnOff (from:TimePoint to:TimePoint):list\<LogOnOff\>; +GetRequest (from:TimePoint to:TimePoint):list\<LogRequest\>]->[DBFacade],
+[ScheduleManager|-AdjustSchedule (); -CheckAlive ()| +SetConfig (config:Config); +Config GetConfig (); +Request (req:GuestRequest); +Pulse (room:RoomInfo); +GetClientList ():list\<ClientInfo\>]->[EnergyCostManager],
+[ScheduleManager]->[LogManager],
 
-[GuestInfoController|+AddGuest(guest:GuestInfo); +RemoveGuest (guest:GuestId); +ViewGuestList ():list\<GuestInfo\>]->[ScheduleManager],
-[GuestInfoController]->[GuestManager],
+[GuestInfoController|+AddGuest(guest:GuestInfo); +RemoveGuest (guest:GuestId); +ViewGuestList ():list\<GuestInfo\>]->[GuestManager],
 [ConfigController|+SetConfig (config:Config); +ViewConfig ():Config]->[ScheduleManager],
 [LogController|+GetDayOnOff (date:TimePoint):list\<LogOnOff\>; +GetWeekOnOff (date:TimePoint):list\<LogOnOff\>; +GetMonthOnOff (date:TimePoint):list\<LogOnOff\>; +GetDayRequest (date:TimePoint):list\<LogRequest\>; +GetWeekRequest (date:TimePoint):list\<LogRequest\>; +GetMonthRequest (date:TimePoint):list\<LogRequest\>]->[LogManager],
 [ClientController|+Auth (guest:GuestInfo); +Request (req:GuestRequest):ClientInfo; +Pulse (room:RoomInfo):ClientInfo; +ViewClientList ():list\<ClientInfo\>]->[ScheduleManager],
+[ClientController]->[GuestManager],
 
 [GuestView|+Show (); +Hide (); +OnAdd (); +OnDel ()]->[GuestInfoController],
 [ConfigView|+Show (); +Hide (); +OnSet ()]->[ConfigController],
