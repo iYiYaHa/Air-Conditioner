@@ -95,6 +95,24 @@
 | -- | -- |
 | output_table(TimePoint timebegin,TimePoint timeend) | 输出起始时间点到终止时间点之间的报表信息 |
 
+### 维护房客信息
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| AddGuest(guest:GuestInfo) | 添加房客信息 |
+| RemoveGuest (guest:GuestId) | 删除房客信息 |
+| ViewGuestList ():list | 查看房客信息 |
+
+### 汇报获取状态
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| Auth (guest:GuestInfo) | 查看房客权限 |
+| Request (req:GuestRequest):ClientInfo | 接受从控机请求 |
+| Pulse (room:RoomInfo):ClientInfo | 定时刷新获取从控机房间信息 |
+| AddEnergy (room:RoomId energy:Energy) | 添加房间号及能耗信息 |
+| Cost GetCost (room:RoomId) | 反馈房间号及费用 |
+
 ### 调控请求
 
 | 操作名称 | 操作说明 |
