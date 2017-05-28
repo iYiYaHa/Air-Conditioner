@@ -66,7 +66,8 @@
 
 ## 用例模型
 
-![user-cases-diagram](diagrams/user-cases-diagram.svg)
+![user-cases-diagram](diagrams/user-cases-master-new.svg)
+
 ![user-cases-slave](diagrams/user-cases-slave.svg)
 
 ### 选项配置更改
@@ -113,6 +114,10 @@
 ## 软件体系结构设计
 
 系统采用分层的体系结构，其软件分层结构如下所示：
+
+[align-center]
+
+[img=max-width:50%]
 
 ![BUPT-Illformed-MVC](diagrams/bupt-mvc.png)
 

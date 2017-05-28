@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<svg width="615" height="461" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <filter y="0" x="0" id="shadow" filterRes="100">
+   <feGaussianBlur stdDeviation="2 2"/>
+  </filter>
+  <linearGradient y2="100%" y1="0%" x2="100%" x1="0%" id="lightgrey">
+   <stop stop-color="rgb(255,255,255)" offset="0%"/>
+   <stop stop-color="rgb(220,220,220)" offset="100%"/>
+  </linearGradient>
+  <linearGradient y2="100%" y1="0%" x2="100%" x1="0%" id="black">
+   <stop stop-color="rgb(150,150,150)" stop-opacity="2" offset="0%"/>
+   <stop stop-color="rgb(0,0,0)" stop-opacity="2" offset="100%"/>
+  </linearGradient>
+ </defs>
+ <g transform="scale(1) translate(4,457) " id="graph0" class="graph">
+  <title>G</title>
+  <g id="clust1" class="cluster">
+   <title>clusterActors</title>
+   <polygon id="svg_1" points="3,-8 3,-409 99,-409 99,-8 3,-8" fill="none"/>
+  </g>
+  <g id="clust2" class="cluster">
+   <title>clusteryuml_a____</title>
+   <polygon id="svg_2" points="11,-278 11,-401 91,-401 91,-278 11,-278" fill="none"/>
+   <text id="svg_3" font-size="10px" font-family="Verdana" y="-287.8" x="51" text-anchor="middle">后台人员</text>
+  </g>
+  <g id="clust3" class="cluster">
+   <title>clusteryuml_c__</title>
+   <polygon id="svg_4" points="16,-147 16,-270 86,-270 86,-147 16,-147" fill="none"/>
+   <text id="svg_5" font-size="10px" font-family="Verdana" y="-156.8" x="51" text-anchor="middle">前台</text>
+  </g>
+  <g id="clust4" class="cluster">
+   <title>clusteryuml_d___</title>
+   <polygon id="svg_6" points="16,-16 16,-139 86,-139 86,-16 16,-16" fill="none"/>
+   <text id="svg_7" font-size="10px" font-family="Verdana" y="-25.8" x="51" text-anchor="middle">从控机</text>
+  </g>
+  <g id="clust5" class="cluster">
+   <title>clusterSystem</title>
+   <polygon id="svg_8" points="119,-58 119,-445 599,-445 599,-58 119,-58" fill="none"/>
+  </g>
+  <g id="node1" class="node">
+   <title>yuml_a____</title>
+   <g id="svg_9" transform="translate(30.75,-382.5) scale(0.75) " fill-rule="evenodd" fill="none">
+    <g id="svg_10" stroke="#000000">
+     <path id="svg_11" d="m32.5,29c8.00813,0 14.5,-6.49187 14.5,-14.5c0,-8.00813 -6.49187,-14.5 -14.5,-14.5c-8.00813,0 -14.5,6.49187 -14.5,14.5c0,8.00813 6.49187,14.5 14.5,14.5z"/>
+     <path id="svg_12" fill="none" stroke="black" stroke-opacity="0.3" filter="url(#shadow)" d="m32.5,29c8.00813,0 14.5,-6.49187 14.5,-14.5c0,-8.00813 -6.49187,-14.5 -14.5,-14.5c-8.00813,0 -14.5,6.49187 -14.5,14.5c0,8.00813 6.49187,14.5 14.5,14.5z"/>
+     <path id="svg_13" stroke-linecap="square" d="m-0.5,38.5l65.03076,0"/>
+     <path id="svg_14" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m-0.5,38.5l65.03076,0"/>
+     <path id="svg_15" stroke-linecap="square" d="m32.5,69l25.5,42"/>
+     <path id="svg_16" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,69l25.5,42"/>
+     <path id="svg_17" stroke-linecap="square" d="m32.5,69l-25.5,42"/>
+     <path id="svg_18" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,69l-25.5,42"/>
+     <path id="svg_19" stroke-linecap="square" d="m32.5,29.5l0,40.5"/>
+     <path id="svg_20" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,29.5l0,40.5"/>
+    </g>
+   </g>
+  </g>
+  <g id="node4" class="node">
+   <title>yuml_a5______</title>
+   <ellipse id="svg_21" fill-opacity="0.2" ry="23.1702" rx="82.9636" filter="url(#shadow)" fill="black" cy="-414" cx="220"/>
+   <ellipse id="svg_22" stroke="black" ry="23.1702" rx="82.9636" fill="url(#lightgrey)" cy="-414" cx="220"/>
+   <text id="svg_23" font-size="10px" font-family="Verdana" y="-412.3" x="220" text-anchor="middle">选项配置更改</text>
+  </g>
+  <g id="edge1" class="edge">
+   <title>yuml_a____-&gt;yuml_a5______</title>
+   <path id="svg_24" stroke="black" fill="none" d="m78.1494,-363.455c12.277,-5.655 27.1856,-12.247 40.8506,-17.545c14.404,-5.584 30.194,-11.078 44.886,-15.932"/>
+   <path id="svg_25" stroke-opacity="0.1" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m78.1494,-363.455c12.277,-5.655 27.1856,-12.247 40.8506,-17.545c14.404,-5.584 30.194,-11.078 44.886,-15.932"/>
+  </g>
+  <g id="node5" class="node">
+   <title>yuml_a4_______</title>
+   <ellipse id="svg_26" fill-opacity="0.2" ry="23.1702" rx="92.7622" filter="url(#shadow)" fill="black" cy="-349" cx="220"/>
+   <ellipse id="svg_27" stroke="black" ry="23.1702" rx="92.7622" fill="url(#lightgrey)" cy="-349" cx="220"/>
+   <text id="svg_28" font-size="10px" font-family="Verdana" y="-347.3" x="220" text-anchor="middle">监测从控机状态</text>
+  </g>
+  <g id="edge2" class="edge">
+   <title>yuml_a____-&gt;yuml_a4_______</title>
+   <path id="svg_29" stroke="black" fill="none" d="m78.0938,-350.688c13.5769,0.163 31.0782,0.373 49.1012,0.589"/>
+   <path id="svg_30" stroke-opacity="0.1" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m78.0938,-350.688c13.5769,0.163 31.0782,0.373 49.1012,0.589"/>
+  </g>
+  <g id="node6" class="node">
+   <title>yuml_b1____</title>
+   <ellipse id="svg_31" fill-opacity="0.2" ry="23.1702" rx="62.8651" filter="url(#shadow)" fill="black" cy="-284" cx="220"/>
+   <ellipse id="svg_32" stroke="black" ry="23.1702" rx="62.8651" fill="url(#lightgrey)" cy="-284" cx="220"/>
+   <text id="svg_33" font-size="10px" font-family="Verdana" y="-282.3" x="220" text-anchor="middle">查询报表</text>
+  </g>
+  <g id="edge3" class="edge">
+   <title>yuml_a____-&gt;yuml_b1____</title>
+   <path id="svg_34" stroke="black" fill="none" d="m78.3011,-336.493c12.1811,6.415 26.9689,13.782 40.6989,19.493c16.458,6.846 34.885,13.264 51.394,18.587"/>
+   <path id="svg_35" stroke-opacity="0.1" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m78.3011,-336.493c12.1811,6.415 26.9689,13.782 40.6989,19.493c16.458,6.846 34.885,13.264 51.394,18.587"/>
+  </g>
+  <g id="node2" class="node">
+   <title>yuml_c__</title>
+   <g id="svg_36" transform="translate(30.75,-251.5) scale(0.75) " fill-rule="evenodd" fill="none">
+    <g id="svg_37" stroke="#000000">
+     <path id="svg_38" d="m32.5,29c8.00813,0 14.5,-6.49187 14.5,-14.5c0,-8.00813 -6.49187,-14.5 -14.5,-14.5c-8.00813,0 -14.5,6.49187 -14.5,14.5c0,8.00813 6.49187,14.5 14.5,14.5z"/>
+     <path id="svg_39" fill="none" stroke="black" stroke-opacity="0.3" filter="url(#shadow)" d="m32.5,29c8.00813,0 14.5,-6.49187 14.5,-14.5c0,-8.00813 -6.49187,-14.5 -14.5,-14.5c-8.00813,0 -14.5,6.49187 -14.5,14.5c0,8.00813 6.49187,14.5 14.5,14.5z"/>
+     <path id="svg_40" stroke-linecap="square" d="m-0.5,38.5l65.03076,0"/>
+     <path id="svg_41" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m-0.5,38.5l65.03076,0"/>
+     <path id="svg_42" stroke-linecap="square" d="m32.5,69l25.5,42"/>
+     <path id="svg_43" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,69l25.5,42"/>
+     <path id="svg_44" stroke-linecap="square" d="m32.5,69l-25.5,42"/>
+     <path id="svg_45" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,69l-25.5,42"/>
+     <path id="svg_46" stroke-linecap="square" d="m32.5,29.5l0,40.5"/>
+     <path id="svg_47" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,29.5l0,40.5"/>
+    </g>
+   </g>
+  </g>
+  <g id="node7" class="node">
+   <title>yuml_c1______</title>
+   <ellipse id="svg_48" fill-opacity="0.2" ry="23.1702" rx="82.9636" filter="url(#shadow)" fill="black" cy="-219" cx="220"/>
+   <ellipse id="svg_49" stroke="black" ry="23.1702" rx="82.9636" fill="url(#lightgrey)" cy="-219" cx="220"/>
+   <text id="svg_50" font-size="10px" font-family="Verdana" y="-217.3" x="220" text-anchor="middle">维护房客信息</text>
+  </g>
+  <g id="edge4" class="edge">
+   <title>yuml_c__-&gt;yuml_c1______</title>
+   <path id="svg_51" stroke="black" fill="none" d="m78.0938,-219.844c16.0537,0.096 37.5942,0.225 58.9962,0.354"/>
+   <path id="svg_52" stroke-opacity="0.1" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m78.0938,-219.844c16.0537,0.096 37.5942,0.225 58.9962,0.354"/>
+  </g>
+  <g id="node3" class="node">
+   <title>yuml_d___</title>
+   <g id="svg_53" transform="translate(30.75,-120.5) scale(0.75) " fill-rule="evenodd" fill="none">
+    <g id="svg_54" stroke="#000000">
+     <path id="svg_55" d="m32.5,29c8.00813,0 14.5,-6.49187 14.5,-14.5c0,-8.00813 -6.49187,-14.5 -14.5,-14.5c-8.00813,0 -14.5,6.49187 -14.5,14.5c0,8.00813 6.49187,14.5 14.5,14.5z"/>
+     <path id="svg_56" fill="none" stroke="black" stroke-opacity="0.3" filter="url(#shadow)" d="m32.5,29c8.00813,0 14.5,-6.49187 14.5,-14.5c0,-8.00813 -6.49187,-14.5 -14.5,-14.5c-8.00813,0 -14.5,6.49187 -14.5,14.5c0,8.00813 6.49187,14.5 14.5,14.5z"/>
+     <path id="svg_57" stroke-linecap="square" d="m-0.5,38.5l65.03076,0"/>
+     <path id="svg_58" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m-0.5,38.5l65.03076,0"/>
+     <path id="svg_59" stroke-linecap="square" d="m32.5,69l25.5,42"/>
+     <path id="svg_60" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,69l25.5,42"/>
+     <path id="svg_61" stroke-linecap="square" d="m32.5,69l-25.5,42"/>
+     <path id="svg_62" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,69l-25.5,42"/>
+     <path id="svg_63" stroke-linecap="square" d="m32.5,29.5l0,40.5"/>
+     <path id="svg_64" fill="none" stroke="black" stroke-opacity="0.3" stroke-linecap="square" filter="url(#shadow)" d="m32.5,29.5l0,40.5"/>
+    </g>
+   </g>
+  </g>
+  <g id="node8" class="node">
+   <title>yuml_d2______</title>
+   <ellipse id="svg_65" fill-opacity="0.2" ry="23.1702" rx="83.3772" filter="url(#shadow)" fill="black" cy="-154" cx="220"/>
+   <ellipse id="svg_66" stroke="black" ry="23.1702" rx="83.3772" fill="url(#lightgrey)" cy="-154" cx="220"/>
+   <text id="svg_67" font-size="10px" font-family="Verdana" y="-152.3" x="220" text-anchor="middle">汇报获取信息</text>
+  </g>
+  <g id="edge5" class="edge">
+   <title>yuml_d___-&gt;yuml_d2______</title>
+   <path id="svg_68" stroke="black" fill="none" d="m78.0681,-102.398c12.2598,-6.055 27.1769,-13.074 40.9319,-18.602c14.164,-5.693 29.727,-11.183 44.27,-15.997"/>
+   <path id="svg_69" stroke-opacity="0.1" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m78.0681,-102.398c12.2598,-6.055 27.1769,-13.074 40.9319,-18.602c14.164,-5.693 29.727,-11.183 44.27,-15.997"/>
+  </g>
+  <g id="node11" class="node">
+   <title>yuml_d5____</title>
+   <ellipse id="svg_70" fill-opacity="0.2" ry="23.1702" rx="62.8651" filter="url(#shadow)" fill="black" cy="-89" cx="220"/>
+   <ellipse id="svg_71" stroke="black" ry="23.1702" rx="62.8651" fill="url(#lightgrey)" cy="-89" cx="220"/>
+   <text id="svg_72" font-size="10px" font-family="Verdana" y="-87.3" x="220" text-anchor="middle">调控请求</text>
+  </g>
+  <g id="edge6" class="edge">
+   <title>yuml_d___-&gt;yuml_d5____</title>
+   <path id="svg_73" stroke="black" fill="none" d="m78.0938,-89c21.0992,0 51.6762,0 78.9592,0"/>
+   <path id="svg_74" stroke-opacity="0.1" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m78.0938,-89c21.0992,0 51.6762,0 78.9592,0"/>
+  </g>
+  <g id="node9" class="node">
+   <title>yuml_d3______</title>
+   <ellipse id="svg_75" fill-opacity="0.2" ry="23.1702" rx="83.3772" filter="url(#shadow)" fill="black" cy="-219" cx="507"/>
+   <ellipse id="svg_76" stroke="black" ry="23.1702" rx="83.3772" fill="url(#lightgrey)" cy="-219" cx="507"/>
+   <text id="svg_77" font-size="10px" font-family="Verdana" y="-217.3" x="507" text-anchor="middle">统计能耗费用</text>
+  </g>
+  <g id="edge7" class="edge">
+   <title>yuml_d2______-&gt;yuml_d3______</title>
+   <path id="svg_78" stroke-dasharray="5,2" stroke="black" fill="none" d="m284.96,-168.587c43.575,-9.939 101.401,-23.127 146.977,-33.521"/>
+   <path id="svg_79" stroke-opacity="0.1" stroke-dasharray="5,2" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m284.96,-168.587c43.575,-9.939 101.401,-23.127 146.977,-33.521"/>
+   <polygon id="svg_80" fill-opacity="0.2" points="441.761,-204.349 431.011,-206.513 436.887,-203.237 432.012,-202.125 432.012,-202.125 432.012,-202.125 436.887,-203.237 433.012,-197.738 441.761,-204.349 441.761,-204.349" filter="url(#shadow)" fill="black"/>
+   <polygon id="svg_81" stroke="black" points="441.761,-204.349 431.011,-206.513 436.887,-203.237 432.012,-202.125 432.012,-202.125 432.012,-202.125 436.887,-203.237 433.012,-197.738 441.761,-204.349 441.761,-204.349" fill="url(#black)"/>
+   <text id="svg_82" font-size="8px" font-family="Verdana" y="-202.8" x="368" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+  </g>
+  <g id="node10" class="node">
+   <title>yuml_d4______</title>
+   <ellipse id="svg_83" fill-opacity="0.2" ry="23.1702" rx="83.3772" filter="url(#shadow)" fill="black" cy="-284" cx="507"/>
+   <ellipse id="svg_84" stroke="black" ry="23.1702" rx="83.3772" fill="url(#lightgrey)" cy="-284" cx="507"/>
+   <text id="svg_85" font-size="10px" font-family="Verdana" y="-282.3" x="507" text-anchor="middle">认证房客身份</text>
+  </g>
+  <g id="edge8" class="edge">
+   <title>yuml_d2______-&gt;yuml_d4______</title>
+   <path id="svg_86" stroke-dasharray="5,2" stroke="black" fill="none" d="m291.64,-173.94c7.595,-3.686 14.898,-8.007 21.36,-13.06c11.362,-8.883 6.809,-17.902 18,-27c34.197,-27.801 51.079,-20.636 92,-37c11.375,-4.549 23.633,-9.432 35.147,-14.011"/>
+   <path id="svg_87" stroke-opacity="0.1" stroke-dasharray="5,2" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m291.64,-173.94c7.595,-3.686 14.898,-8.007 21.36,-13.06c11.362,-8.883 6.809,-17.902 18,-27c34.197,-27.801 51.079,-20.636 92,-37c11.375,-4.549 23.633,-9.432 35.147,-14.011"/>
+   <polygon id="svg_88" fill-opacity="0.2" points="282.268,-169.753 293.234,-169.723 286.833,-171.792 291.398,-173.832 291.398,-173.832 291.398,-173.832 286.833,-171.792 289.563,-177.941 282.268,-169.753 282.268,-169.753" filter="url(#shadow)" fill="black"/>
+   <polygon id="svg_89" stroke="black" points="282.268,-169.753 293.234,-169.723 286.833,-171.792 291.398,-173.832 291.398,-173.832 291.398,-173.832 286.833,-171.792 289.563,-177.941 282.268,-169.753 282.268,-169.753" fill="url(#black)"/>
+   <text id="svg_90" font-size="8px" font-family="Verdana" y="-251.8" x="368" text-anchor="middle">&lt;&lt;extend&gt;&gt;</text>
+  </g>
+  <g id="node12" class="node">
+   <title>yuml_d6____</title>
+   <ellipse id="svg_91" fill-opacity="0.2" ry="23.1702" rx="62.8651" filter="url(#shadow)" fill="black" cy="-89" cx="507"/>
+   <ellipse id="svg_92" stroke="black" ry="23.1702" rx="62.8651" fill="url(#lightgrey)" cy="-89" cx="507"/>
+   <text id="svg_93" font-size="10px" font-family="Verdana" y="-87.3" x="507" text-anchor="middle">调节温度</text>
+  </g>
+  <g id="edge9" class="edge">
+   <title>yuml_d5____-&gt;yuml_d6____</title>
+   <path id="svg_94" stroke-dasharray="5,2" stroke="black" fill="none" d="m293.205,-89c46.515,0 106.363,0 150.735,0"/>
+   <path id="svg_95" stroke-opacity="0.1" stroke-dasharray="5,2" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m293.205,-89c46.515,0 106.363,0 150.735,0"/>
+   <polygon id="svg_96" fill-opacity="0.2" points="283.192,-89 293.192,-84.5001 288.192,-89 293.192,-89.0001 293.192,-89.0001 293.192,-89.0001 288.192,-89 293.192,-93.5001 283.192,-89 283.192,-89" filter="url(#shadow)" fill="black"/>
+   <polygon id="svg_97" stroke="black" points="283.192,-89 293.192,-84.5001 288.192,-89 293.192,-89.0001 293.192,-89.0001 293.192,-89.0001 288.192,-89 293.192,-93.5001 283.192,-89 283.192,-89" fill="url(#black)"/>
+   <text id="svg_98" font-size="8px" font-family="Verdana" y="-96.8" x="368" text-anchor="middle">&lt;&lt;extend&gt;&gt;</text>
+  </g>
+  <g id="node13" class="node">
+   <title>yuml_d7____</title>
+   <ellipse id="svg_99" fill-opacity="0.2" ry="23.1702" rx="62.8651" filter="url(#shadow)" fill="black" cy="-154" cx="507"/>
+   <ellipse id="svg_100" stroke="black" ry="23.1702" rx="62.8651" fill="url(#lightgrey)" cy="-154" cx="507"/>
+   <text id="svg_101" font-size="10px" font-family="Verdana" y="-152.3" x="507" text-anchor="middle">调节风速</text>
+  </g>
+  <g id="edge10" class="edge">
+   <title>yuml_d5____-&gt;yuml_d7____</title>
+   <path id="svg_102" stroke-dasharray="5,2" stroke="black" fill="none" d="m283.796,-103.322c50.671,-11.556 121.163,-27.634 169.066,-38.559"/>
+   <path id="svg_103" stroke-opacity="0.1" stroke-dasharray="5,2" stroke="{@stroke}" filter="url(#shadow)" fill="none" d="m283.796,-103.322c50.671,-11.556 121.163,-27.634 169.066,-38.559"/>
+   <polygon id="svg_104" fill-opacity="0.2" points="273.938,-101.074 284.689,-98.91 278.813,-102.186 283.688,-103.297 283.688,-103.297 283.688,-103.297 278.813,-102.186 282.687,-107.685 273.938,-101.074 273.938,-101.074" filter="url(#shadow)" fill="black"/>
+   <polygon id="svg_105" stroke="black" points="273.938,-101.074 284.689,-98.91 278.813,-102.186 283.688,-103.297 283.688,-103.297 283.688,-103.297 278.813,-102.186 282.687,-107.685 273.938,-101.074 273.938,-101.074" fill="url(#black)"/>
+   <text id="svg_106" font-size="8px" font-family="Verdana" y="-137.8" x="368" text-anchor="middle">&lt;&lt;extend&gt;&gt;</text>
+  </g>
+  <rect id="svg_107" height="415.999988" width="503.999985" y="-447.666667" x="93.999997" fill-opacity="0" stroke="#000000" fill="#000000"/>
+ </g>
+</svg>
