@@ -20,6 +20,7 @@
 > - v0.4 | 2017/5/28 | 左旭彤 | 增加从控机操作契约和协作图
 > - v0.5 | 2017/5/28 | 张有杰 | 主控机部分用例
 > - v0.6 | 2017/5/28 | 张有杰 | 添加文档说明及部分系统操作说明
+> - v0.7 | 2017/5/28 | 赵  亮 | 添加主控机操作契约及协作图
 
 ## 文档说明
 
@@ -296,6 +297,40 @@
 > 协作图
 
 ![output_table-collaboration-diagram](diagrams/output_table-collaboration-diagram.svg)
+
+### 维护房客信息
+
+
+> 操作契约
+
+| 操作 | manage_guestInfo(name,password) |
+| :-- | :-- |
+| 交叉引用 | 维护房客信息UC_M_005 |
+| 前置条件 | 主控机处于关闭状态，前台人员发出打开信息管理系统请求 |
+| 后置条件 | 1.（概念类）信息管理系统打开； |
+| |2.系统中键入新的（概念类）用户信息； |
+| |3.(概念类)用户与相应房间的从控机建立关联；|
+
+> 协作图
+
+![Manage Guest Info Collaboration Diagram](diagrams/manage_guestInfo-collaboration-diagram.svg)
+
+### 汇报获取信息
+
+> 操作契约
+
+| 操作 | send_get_status(speed,temperature,energy) |
+| :-- | :-- |
+| 交叉引用 | 获取信息UC_M_006 |
+| 前置条件 | 系统正常运行 |
+| 后置条件 | 1. 主控机得到从控机温度调节请求和风速调节请求； |
+| | 2. 主控机向从控机输送相应的风速； |
+| | 3. 主控机向从控机返回能耗信息； |
+| | 4. 主控机能够一直监测从控机的状态； |
+
+> 协作图
+
+![Auth And Energy Callaboration Diagram](diagrams/authAndEnergy-callaboration-diagram.svg)
 
 ### 接收从控机调控请求
 
