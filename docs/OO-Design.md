@@ -95,6 +95,12 @@
 | -- | -- |
 | output_table(TimePoint timebegin,TimePoint timeend) | 输出起始时间点到终止时间点之间的报表信息 |
 
+### 调控请求
+
+| 操作名称 | 操作说明 |
+| -- | -- |
+| change_request(req:GuestRequest) | 根据从控机发送的调控请求（风速，温度）更改空调运行状态，并在日志中记录相应内容 
+
 ### 接收从控机调控请求
 
 ### 从控机调控
@@ -345,8 +351,6 @@
 | 后置条件 | 1. （概念类）房间空调信息的属性被修改，存储了新的请求； |
 
 > 协作图
-
-![change_temp-collaboration-diagram](diagrams/change_temp-collaboration-diagram.png)
 
 ![change_request-collaboration-diagram](diagrams/change_request-collaboration-diagram.svg)
 
