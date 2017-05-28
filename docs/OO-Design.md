@@ -22,6 +22,7 @@
 > - v0.6 | 2017/5/28 | 张有杰 | 添加文档说明及部分系统操作说明
 > - v0.7 | 2017/5/28 | 赵  亮 | 添加主控机操作契约及协作图
 > - v0.8 | 2017/5/28 | 赵  亮 | 添加部分操作名称及说明
+> - v1.0 | 2017/5/28 | John Lee | 发布文档
 
 ## 文档说明
 
@@ -115,13 +116,11 @@
 | AddEnergy (room:RoomId energy:Energy) | 添加房间号及能耗信息 |
 | Cost GetCost (room:RoomId) | 反馈房间号及费用 |
 
-### 调控请求
+### 接收从控机调控请求
 
 | 操作名称 | 操作说明 |
 | -- | -- |
-| change_request(req:GuestRequest) | 根据从控机发送的调控请求（风速，温度）更改空调运行状态，并在日志中记录相应内容 
-
-### 接收从控机调控请求
+| change_request(req:GuestRequest) | 根据从控机发送的调控请求（风速，温度）更改空调运行状态，并在日志中记录相应内容
 
 ### 从控机调控
 
@@ -330,6 +329,7 @@
 
 ### 维护房客信息
 
+#### manage_guestInfo(name,password)
 
 > 操作契约
 
@@ -346,6 +346,8 @@
 ![Manage Guest Info Collaboration Diagram](diagrams/manage_guestInfo-collaboration-diagram.svg)
 
 ### 汇报获取信息
+
+#### send_get_status(speed,temperature,energy)
 
 > 操作契约
 
