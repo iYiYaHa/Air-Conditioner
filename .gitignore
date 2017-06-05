@@ -211,3 +211,12 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 
+# Dependency
+json.hpp
+ormlite.h
+sqlite3.h
+sqlite3.c
+
+# Log
+log.txt
+*.db
