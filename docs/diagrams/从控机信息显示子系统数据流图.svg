@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="275" height="223" viewBox="0 0 275 223">
+    <style type="text/css"><![CDATA[
+.st1 {fill:#000000;font-family:宋体;font-size:10pt}
+]]></style>
+    <defs>
+        <linearGradient x2="0%" x1="0%" id="lg1" y2="100%" y1="0%">
+            <stop stop-color="#fcfcfc" offset="0"/>
+            <stop stop-color="#f5f5f5" offset="0.5"/>
+            <stop stop-color="#eeeeee" offset="1"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(-1,-1)">
+        <g transform="translate(175.01,111.82)" id="shape1">
+            <path d="M0,-0L85.6,-0" stroke="#545454" fill="none"/>
+            <path d="M96,-0L85.6,-2.6L85.6,2.6L96,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text class="st1">
+                <tspan y="4.5" x="22">状态信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,-1,1,0,147.1,214)" id="shape2">
+            <path d="M0,-0L63.9,-0" stroke="#545454" fill="none"/>
+            <path d="M74.3,-0L63.9,-2.6L63.9,2.6L74.3,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,1,-1,0,37.2,-37.2)" class="st1">
+                <tspan y="4.5" x="11.2">费用能耗</tspan>
+            </text>
+        </g>
+        <g transform="translate(7,111.82)" id="shape3">
+            <path d="M0,-0L101.9,-0" stroke="#545454" fill="none"/>
+            <path d="M112.3,-0L101.9,-2.6L101.9,2.6L112.3,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text class="st1">
+                <tspan y="4.5" x="17.1">空调运行状态</tspan>
+            </text>
+        </g>
+        <g transform="translate(119.26,83.95)" id="shape4">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="24.9" x="8.4">显示信</tspan>
+                <tspan y="39.9" x="21.4">息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,1,-1,0,147.1,11)" id="shape5">
+            <path d="M0,-0L62.5,-0" stroke="#545454" fill="none"/>
+            <path d="M72.9,-0L62.5,-2.6L62.5,2.6L72.9,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,-1,1,0,36.5,36.5)" class="st1">
+                <tspan y="4.5" x="-9">从控机配置信息</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

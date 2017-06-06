@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="471" height="304" viewBox="0 0 471 304">
+    <style type="text/css"><![CDATA[
+.st1 {fill:#000000;font-family:宋体;font-size:10pt}
+]]></style>
+    <defs>
+        <linearGradient x2="0%" x1="0%" id="lg1" y2="100%" y1="0%">
+            <stop stop-color="#fcfcfc" offset="0"/>
+            <stop stop-color="#f5f5f5" offset="0.5"/>
+            <stop stop-color="#eeeeee" offset="1"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(-1,-1.01)">
+        <g transform="matrix(-1,0,-0,-1,467.5,94.9)" id="shape1">
+            <path d="M0,-0L107.9,-0" stroke="#545454" fill="none"/>
+            <path d="M118.3,-0L107.9,-2.6L107.9,2.6L118.3,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,118.3,0)" class="st1">
+                <tspan y="4.5" x="13.7">目标温度、风速</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,-0,0,-1,293.4,94.9)" id="shape2">
+            <path d="M0,-0L90.8,-0" stroke="#545454" fill="none"/>
+            <path d="M101.2,-0L90.8,-2.6L90.8,2.6L101.2,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,0,-0,-1,101.2,-0)" class="st1">
+                <tspan y="4.5" x="24.6">调节请求</tspan>
+            </text>
+        </g>
+        <g transform="translate(293.43,67.01)" id="shape3">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="24.9" x="8.4">界面调</tspan>
+                <tspan y="39.9" x="21.4">节</tspan>
+            </text>
+        </g>
+        <g transform="translate(136.51,67)" id="shape4">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="17.4" x="8.4">接收温</tspan>
+                <tspan y="32.4" x="8.4">度调节</tspan>
+                <tspan y="47.4" x="15.4">信息</tspan>
+            </text>
+        </g>
+        <g transform="translate(135.75,199.82)" id="shape5">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="24.9" x="8.4">负载均</tspan>
+                <tspan y="39.9" x="21.4">衡</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,1,-1,0,164.4,12)" id="shape6">
+            <path d="M0,-0L44.6,-0" stroke="#545454" fill="none"/>
+            <path d="M55,-0L44.6,-2.6L44.6,2.6L55,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,-1,1,0,27.5,27.5)" class="st1">
+                <tspan y="4.5" x="1.5">使用授权</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-0.01,1,-1,-0.01,164.4,122.7)" id="shape7">
+            <path d="M0,-0L66.7,-0" stroke="#545454" fill="none"/>
+            <path d="M77.1,-0L66.7,-2.6L66.7,2.6L77.1,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-0.01,-1,1,-0.01,38.9,38.5)" class="st1">
+                <tspan y="4.5" x="-0.5">调节请求记录</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,0,0,-1,142.4,212.1)" id="shape8">
+            <path d="M0,-0L125,-0" stroke="#545454" fill="none"/>
+            <path d="M135.4,-0L125,-2.6L125,2.6L135.4,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,135.4,0)" class="st1">
+                <tspan y="4.5" x="28.7">空调运行状态</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,-1,1,0,163.6,295.8)" id="shape9">
+            <path d="M0,-0L29.8,-0" stroke="#545454" fill="none"/>
+            <path d="M40.2,-0L29.8,-2.6L29.8,2.6L40.2,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,1,-1,0,20.1,-20.1)" class="st1">
+                <tspan y="4.5" x="-25.4">主控机配置信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,1,-1,0,321.3,11.6)" id="shape10">
+            <path d="M0,-0L45,-0" stroke="#545454" fill="none"/>
+            <path d="M55.4,-0L45,-2.6L45,2.6L55.4,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,-1,1,0,27.7,27.7)" class="st1">
+                <tspan y="4.5" x="-17.8">从控机配置信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,0,0,-1,135.8,227.7)" id="shape11">
+            <path d="M0,-0L118.4,-0" stroke="#545454" fill="none"/>
+            <path d="M128.8,-0L118.4,-2.6L118.4,2.6L128.8,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,128.8,0)" class="st1">
+                <tspan y="4.5" x="12.4">从控机及房间信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,0,0,-1,277,227.7)" id="shape12">
+            <path d="M0,-0L75.1,-0" stroke="#545454" fill="none"/>
+            <path d="M85.5,-0L75.1,-2.6L75.1,2.6L85.5,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,85.5,0)" class="st1">
+                <tspan y="4.5" x="16.7">房间信息</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

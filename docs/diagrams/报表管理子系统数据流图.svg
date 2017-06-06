@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="283" height="336" viewBox="0 0 283 336">
+    <style type="text/css"><![CDATA[
+.st1 {fill:#000000;font-family:宋体;font-size:10pt}
+]]></style>
+    <defs>
+        <linearGradient x2="0%" x1="0%" id="lg1" y2="100%" y1="0%">
+            <stop stop-color="#fcfcfc" offset="0"/>
+            <stop stop-color="#f5f5f5" offset="0.5"/>
+            <stop stop-color="#eeeeee" offset="1"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(-1,-1.26)">
+        <g transform="matrix(0,1,-1,0,128,257.8)" id="shape1">
+            <path d="M0,-0L59.8,-0" stroke="#545454" fill="none"/>
+            <path d="M70.2,-0L59.8,-2.6L59.8,2.6L70.2,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,-1,1,0,35.1,35.1)" class="st1">
+                <tspan y="4.5" x="9.1">目标报表</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,0,0,-1,255,229.9)" id="shape2">
+            <path d="M0,-0L88.7,-0" stroke="#545454" fill="none"/>
+            <path d="M99.1,-0L88.7,-2.6L88.7,2.6L99.1,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,99.1,0)" class="st1">
+                <tspan y="4.5" x="23.6">查询请求</tspan>
+            </text>
+        </g>
+        <g transform="translate(100.1,202.05)" id="shape3">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="24.9" x="8.4">管理报</tspan>
+                <tspan y="39.9" x="21.4">表</tspan>
+            </text>
+        </g>
+        <g transform="translate(100.27,83.26)" id="shape4">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="24.9" x="8.4">生成报</tspan>
+                <tspan y="39.9" x="21.4">表</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,0,0,-1,279,111.1)" id="shape5">
+            <path d="M0,-0L112.6,-0" stroke="#545454" fill="none"/>
+            <path d="M123,-0L112.6,-2.6L112.6,2.6L123,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,123,0)" class="st1">
+                <tspan y="4.5" x="22.5">空调运行状态</tspan>
+            </text>
+        </g>
+        <g transform="translate(5,111.13)" id="shape6">
+            <path d="M0,-0L84.9,-0" stroke="#545454" fill="none"/>
+            <path d="M95.3,-0L84.9,-2.6L84.9,2.6L95.3,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text class="st1">
+                <tspan y="4.5" x="21.6">费用能耗</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,1,-1,0,128.1,12.3)" id="shape7">
+            <path d="M0,-0L60.6,-0" stroke="#545454" fill="none"/>
+            <path d="M71,-0L60.6,-2.6L60.6,2.6L71,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,-1,1,0,35.5,35.5)" class="st1">
+                <tspan y="4.5" x="3">从控机开机</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-0,1,-1,-0,128.1,139)" id="shape8">
+            <path d="M0,-0L52.6,-0" stroke="#545454" fill="none"/>
+            <path d="M63,-0L52.6,-2.6L52.6,2.6L63,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-0,-1,1,-0,31.6,31.5)" class="st1">
+                <tspan y="4.5" x="5.5">报表信息</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="477" height="205" viewBox="0 0 477 205">
+    <style type="text/css"><![CDATA[
+.st1 {fill:#000000;font-family:宋体;font-size:10pt}
+]]></style>
+    <defs>
+        <linearGradient x2="0%" x1="0%" id="lg1" y2="100%" y1="0%">
+            <stop stop-color="#fcfcfc" offset="0"/>
+            <stop stop-color="#f5f5f5" offset="0.5"/>
+            <stop stop-color="#eeeeee" offset="1"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(-492,-122)">
+        <g transform="matrix(-1,0,0,-1,964,220.7)" id="shape1">
+            <path d="M0,-0L102.4,-0" stroke="#545454" fill="none"/>
+            <path d="M112.8,-0L102.4,-2.6L102.4,2.6L112.8,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,112.8,0)" class="st1">
+                <tspan y="4.5" x="30.4">登录信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-1,0,0,-1,795.4,220.7)" id="shape2">
+            <path d="M0,-0L101.6,-0" stroke="#545454" fill="none"/>
+            <path d="M112,-0L101.6,-2.6L101.6,2.6L112,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(-1,-0,0,-1,112,0)" class="st1">
+                <tspan y="4.5" x="17">身份认证信息</tspan>
+            </text>
+        </g>
+        <g transform="translate(795.42,192.79)" id="shape3">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="17.4" x="8.4">界面房</tspan>
+                <tspan y="32.4" x="8.4">客身份</tspan>
+                <tspan y="47.4" x="15.4">认证</tspan>
+            </text>
+        </g>
+        <g transform="translate(627.7,192.79)" id="shape4">
+            <path fill-opacity="0.5" d="M2,29.9C2,14.5,14.5,2,29.9,2C45.3,2,57.8,14.5,57.7,29.9C57.7,45.3,45.3,57.7,29.9,57.7C14.5,57.7,2,45.3,2,29.9z" fill="#bebebe"/>
+            <path d="M0,27.9C-0,12.5,12.5,-0,27.9,-0C43.3,-0,55.8,12.5,55.7,27.9C55.7,43.3,43.3,55.7,27.9,55.7C12.5,55.7,0,43.3,0,27.9z" stroke="#545454" fill="url(#lg1)"/>
+            <text class="st1">
+                <tspan y="24.9" x="8.4">房客登</tspan>
+                <tspan y="39.9" x="8.4">录认证</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,1,-1,0,655.6,248.5)" id="shape5">
+            <path d="M0,-0L58.1,-0" stroke="#545454" fill="none"/>
+            <path d="M68.5,-0L58.1,-2.6L58.1,2.6L68.5,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,-1,1,0,34.2,34.2)" class="st1">
+                <tspan y="4.5" x="8.2">使用授权</tspan>
+            </text>
+        </g>
+        <g transform="matrix(1,-0,0,1,497.5,220.7)" id="shape6">
+            <path d="M0,-0L119.8,-0" stroke="#545454" fill="none"/>
+            <path d="M130.2,-0L119.8,-2.6L119.8,2.6L130.2,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(1,0,-0,1,0,-0)" class="st1">
+                <tspan y="4.5" x="26.1">目标房客信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,-1,1,0,823.3,312)" id="shape7">
+            <path d="M0,-0L53.1,-0" stroke="#545454" fill="none"/>
+            <path d="M63.5,-0L53.1,-2.6L53.1,2.6L63.5,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,1,-1,0,31.7,-31.7)" class="st1">
+                <tspan y="4.5" x="-13.8">从控机配置信息</tspan>
+            </text>
+        </g>
+        <g transform="matrix(0,-1,1,0,655.6,192.8)" id="shape8">
+            <path d="M0,-0L50.4,-0" stroke="#545454" fill="none"/>
+            <path d="M60.8,-0L50.4,-2.6L50.4,2.6L60.8,-0" stroke-linecap="round" stroke="#545454" fill="#545454" stroke-width="1"/>
+            <text transform="matrix(0,1,-1,0,30.4,-30.4)" class="st1">
+                <tspan y="4.5" x="-15.1">从控机开机信息</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
