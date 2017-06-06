@@ -17,6 +17,7 @@
 > - v0.1 | 2017/6/5 | John Lee | 创建文档
 > - v0.2 | 2017/6/6 | 董星彤 | 更新各层数据流图，添加各子系统数据流图
 > - v0.3 | 2017/6/6 | 董星彤 | 添加各子系统系统结构图
+> - v0.4 | 2017/6/6 | 左旭彤 | 增加子系统5、6的处理说明和接口模块
 
 ## 文档说明
 
@@ -113,6 +114,38 @@
 #### 功能结构图
 
 ![实时信息查看子系统系统结构图](diagrams/实时信息查看子系统系统结构图.svg)
+> 为功能结构图中每一个模块写一份处理说明和一份接口说明
+
+1. 模块名字 获取从控机及房间信息
+  - 处理说明 “获取从控机及房间信息”模块可以获取信息，并将信息传递到主模块
+  - 接口说明\
+    PROCEDURE getClientinfoAndRoominfo\
+	INTERFACE RETURNS\
+	TYPE ClientinfoAndRoominfo IS STRING\
+	No external I/O or global data Used\
+	Called by main\
+	Calls no subordinate modules
+    
+2. 模块名字 查看实时信息
+  - 处理说明 “查看实时信息”模块获取来自主模块的从控机及房间信息，并将其转化为全部从控机及房间信息
+  - 接口说明\
+        PROCEDURE ViewingRealtimeInformation\
+		INTERFACE ACCEPTS\
+		TYPE ClientinfoAndRoominfo IS STRING\
+		INTERFACE RETURNS\
+		TYPE AllClientinfoAndRoominfo IS STRING\
+		No external I/O or global data Used\
+		Called by main\
+		Calls no subordinate modules
+3. 模块名字 显示结果
+  - 处理说明 “显示结果”模块接收来自主模块的全部从控机房间信息，并将其进行显示
+  - 接口说明\
+        PROCEDURE showresult\
+		INTERFACE ACCEPTS\
+		TYPE AllClientinfoAndRoominfo IS STRING\
+		No external I/O or global data Used\
+		Called by main\
+		Calls no subordinate modules
 
 
 ### 子系统6：配置空调参数子系统
@@ -124,6 +157,38 @@
 #### 功能结构图
 
 ![配置空调参数子系统系统结构图](diagrams/配置空调参数子系统系统结构图.svg)
+
+1. 模块名字 取得配置信息
+  - 处理说明 “取得配置信息”模块可以获取信息，并将信息传递到主模块
+  - 接口说明\
+        PROCEDURE getconfigureinfo\
+		INTERFACE RETURNS\
+		TYPE configureinfo IS STRING\
+		No external I/O or global data Used\
+		Called by main\
+		Calls no subordinate modules
+
+2. 模块名字 配置空调参数
+  - 处理说明 “配置空调参数”模块可以获取来自主模块的配置信息，并将其转化为主控机配置返回给主模块
+  - 接口说明\
+        PROCEDURE configureParameter\
+		INTERFACE ACCEPTS\
+		TYPE configureinfo IS STRING\
+		INTERFACE RETURNS\
+		TYPE Mconfigureinfo IS STRING\
+		No external I/O or global data Used\
+		Called by main\
+		Calls no subordinate modules
+3. 模块名字 给出结果
+  - 处理说明 “给出结果”模块可以接收来自主控机的主控机配置信息，并将结果给出
+  - 接口说明\
+        PROCEDURE giveresult\
+		INTERFACE ACCEPTS\
+		TYPE Mconfigureinfo IS STRING\
+		No external I/O or global data Used\
+		Called by main\
+		Calls no subordinate modules
+
 
 
 ### 子系统7：能耗费用计算子系统
@@ -147,6 +212,16 @@
 
 ![从控机信息显示子系统系统结构图](diagrams/从控机信息显示子系统系统结构图.svg)
 
+#### 功能模块说明
+
+> 为功能结构图中每一个模块写一份处理说明和一份接口说明
+
+1. 模块名字 1（与功能结构图中名字相同）
+  - 处理说明 // 参见教科书（教材223页8.7.1）
+  - 接口说明 // 参见教科书（教材224页8.7.2），只需要说明入口参数、返回值、下属模块、上级模块
+2. 模块名字 2
+  - 处理说明
+  - 接口说明
 
 ### 子系统9：从控机登录认证子系统
 
