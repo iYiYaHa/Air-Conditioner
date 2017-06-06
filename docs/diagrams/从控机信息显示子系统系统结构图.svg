@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 599 200" width="599" xmlns:xlink="http://www.w3.org/1999/xlink" height="200">
+    <style type="text/css"><![CDATA[
+.st2 {fill:#1f6391;font-family:宋体;font-size:10pt}
+.st1 {fill:#344961;font-family:宋体;font-size:10pt}
+]]></style>
+    <defs/>
+    <g transform="translate(-229,-260.5)">
+        <g id="shape1" transform="translate(482,261.5)">
+            <path stroke="#8d9cb1" fill="#ffffff" d="M0,0L100,0L100,43L0,43L0,0z"/>
+            <text class="st1">
+                <tspan y="26" x="31">主模块</tspan>
+            </text>
+        </g>
+        <g id="shape2" transform="translate(609,416)">
+            <path stroke="#8d9cb1" fill="#ffffff" d="M0,0L100,0L100,43L0,43L0,0z"/>
+            <text class="st1">
+                <tspan y="26" x="24">显示信息</tspan>
+            </text>
+        </g>
+        <g id="shape3" transform="translate(557,304.5)">
+            <path stroke="#000000" d="M0,0L102,111.5" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M99.6,102.9L102,111.5L93.6,108.3" stroke-linecap="round" stroke-width="1"/>
+        </g>
+        <g id="shape4" transform="translate(406,383)">
+            <path stroke="#000000" d="M2.8,-2.9L61,-62" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-2.8,2.9C-4.4,1.3,-4.4,-1.2,-2.9,-2.8C-1.3,-4.4,1.2,-4.4,2.8,-2.9C4.4,-1.3,4.4,1.2,2.9,2.8C1.3,4.4,-1.2,4.4,-2.8,2.9" stroke-linecap="round" stroke-width="1"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M48.3,-57.7L61,-62L56.9,-49.2" stroke-linecap="round" stroke-width="1"/>
+            <text class="st2">
+                <tspan y="-21.1" x="-15">从控机配置信息</tspan>
+            </text>
+        </g>
+        <g id="shape5" transform="translate(666,397)">
+            <path stroke="#000000" d="M-2.7,-3L-51.3,-57" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M2.7,3C1,4.5,-1.5,4.3,-3,2.7C-4.5,1,-4.3,-1.5,-2.7,-3C-1,-4.5,1.5,-4.3,3,-2.7C4.5,-1,4.3,1.5,2.7,3" stroke-linecap="round" stroke-width="1"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-47.7,-44.1L-51.3,-57L-38.8,-52.1" stroke-linecap="round" stroke-width="1"/>
+            <text class="st2">
+                <tspan y="-21.7" x="-64.6">空调房间状态</tspan>
+            </text>
+        </g>
+        <g id="shape6" transform="translate(356,416)">
+            <path stroke="#8d9cb1" fill="#ffffff" d="M0,0L100,0L100,43L0,43L0,0z"/>
+            <text class="st1">
+                <tspan y="26" x="24">取得数据</tspan>
+            </text>
+        </g>
+        <g id="shape7" transform="translate(727,416)">
+            <path stroke="#8d9cb1" fill="#ffffff" d="M0,0L100,0L100,43L0,43L0,0z"/>
+            <text class="st1">
+                <tspan y="26" x="24">给出结果</tspan>
+            </text>
+        </g>
+        <g id="shape8" transform="translate(507,304.5)">
+            <path stroke="#000000" d="M0,0L-101,111.5" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-92.7,108.3L-101,111.5L-98.6,102.9" stroke-linecap="round" stroke-width="1"/>
+        </g>
+        <g id="shape9" transform="translate(557,326)">
+            <path stroke="#000000" d="M2.7,3L42,47" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-2.7,-3C-1,-4.5,1.5,-4.3,3,-2.7C4.5,-1,4.3,1.5,2.7,3C1,4.5,-1.5,4.3,-3,2.7C-4.5,1,-4.3,-1.5,-2.7,-3" stroke-linecap="round" stroke-width="1"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M38.5,34.1L42,47L29.5,42.1" stroke-linecap="round" stroke-width="1"/>
+            <text class="st2">
+                <tspan y="-6.9" x="-24.5">从控机配置信息</tspan>
+                <tspan y="8.1" x="-4.5">能耗费用</tspan>
+                <tspan y="23.1" x="-17.5">空调运行状态</tspan>
+            </text>
+        </g>
+        <g id="shape10" transform="translate(582,293.75)">
+            <path stroke="#000000" d="M0,0L195,122.3" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M190.3,114.6L195,122.3L186.1,121.4" stroke-linecap="round" stroke-width="1"/>
+        </g>
+        <g id="shape11" transform="translate(628,307)">
+            <path stroke="#000000" d="M3.5,2L100,57" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-3.5,-2C-2.4,-3.9,.1,-4.6,2,-3.5C3.9,-2.4,4.6,.1,3.5,2C2.4,3.9,-0.1,4.6,-2,3.5C-3.9,2.4,-4.6,-0.1,-3.5,-2" stroke-linecap="round" stroke-width="1"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M92.5,45.8L100,57L86.6,56.3" stroke-linecap="round" stroke-width="1"/>
+            <text class="st2">
+                <tspan y="3.1" x="11">空调房间状态</tspan>
+            </text>
+        </g>
+        <g id="shape12" transform="translate(298,373)">
+            <path stroke="#000000" d="M3.5,-1.9L104,-56" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-3.5,1.9C-4.6,-0,-3.8,-2.5,-1.9,-3.5C0,-4.6,2.5,-3.8,3.5,-1.9C4.6,0,3.8,2.5,1.9,3.5C-0,4.6,-2.5,3.8,-3.5,1.9" stroke-linecap="round" stroke-width="1"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M90.6,-55.6L104,-56L96.3,-45" stroke-linecap="round" stroke-width="1"/>
+            <text class="st2">
+                <tspan y="-16.3" x="26">能耗费用</tspan>
+            </text>
+        </g>
+        <g id="shape13" transform="translate(230,416)">
+            <path stroke="#8d9cb1" fill="#ffffff" d="M0,0L100,0L100,43L0,43L0,0z"/>
+            <text class="st1">
+                <tspan y="26" x="24">取得数据</tspan>
+            </text>
+        </g>
+        <g id="shape14" transform="translate(482,293.75)">
+            <path stroke="#000000" d="M0,0L-202,122.3" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-193.1,121.5L-202,122.3L-197.2,114.7" stroke-linecap="round" stroke-width="1"/>
+        </g>
+        <g id="shape15" transform="translate(520,392)">
+            <path stroke="#000000" d="M0,-4L0,-61" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M0,4C-2.2,4,-4,2.2,-4,0C-4,-2.2,-2.2,-4,0,-4C2.2,-4,4,-2.2,4,0C4,2.2,2.2,4,0,4" stroke-linecap="round" stroke-width="1"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M-6,-49L0,-61L6,-49" stroke-linecap="round" stroke-width="1"/>
+            <text class="st2">
+                <tspan y="-26.8" x="-39">空调运行状态</tspan>
+            </text>
+        </g>
+        <g id="shape16" transform="translate(482,416)">
+            <path stroke="#8d9cb1" fill="#ffffff" d="M0,0L100,0L100,43L0,43L0,0z"/>
+            <text class="st1">
+                <tspan y="26" x="24">取得数据</tspan>
+            </text>
+        </g>
+        <g id="shape17" transform="translate(532,304.5)">
+            <path stroke="#000000" d="M0,0L0,111.5" fill="none"/>
+            <path stroke-linejoin="round" stroke="#000000" fill="none" d="M4,103.5L0,111.5L-4,103.5" stroke-linecap="round" stroke-width="1"/>
+        </g>
+    </g>
+</svg>

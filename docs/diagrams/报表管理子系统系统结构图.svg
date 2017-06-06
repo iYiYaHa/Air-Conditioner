@@ -1,0 +1,180 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 676 362" xmlns="http://www.w3.org/2000/svg" width="676" height="362">
+    <style type="text/css"><![CDATA[
+.st2 {fill:#1f6391;font-family:宋体;font-size:10pt}
+.st1 {fill:#344961;font-family:宋体;font-size:10pt}
+]]></style>
+    <defs/>
+    <g transform="translate(-72,-280.5)">
+        <g id="shape1" transform="translate(502,281.5)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="31">主模块</tspan>
+            </text>
+        </g>
+        <g id="shape2" transform="translate(502,436)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="24">管理报表</tspan>
+            </text>
+        </g>
+        <g id="shape3" transform="translate(552,324.5)">
+            <path d="M0,0L0,111.5" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M4,103.5L0,111.5L-4,103.5" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape4" transform="translate(385,390)">
+            <path d="M3.4,-2.1L85,-52" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-3.4,2.1C-4.6,.2,-4,-2.3,-2.1,-3.4C-0.2,-4.6,2.3,-4,3.4,-2.1C4.6,-0.2,4,2.3,2.1,3.4C.2,4.6,-2.3,4,-3.4,2.1" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M71.6,-50.9L85,-52L77.9,-40.6" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-17.3" x="29.5">报表</tspan>
+            </text>
+        </g>
+        <g id="shape5" transform="translate(577,418)">
+            <path d="M0,-4L.7,-66" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-0,4C-2.3,4,-4,2.2,-4,-0C-4,-2.3,-2.2,-4,0,-4C2.3,-4,4,-2.2,4,0C4,2.3,2.2,4,-0,4" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-5.4,-54.1L.7,-66L6.6,-53.9" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-26.8" x="-26.6">目标报表</tspan>
+            </text>
+        </g>
+        <g id="shape6" transform="translate(311,436)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="24">获取报表</tspan>
+            </text>
+        </g>
+        <g id="shape7" transform="translate(647,436)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="24">给出结果</tspan>
+            </text>
+        </g>
+        <g id="shape8" transform="translate(527,324.5)">
+            <path d="M0,0L-166,111.5" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-157.1,110.4L-166,111.5L-161.6,103.7" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape9" transform="translate(531,350)">
+            <path d="M0,4L0,62" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M0,-4C2.2,-4,4,-2.2,4,0C4,2.2,2.2,4,0,4C-2.2,4,-4,2.2,-4,0C-4,-2.2,-2.2,-4,0,-4" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M6,50L0,62L-6,50" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="5.7" x="-27">查询请求</tspan>
+                <tspan y="20.7" x="-27">  报表</tspan>
+            </text>
+        </g>
+        <g id="shape10" transform="translate(577,324.5)">
+            <path d="M0,0L120,111.5" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M116.9,103.1L120,111.5L111.4,109" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape11" transform="translate(619,342)">
+            <path d="M2.9,2.7L74,68" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-2.9,-2.7C-1.5,-4.3,1.1,-4.4,2.7,-2.9C4.3,-1.5,4.4,1.1,2.9,2.7C1.5,4.3,-1.1,4.4,-2.7,2.9C-4.3,1.5,-4.4,-1.1,-2.9,-2.7" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M69.2,55.5L74,68L61.1,64.3" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="6.7" x="10">目标报表</tspan>
+            </text>
+        </g>
+        <g id="shape12" transform="translate(251,554)">
+            <path d="M2.9,-2.8L58,-56" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-2.9,2.8C-4.4,1.2,-4.4,-1.3,-2.8,-2.9C-1.2,-4.4,1.3,-4.4,2.9,-2.8C4.4,-1.2,4.4,1.3,2.8,2.9C1.2,4.4,-1.3,4.4,-2.9,2.8" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M45.2,-52L58,-56L53.5,-43.3" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-20.7" x="-16.5">从控机开机信息</tspan>
+            </text>
+        </g>
+        <g id="shape13" transform="translate(198,583.5)">
+            <path d="M0,0L100,0L100,58L0,58L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="5">获取从控机开机</tspan>
+                <tspan y="41" x="37">信息</tspan>
+            </text>
+        </g>
+        <g id="shape14" transform="translate(336,479)">
+            <path d="M0,0L-88,104.5" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-79.8,101L-88,104.5L-85.9,95.8" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape15" transform="translate(350,571)">
+            <path d="M0,-4L0,-56" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M0,4C-2.2,4,-4,2.2,-4,0C-4,-2.2,-2.2,-4,0,-4C2.2,-4,4,-2.2,4,0C4,2.2,2.2,4,0,4" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-6,-44L0,-56L6,-44" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-26.8" x="-39">空调运行状态</tspan>
+            </text>
+        </g>
+        <g id="shape16" transform="translate(311,583.5)">
+            <path d="M0,0L100,0L100,58L0,58L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="5">获取空调运行状</tspan>
+                <tspan y="41" x="44">态</tspan>
+            </text>
+        </g>
+        <g id="shape17" transform="translate(361,479)">
+            <path d="M0,0L0,104.5" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M4,96.5L0,104.5L-4,96.5" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape18" transform="translate(449,547)">
+            <path d="M3.3,2.2L43,29" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-3.3,-2.2C-2.1,-4.1,.4,-4.6,2.2,-3.3C4.1,-2.1,4.6,.4,3.3,2.2C2.1,4.1,-0.4,4.6,-2.2,3.3C-4.1,2.1,-4.6,-0.4,-3.3,-2.2" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M36.4,17.3L43,29L29.7,27.3" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-10.7" x="-4">能耗费用</tspan>
+                <tspan y="4.3" x="-24">从控机开机信息</tspan>
+                <tspan y="19.3" x="-17">空调运行状态</tspan>
+            </text>
+        </g>
+        <g id="shape19" transform="translate(491,591)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="24">生成报表</tspan>
+            </text>
+        </g>
+        <g id="shape20" transform="translate(386,479)">
+            <path d="M0,0L155,112" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M150.9,104.1L155,112L146.2,110.6" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape21" transform="translate(488,528)">
+            <path d="M-3.5,-2L-66,-38" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M3.5,2C2.4,3.9,-0.1,4.6,-2,3.5C-3.9,2.4,-4.6,-0.1,-3.5,-2C-2.4,-3.9,.1,-4.6,2,-3.5C3.9,-2.4,4.6,.1,3.5,2" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-58.6,-26.8L-66,-38L-52.6,-37.2" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-16.8" x="-46">报表</tspan>
+            </text>
+        </g>
+        <g id="shape22" transform="translate(169,539)">
+            <path d="M3.4,-2.1L62,-38" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-3.4,2.1C-4.6,.2,-4,-2.3,-2.1,-3.4C-0.2,-4.6,2.3,-4,3.4,-2.1C4.6,-0.2,4,2.3,2.1,3.4C.2,4.6,-2.3,4,-3.4,2.1" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M48.6,-36.8L62,-38L54.9,-26.6" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-17.3" x="5">能耗费用</tspan>
+            </text>
+        </g>
+        <g id="shape23" transform="translate(73,591)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="11">获取能耗费用</tspan>
+            </text>
+        </g>
+        <g id="shape24" transform="translate(311,468.25)">
+            <path d="M0,0L-188,122.8" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-179.1,121.7L-188,122.8L-183.5,115" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="shape25" transform="translate(293,384)">
+            <path d="M3.7,-1.5L109,-44" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-3.7,1.5C-4.5,-0.6,-3.5,-2.9,-1.5,-3.7C.6,-4.5,2.9,-3.5,3.7,-1.5C4.5,.6,3.5,2.9,1.5,3.7C-0.6,4.5,-2.9,3.5,-3.7,1.5" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M95.6,-45.1L109,-44L100.1,-33.9" stroke="#000000" stroke-linejoin="round" fill="none"/>
+            <text class="st2">
+                <tspan y="-14.3" x="28.5">查询请求</tspan>
+            </text>
+        </g>
+        <g id="shape26" transform="translate(172,432)">
+            <path d="M0,0L100,0L100,43L0,43L0,0z" stroke="#8d9cb1" fill="#ffffff"/>
+            <text class="st1">
+                <tspan y="26" x="11">取得查询请求</tspan>
+            </text>
+        </g>
+        <g id="shape27" transform="translate(502,313.75)">
+            <path d="M0,0L-280,118.3" stroke="#000000" fill="none"/>
+            <path stroke-width="1" stroke-linecap="round" d="M-271.1,118.8L-280,118.3L-274.2,111.5" stroke="#000000" stroke-linejoin="round" fill="none"/>
+        </g>
+    </g>
+</svg>
