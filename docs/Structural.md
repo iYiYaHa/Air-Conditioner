@@ -22,6 +22,7 @@
 > - v0.6 | 2017/6/10 | 左旭彤 | 增加子系统3、4、7、8、9的处理说明和接口模块
 > - v0.7 | 2017/6/10 | 赵亮 | 完成文档说明、项目背景说明、数据库的设计
 > - v0.8 | 2017/6/11 | 董星彤 左旭彤 | 增加优化后的系统功能结构图
+> - v0.9 | 2017/6/11 | 董星彤 左旭彤 | 修改处理说明和接口模块格式
 
 ## 文档说明
 ### 文档目的
@@ -75,44 +76,40 @@
 
 1. 模块名字 获取房间信息
   - 处理说明 “获取房间信息”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-    PROCEDURE getRoominfo\
-	INTERFACE RETURNS\
-	TYPE Roominfo IS STRING\
-	No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
-
+  - 接口说明
+    - PROCEDURE getRoominfo
+    - INTERFACE RETURNS
+    - TYPE Roominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 2. 模块名字 获取主控机配置信息
   - 处理说明 “获取主控机配置信息”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-    PROCEDURE getMconfigureinfo\
-	INTERFACE RETURNS\
-	TYPE Mconfigureinfo IS STRUCT\
-	No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
-
+  - 接口说明
+    - PROCEDURE getMconfigureinfo
+    - INTERFACE RETURNS
+    - TYPE Mconfigureinfo IS STRUCT
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 3. 模块名字 获取调节请求记录
   - 处理说明 “获取调节请求记录”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-    PROCEDURE getRequestRec\
-	INTERFACE RETURNS\
-	TYPE RequestRec IS STRUCT\
-	No external I/O or global data Used\
-	Called by main\
-	Calls getAuth,getRequest,recvRequestInfo
-
+  - 接口说明
+    - PROCEDURE getRequestRec
+    - INTERFACE RETURNS
+    - TYPE RequestRec IS STRUCT
+    - No external I/O or global data Used
+    - Called by main
+    - Calls getAuth,getRequest,recvRequestInfo
 4. 模块名字 获取使用授权
   - 处理说明 “获取使用授权”模块可以获取信息，并将信息传递到“获取调节请求模块”
-  - 接口说明\
-    PROCEDURE getAuth\
-	INTERFACE RETURNS\
-	TYPE Auth IS BOOL\
-	No external I/O or global data Used\
-	Called by getRequestRec\
-	Calls no subordinate modules
-
+  - 接口说明
+    - PROCEDURE getAuth
+    - INTERFACE RETURNS
+    - TYPE Auth IS BOOL
+    - No external I/O or global data Used
+    - Called by getRequestRec
+    - Calls no subordinate modules
 5. 模块名字 获取调节请求
   - 处理说明 “获取调节请求”模块可以获取信息，并将信息传递到“获取调节请求记录模块”
   - 接口说明
@@ -122,7 +119,6 @@
     - No external I/O or global data Used
     - Called by getRequestRec
     - Calls getTempSpeed,getSconfigureinfo,adjust
-
 6. 模块名字 获取目标风速温度
   - 处理说明 “获取目标风速温度”模块可以获取信息，并将信息传递到“获取调节请求模块”
   - 接口说明
@@ -132,7 +128,6 @@
     - No external I/O or global data Used
     - Called by getRequest
     - Calls no subordinate modules
-
 7. 模块名字 获取从控机配置信息
   - 处理说明 “获取从控机配置信息”模块可以获取信息，并将信息传递到“获取调节请求模块”
   - 接口说明
@@ -142,7 +137,6 @@
     - No external I/O or global data Used
     - Called by getRequest
     - Calls no subordinate modules
-
 8. 模块名字 界面调节
   - 处理说明 “界面调节模块”获得从控机配置信息、目标温度和风速信息，并将他们转化为调节请求,将信息传递到“获取调节请求模块”
   - 接口说明
@@ -154,7 +148,6 @@
     - No external I/O or global data Used
     - Called by getRequest
     - Calls no subordinate modules
-
 9. 模块名字 接收温度调节信息
   - 处理说明 “接收温度调节信息”获得从控机配置信息、目标温度和风速信息，并将他们转化为调节请求,将信息传递到“获取调节请求模块”
   - 接口说明
@@ -167,7 +160,6 @@
     - No external I/O or global data Used
     - Called by getRequestRec
     - Calls no subordinate modules
-
 10. 模块名字 负载均衡
    - 处理说明 “负载均衡”模块接收调解请求记录，主控机配置信息和房间信息，对空调请求做负载均衡处理，转化为空调运行状态和从控机及房间信息
    - 接口说明
@@ -182,7 +174,6 @@
      - No external I/O or global data Used
      - Called by main
      - Calls no subordinate modules
-
 11. 模块名字 给出空调运行状态
   - 处理说明 “给出空调运行状态”从主模块获得空调运行状态，给出结果
   - 接口说明
@@ -192,7 +183,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
 12. 模块名字 给出从控机及房间信息
   - 处理说明 “给出从控机及房间信息”从主模块获得从控机及房间信息，给出结果
   - 接口说明
@@ -202,7 +192,6 @@
 	No external I/O or global data Used\
 	Called by main\
 	Calls no subordinate modules
-
 ### 子系统2：报表管理子系统
 
 #### 数据流图
@@ -217,91 +206,91 @@
 
 1. 模块名字 取得查询请求
   - 处理说明 “取得查询请求”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-    PROCEDURE getSearchReq\
-	INTERFACE RETURNS\
-	TYPE SearchReq IS TIME\
-	No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getSearchReq
+    - INTERFACE RETURNS
+    - TYPE SearchReq IS TIME
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 
 2. 模块名字 获取报表
   - 处理说明 “获取报表”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-    PROCEDURE getReport\
-	INTERFACE RETURNS\
-	TYPE Report IS STRUCT*\
-	No external I/O or global data Used\
-	Called by main\
-	Calls getCost,getStartup,getRunningStatus,produceReport
+  - 接口说明
+    - PROCEDURE getReport
+    - INTERFACE RETURNS
+    - TYPE Report IS STRUCT*
+    - No external I/O or global data Used
+    - Called by main
+    - Calls getCost,getStartup,getRunningStatus,produceReport
 
 3. 模块名字 获取能耗费用
   - 处理说明 “获取能耗费用”模块可以获取信息，并将信息传递到“获取报表模块”
-  - 接口说明\
-    PROCEDURE getCost\
-	INTERFACE RETURNS\
-	TYPE Cost IS DOUBLE\
-	No external I/O or global data Used\
-	Called by getReport\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getCost
+    - INTERFACE RETURNS
+    - TYPE Cost IS DOUBLE
+    - No external I/O or global data Used
+    - Called by getReport
+    - Calls no subordinate modules
 
 4. 模块名字 获取从控机开机信息
   - 处理说明 “获取从控机开机信息”模块可以获取信息，并将信息传递到“获取报表模块”
-  - 接口说明\
-    PROCEDURE getStartup\
-	INTERFACE RETURNS\
-	TYPE Startup IS String\
-	No external I/O or global data Used\
-	Called by getReport\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getStartup
+    - INTERFACE RETURNS
+    - TYPE Startup IS String
+    - No external I/O or global data Used
+    - Called by getReport
+    - Calls no subordinate modules
 
 5. 模块名字 获取空调运行状态
   - 处理说明 “获取空调运行状态”模块可以获取信息，并将信息传递到“获取调节请求模块”
-  - 接口说明\
-    PROCEDURE getRunningStatus\
-	INTERFACE RETURNS\
-	TYPE RunningStatus IS STRUCT\
-	No external I/O or global data Used\
-	Called by getReport\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getRunningStatus
+    - INTERFACE RETURNS
+    - TYPE RunningStatus IS STRUCT
+    - No external I/O or global data Used
+    - Called by getReport
+    - Calls no subordinate modules
 
 6. 模块名字 生成报表
  - 处理说明 “接收温度调节信息”获得从控机配置信息、目标温度和风速信息，并将他们转化为调节请求,将信息传递到“获取调节请求模块”
- - 接口说明\
-   PROCEDURE produceReport\
-   INTERFACE ACCEPTS\
-   TYPE Cost IS DOUBLE\
-   TYPE Startup IS String\
-   TYPE RunningStatus IS STRUCT\
-   INTERFACE RETURNS\
-   TYPE Report IS STRUCT*\
-   No external I/O or global data Used\
-   Called by getReport\
-   Calls no subordinate modules
+ - 接口说明
+   - PROCEDURE produceReport
+   - INTERFACE ACCEPTS
+   - TYPE Cost IS DOUBLE
+   - TYPE Startup IS String
+   - TYPE RunningStatus IS STRUCT
+   - INTERFACE RETURNS
+   - TYPE Report IS STRUCT *
+   - No external I/O or global data Used
+   - Called by getReport
+   - Calls no subordinate modules
 
 7. 模块名字 管理报表
  - 处理说明 “管理报表”模块接收报表和查询请求，根据查询请求查询报表，产生目标报表发送给主模块
- - 接口说明\
-   PROCEDURE loadBalancing\
-   INTERFACE ACCEPTS\
-   TYPE Report IS STRUCT*\
-   TYPE SearchReq IS TIME\
-   INTERFACE RETURNS\
-   TYPE targetReport IS STRUCT*\
-   No external I/O or global data Used\
-   Called by main\
-   Calls no subordinate modules
+ - 接口说明
+   - PROCEDURE loadBalancing
+   - INTERFACE ACCEPTS
+   - TYPE Report IS STRUCT*
+   - TYPE SearchReq IS TIME
+   - INTERFACE RETURNS
+   - TYPE targetReport IS STRUCT*
+   - No external I/O or global data Used
+   - Called by main
+   - Calls no subordinate modules
 
 8. 模块名字 给出目标报表
   - 处理说明 “给出目标报表”从主模块获得目标报表，给出结果
-  - 接口说明\
-    PROCEDURE resultTargetReport\
-	INTERFACE ACCEPTS\
-	TYPE targetReport IS STRUCT*\
-    No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE resultTargetReport
+    - INTERFACE ACCEPTS
+    - TYPE targetReport IS STRUCT*
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 ### 子系统3：房间信息定时更新子系统
 
@@ -317,68 +306,68 @@
 
 1. 模块名字 获取房间信息
   - 处理说明 "获取房间信息"模块可以获取房间温度和从控机配置信息，然后将这些信息发给"发送房间信息"模块，同时获取来自"发送房间信息"模块的返回房间信息
-  - 接口说明\
-        PROCEDURE getroominfo\
-		INTERFACE ACCEPTS\
-		TYPE roomtemp IS STRING\
-        TYPE Cconfigureinfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE roominfo IS STRING\
-		No external I/O or global data Used\
-		Called by main
-		Calls getroomtemp,getCconfigureinfo and sendroominfo modules
+  - 接口说明
+    - PROCEDURE getroominfo
+    - INTERFACE ACCEPTS
+    - TYPE roomtemp IS STRING
+    - TYPE Cconfigureinfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE roominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls getroomtemp,getCconfigureinfo and sendroominfo modules
 
 2. 模块名字 获取房间温度
   - 处理说明 "获取房间温度"模块可以获取房间温度，并将其传给"获取房间信息"模块
-  - 接口说明\
-        PROCEDURE getroomtemp\
-	    INTERFACE RETURNS\
-	    TYPE roomtemp IS STRING\
-	    No external I/O or global data Used\
-	    Called by getroominfo\
-	    Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getroomtemp
+    - INTERFACE RETURNS
+    - TYPE roomtemp IS STRING
+    - No external I/O or global data Used
+    - Called by getroominfo
+    - Calls no subordinate modules
 
 3. 模块名字 获取从控机配置信息
   - 处理说明 "获取从控机配置信息"模块可以获取从控机配置信息，并将其传给"获取房间信息"模块
-  - 接口说明\
-        PROCEDURE getCconfigureinfo\
-	    INTERFACE RETURNS\
-	    TYPE Cconfigureinfo IS STRING\
-	    No external I/O or global data Used\
-	    Called by getroominfo\
-	    Calls no subordinate modules 
+  - 接口说明
+    - PROCEDURE getCconfigureinfo
+    - INTERFACE RETURNS
+    - TYPE Cconfigureinfo IS STRING
+    - No external I/O or global data Used
+    - Called by getroominfo
+    - Calls no subordinate modules 
 4. 模块名字 发送房间信息
   - 处理说明 "发送房间信息"模块接收来自"获取房间信息"模块的从控机配置信息和房间温度，并转化为房间信息返回给"获取房间信息"模块
-  - 接口说明\
-        PROCEDURE sendroominfo\
-		INTERFACE ACCEPTS\
-		TYPE Cconfigureinfo IS STRING\
-        TYPE tempreture IS STRING\
-		INTERFACE RETURNS\
-		TYPE roominfo IS STRING\
-		No external I/O or global data Used\
-		Called by getroominfo
-		Calls no subordinate modules 
+  - 接口说明
+    - PROCEDURE sendroominfo
+    - INTERFACE ACCEPTS
+    - TYPE Cconfigureinfo IS STRING
+    - TYPE tempreture IS STRING
+    - INTERFACE RETURNS
+    - TYPE roominfo IS STRING
+    - No external I/O or global data Used
+    - Called by getroominfo
+    - Calls no subordinate modules 
  5. 模块名字 房间信息更新
    - 处理说明 "房间信息更新"模块获取来自主模块的房间信息，并将之转化为目标房间信息返回给主模块
-   - 接口说明\
-        PROCEDURE updateroominfo\
-		INTERFACE ACCEPTS\
-		TYPE roominfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE targetroominfo IS STRING\
-		No external I/O or global data Used\
-		Called by main
-		Calls no subordinate modules
+   - 接口说明
+    - PROCEDURE updateroominfo
+    - INTERFACE ACCEPTS
+    - TYPE roominfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE targetroominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
  6. 模块名字 给出结果
     - 处理说明 "给出结果"模块接收来自主模块的目标房间信息，并给出结果
-    - 接口说明\
-        PROCEDURE giveresult\
-		INTERFACE ACCEPTS\
-		TYPE targetroominfo IS STRING\
-		No external I/O or global data Used\
-		Called by main
-		Calls no subordinate modules
+    - 接口说明
+    - PROCEDURE giveresult
+    - INTERFACE ACCEPTS
+    - TYPE targetroominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 ### 子系统4：房客信息管理子系统
 
 #### 数据流图
@@ -419,6 +408,7 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
+
 
 ### 子系统5：实时信息查看子系统
 #### 数据流图
