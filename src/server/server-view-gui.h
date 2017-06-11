@@ -226,59 +226,62 @@ namespace Air_Conditioner
         }
 
         ClientList _clients;
-        PulseFreq _freq;
         OnUpdate _onUpdate;
         OnBack _onBack;
 
     public:
-        ClientViewGUI (PulseFreq freq,
-                       OnUpdate &&onUpdate, OnBack &&onBack)
-            : _freq (freq), _onUpdate (onUpdate), _onBack (onBack)
+        ClientViewGUI (OnUpdate &&onUpdate, OnBack &&onBack)
+            : _onUpdate (onUpdate), _onBack (onBack)
         {}
 
         virtual void Show () override
-        {
-            std::cout << "Press 'Enter' to Back to the Welcome Page\n";
+           {
+               std::cout << "Press 'Enter' to Back to the Welcome Page\n";
 
-            auto sleepTime = std::chrono::seconds { _freq };
-            auto isQuit = false;
+               // TODO: config refresh rate
+               auto sleepTime = std::chrono::seconds { 1 };
+               auto isQuit = false;
 
-            std::thread thread ([&] {
-                auto lastHit = std::chrono::system_clock::now ();
-                while (!isQuit)
-                {
-                    try
-                    {
-                        if (_onUpdate) _clients = _onUpdate ();
-                        _PrintInfo ();
-                    }
-                    catch (const std::exception &ex)
-                    {
-                        std::cerr << ex.what () << std::endl;
-                    }
+               std::thread thread ([&] {
+                   auto lastHit = std::chrono::system_clock::now ();
+                   while (!isQuit)
+                   {
+                       try
+                       {
+                           if (_onUpdate) _clients = _onUpdate ();
+                           _PrintInfo ();
+                       }
+                       catch (const std::exception &ex)
+                       {
+                           std::cerr << ex.what () << std::endl;
+                       }
 
-                    // To prevent over sleep :-)
-                    auto timeWasted = std::chrono::system_clock::now () - lastHit;
-                    if (timeWasted < sleepTime)
-                        std::this_thread::sleep_for (sleepTime - timeWasted);
-                    lastHit = std::chrono::system_clock::now ();
-                }
-            });
-            int tmpArgc = 0;
-            char ** tmpArgv = nullptr;
-            QApplication app(tmpArgc,tmpArgv);
-            ClientWindow client;
-            client.SetOnBack([&]{
-                _onBack();
-            });
-            client.show();
-            app.exec();
-//            // TODO: handle invalid input
-//            getchar (); getchar ();
-//            if (_onBack) _onBack ();
-            isQuit = true;
-            if (thread.joinable ()) thread.join ();
-        }
+                       // To prevent over sleep :-)
+                       auto timeWasted = std::chrono::system_clock::now () - lastHit;
+                       if (timeWasted < sleepTime)
+                           std::this_thread::sleep_for (sleepTime - timeWasted);
+                       lastHit = std::chrono::system_clock::now ();
+                   }
+               });
+
+               int tmpArgc = 0;
+               char ** tmpArgv = nullptr;
+               QApplication app(tmpArgc,tmpArgv);
+               ClientWindow client;
+               client.SetOnBack([&]{
+                   _onBack();
+               });
+               client.show();
+               app.exec();
+
+               // TODO: handle invalid input
+               getchar (); getchar ();
+               if (_onBack) _onBack ();
+               isQuit = true;
+               if (thread.joinable ()) thread.join ();
+           }
+
+
     };
 }
 
