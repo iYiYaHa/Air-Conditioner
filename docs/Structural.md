@@ -188,10 +188,10 @@
   - 接口说明
     - PROCEDURE resultSlaveInfo
     - INTERFACE ACCEPTS
-    - TYPE slaveInfo IS STRUCT\
-	No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
+    - TYPE slaveInfo IS STRUCT
+	- No external I/O or global data Used
+	- Called by main
+	- Calls no subordinate modules
 ### 子系统2：报表管理子系统
 
 #### 数据流图
@@ -351,23 +351,23 @@
  5. 模块名字 房间信息更新
    - 处理说明 "房间信息更新"模块获取来自主模块的房间信息，并将之转化为目标房间信息返回给主模块
    - 接口说明
-    - PROCEDURE updateroominfo
-    - INTERFACE ACCEPTS
-    - TYPE roominfo IS STRING
-    - INTERFACE RETURNS
-    - TYPE targetroominfo IS STRING
-    - No external I/O or global data Used
-    - Called by main
-    - Calls no subordinate modules
+     - PROCEDURE updateroominfo
+     - INTERFACE ACCEPTS
+     - TYPE roominfo IS STRING
+     - INTERFACE RETURNS
+     - TYPE targetroominfo IS STRING
+     - No external I/O or global data Used
+     - Called by main
+     - Calls no subordinate modules
  6. 模块名字 给出结果
-    - 处理说明 "给出结果"模块接收来自主模块的目标房间信息，并给出结果
-    - 接口说明
-    - PROCEDURE giveresult
-    - INTERFACE ACCEPTS
-    - TYPE targetroominfo IS STRING
-    - No external I/O or global data Used
-    - Called by main
-    - Calls no subordinate modules
+   - 处理说明 "给出结果"模块接收来自主模块的目标房间信息，并给出结果
+   - 接口说明
+     - PROCEDURE giveresult
+     - INTERFACE ACCEPTS
+     - TYPE targetroominfo IS STRING
+     - No external I/O or global data Used
+     - Called by main
+     - Calls no subordinate modules
 ### 子系统4：房客信息管理子系统
 
 #### 数据流图
