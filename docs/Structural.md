@@ -20,7 +20,7 @@
 > - v0.4 | 2017/6/6 | 左旭彤 | 增加子系统5、6的处理说明和接口模块
 > - v0.5 | 2017/6/7 | 董星彤 | 增加子系统1、2的处理说明和接口模块，增加系统级初始功能结构图
 > - v0.6 | 2017/6/10 | 左旭彤 | 增加子系统3、4、7、8、9的处理说明和接口模块
-> - v0.7 | 2017/6/10 | 赵亮 | 完成文档说明、项目背景说明、数据库的设计
+> - v0.7 | 2017/6/10 | 赵亮 | 完成文档说明、项目背景说明、数据设计
 
 
 ## 文档说明
@@ -693,13 +693,12 @@
 
 ## 优化后的系统级功能结构图
 
-> 基于初始功能结构图，按照启发式原则进行某些模块的合并和优化，使其满足“高内聚低耦合”特性，形成最终的可执行的系统功能结构图，是详细设计和编码的依据。
+![分布式温控系统系统结构图](diagrams/分布式温控系统系统结构图.svg)
 
 ## 数据设计
 
-> 本节给出数据库逻辑结构设计，给出系统各个模块需要的全局数据结构
-
 ### 数据库设计
+
 #### E-R图
 
 ![E R Diagram](diagrams/ER-diagram.svg)
@@ -781,4 +780,110 @@ cost | double | 30 | not null | expense
 
 ### 全局数据结构设计
 
-> 给出系统全局数据结构设计，包括全局常量和全局变量，说明每个数据结构的作用。
+#### 变量说明
+
+``` cpp
+    using RoomId = std::string;
+    using GuestId = std::string;
+
+    using Temperature = double;
+    using Wind = int;  // Stop, Weak, Mid, Strong = 0, 1, 2, 3
+    using Energy = double;
+    using Cost = double;
+
+    using WorkingMode = int; // Summer, Winter = 0, 1
+    using PulseFreq = int;  // in second
+```
+
+- RoomID 房间号
+- GuestID 房客身份证号
+- Temperature 温度
+- Wind 风速
+- Energy 能耗
+- Cost 费用
+- WorkingMode 工作模式，分为冬季和夏季两种模式
+- PulseFreq 脉冲频率
+
+#### 数据结构说明
+
+ - 房客信息录入，包括房间号和房客身份证号
+``` cpp
+    struct GuestInfo
+    {
+        RoomId room;
+        GuestId guest;
+    };
+```
+
+ - 房间信息，包括房间号和当前温度
+```cpp
+    struct RoomInfo
+    {
+        RoomId room;
+        Temperature temp;
+    };
+```
+
+ - 房间请求信息，包括房间号，温度请求及风速请求
+```cpp
+    struct RoomRequest
+    {
+        RoomId room;
+        Temperature temp;
+        Wind wind;
+    };
+```
+
+ - 从控机客户端信息，包括是否送风，能耗和费用
+```cpp
+    struct ClientInfo
+    {
+        bool hasWind;
+        Energy energy;
+        Cost cost;
+    };
+```
+
+ - 主控机服务器信息，包括是够开关状态，工作模式和脉冲频率
+```cpp
+    struct ServerInfo
+    {
+        bool isOn = false;
+        WorkingMode mode = 0;
+        PulseFreq pulseFreq = 1;
+    };
+```
+
+ - 从控机开关次数
+```cpp
+    struct LogOnOff
+    {
+        RoomId room;
+        TimePoint timeBeg, timeEnd;
+    };
+```
+
+ - 报表信息，包括房间号，风速大小，温控请求开始结束时间，当前温度，目标温度，能耗等
+```cpp
+    struct LogRequest
+    {
+        RoomId room;
+        Wind wind;
+        Temperature tempBeg, tempEnd;
+        TimePoint timeBeg, timeEnd;
+        Cost cost;
+    };
+```
+
+ - 从控机状态信息，包括房客ID，当前温度，目标温度，风速大小，能耗费用等
+```cpp
+    struct ClientState
+    {
+        GuestId guest;
+        Temperature curTemp;
+        Temperature targetTemp;
+        Wind wind;
+        Energy energy;
+        Cost cost;
+    };
+```
