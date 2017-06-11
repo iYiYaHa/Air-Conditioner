@@ -9,6 +9,7 @@
 
 #include "server-view-controller.h"
 #include "server-view-cli.h"
+
 namespace Air_Conditioner
 {
     void ServerViewManager::ToWelcomeView ()
