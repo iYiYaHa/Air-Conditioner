@@ -2,8 +2,8 @@
 #define SERVERVIEWGUI_H
 
 //
-// Air Conditioner - Server MVC View (CLI View)
-// BOT Man, 2017
+// Air Conditioner - Server MVC View (GUI View)
+// Youjie Zhang, 2017
 //
 
 #ifndef AC_SERVER_VIEW_GUI_H
@@ -17,8 +17,7 @@
 #include <chrono>
 #include <QApplication>
 
-#include "server-view.h"
-#include "server-window-gui.h"
+#include "server-view-gui-qt.h"
 
 namespace Air_Conditioner
 {
@@ -52,7 +51,7 @@ namespace Air_Conditioner
                 _onNav(ViewType::ConfigView);
             });
 
-            welcome.setOnStatistic([&]{
+            welcome.setOnLog([&]{
                 _onNav(ViewType::LogView);
             });
             welcome.setOnClient([&]{
@@ -89,8 +88,7 @@ namespace Air_Conditioner
         ConfigViewGUI (const ServerInfo &config,
                        OnSet &&onSet, OnBack &&onBack)
             : _config (config), _onSet (onSet), _onBack (onBack)
-        {
-        }
+        {}
 
         virtual void Show () override
         {                    
@@ -98,9 +96,9 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             ConfigWindow configWin;
-            configWin.SetOnBack([&]{
-                _onBack();
-            });
+            configWin.LoadConfig(_config);
+            configWin.SetOnBack(std::move(_onBack));
+            configWin.SetOnSet(std::move(_onSet));
             configWin.show();
             app.exec();
         }
@@ -170,6 +168,9 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             GuestWindow guest;
+            guest.SetOnBack([&]{
+                _onBack();
+            });
 
             guest.show();
             app.exec();
@@ -189,9 +190,9 @@ namespace Air_Conditioner
             int tmpArgc = 0;
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
-            LogWindow log;
+            StatisticWindow statistic;
 
-            log.show();
+            statistic.show();
             app.exec();
         }
     };
@@ -272,13 +273,15 @@ namespace Air_Conditioner
             int tmpArgc = 0;
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
-            //ClientWindow configWin;
-
-            //configWin.show();
+            ClientWindow client;
+            client.SetOnBack([&]{
+                _onBack();
+            });
+            client.show();
             app.exec();
-            // TODO: handle invalid input
-            getchar (); getchar ();
-            if (_onBack) _onBack ();
+//            // TODO: handle invalid input
+//            getchar (); getchar ();
+//            if (_onBack) _onBack ();
             isQuit = true;
             if (thread.joinable ()) thread.join ();
         }
