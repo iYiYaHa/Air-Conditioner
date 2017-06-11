@@ -762,7 +762,7 @@ cost | double | 10 | not null | 获取费用消耗
 Table | log
 --|--
 Version | v1.0
-Purpose | to get log
+Purpose | 打印报表
 Primary Key | roomID
 Foreign Key | NULL
 Index | roomID
