@@ -20,7 +20,7 @@
 > - v0.4 | 2017/6/6 | 左旭彤 | 增加子系统5、6的处理说明和接口模块
 > - v0.5 | 2017/6/7 | 董星彤 | 增加子系统1、2的处理说明和接口模块，增加系统级初始功能结构图
 > - v0.6 | 2017/6/10 | 左旭彤 | 增加子系统3、4、7、8、9的处理说明和接口模块
-> - v0.7 | 2017/6/10 | 赵亮 | 完成文档说明、项目背景说明
+> - v0.7 | 2017/6/10 | 赵亮 | 完成文档说明、项目背景说明、数据库的设计
 
 
 ## 文档说明
@@ -700,29 +700,68 @@
 > 本节给出数据库逻辑结构设计，给出系统各个模块需要的全局数据结构
 
 ### 数据库设计
-
 #### E-R图
 
 ![E R Diagram](diagrams/ER-diagram.svg)
 
 #### 数据库表结构
-
-> 根据ER图，设计出对应的表结构
-
-##### 计费参数维护表
-
-Table | xxx
+##### 房客信息录入表
+Table | getGuestInfo
 --|--
-Version |
-Purpose |
-Primary Key |
-Foreign Key |
-Index |
+Version | v0.1
+Purpose | to get guest information
+Primary Key | guestID
+Foreign Key | roomID
+Index | guestID
+
+Column | Type | Length | NULL | Illustration
+--|--|--|--|--
+guestID | nvarchar | 30 | not null | ID of guest
+roomID | nvarchar | 30 | not null | ID of room
+
+##### 主控机参数配置表
+Table | masterInfo
+--|--
+Version | v0.1
+Purpose | to set the config of master
+Primary Key | 
+Foreign Key | 
+Index | 
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
 
+##### 从控机参数配置表
+Table | slaveInfo
+--|--
+Version | v0.1
+Purpose | to set the config of slave
+Primary Key | 
+Foreign Key | 
+Index | 
+
+Column | Type | Length | NULL | Illustration
+--|--|--|--|--
+guestID | nvarchar | 30 | not null | ID of guest
+roomID | nvarchar | 30 | not null | ID of room
+
+##### 报表
+Table | log
+--|--
+Version | v0.1
+Purpose | to get log
+Primary Key | guestID, roomID
+Foreign Key | 
+Index | 
+
+Column | Type | Length | NULL | Illustration
+--|--|--|--|--
+guestID | nvarchar | 30 | not null | ID of guest
+roomID | nvarchar | 30 | not null | ID of room
+
 #### 数据表关系
+
+![Data Table Relation E R](diagrams/dataTable-relation-ER.svg)
 
 ### 全局数据结构设计
 
