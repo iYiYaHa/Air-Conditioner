@@ -15,11 +15,6 @@ namespace Air_Conditioner
 {
     class ProtocolController
     {
-        static std::pair<ClientInfo, ServerInfo> _GetResponse (
-            const RoomId &room)
-        {
-        }
-
     public:
         void Auth (const GuestInfo &guest)
         {
