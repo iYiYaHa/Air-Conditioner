@@ -23,36 +23,29 @@
 > - v0.7 | 2017/6/10 | 赵亮 | 完成文档说明、项目背景说明、数据库的设计
 > - v0.8 | 2017/6/11 | 董星彤 左旭彤 | 增加优化后的系统功能结构图
 
-
 ## 文档说明
-
 ### 文档目的
 该文档的主要目的是将分析分布式温控系统的结构，将该系统细分为各个功能相对独立的模块和子系统，
 并对每个模块和子系统进行详细的描述和说明，完成结构化概要设计。
-### 文档范围
 
+### 文档范围
 围绕分布式温控系统展开，给出基于需求分析得到的各层数据流；
 详细地描述各个模块和子系统的结构及功能，得出系统级的初始功能结构图和
 优化后的结构图；最后完成数据库层面上的相关设计。
 
 ### 读者对象
-
 软件设计人员、编码人员、测试人员等。
 
 ### 参考文档
-
 - 《分布式温控系统用户需求说明书》
 - 《用例模型说明书模板》
 - 《分布式温控系统详细要求》
 
 ### 术语和缩写
-
 见各个模块和子系统的详细说明
 
 ## 项目背景
-
 根据如下需求，设计中央空调系统：
-
 1. 空调系统由中央空调和房间空调（从控机）两部分构成。中央空调由特定的管理人员操控，房间空调由用户来操控。
 2. 中央空调具备开关按钮，只可人工开启和关闭，正常开启后处于待机状态。有冷暖两种工作模式，每种模式有特定的缺省温度以及温度区间，可根据季节进行工作模式的调整。中央空调能够实时监测个房间的温度和状态，并且能够根据实时刷新的频率进行配置。
 3. 从控机只能人工方式开闭，可以通过控制面板设置目标温度，目标温度有上下限制。控制面板的温度调节可以连续变化也可以断续变化。每个从控机内有一个温度传感器，可以实时监测房间的温度。
@@ -61,31 +54,21 @@
 6. 中央空调同时只能处理三台从控机的请求，为此主机要有负载均衡的能力。如果有超过三台从控机请求，则需要对所有请求机器进行调度，调度算法自行定义。
 
 ## 需求分析结果
-
 ### 第 0 层数据流图
-
 ![0-data-flow-diagram](diagrams/0-data-flow-diagram.svg)
 
 ### 第 1 层数据流图
-
 ![1-data-flow-diagram](diagrams/1-data-flow-diagram.svg)
 
 ### 第 2 层数据流图
-
 ![2-data-flow-diagram](diagrams/2-data-flow-diagram.svg)
 
 ## 基于功能需求的初始功能结构图
-
-> 结合以上分层的数据流图，将整个系统对应的数据流图划分成多个功能相对独立的子系统，每个子系统由一个或多个结合紧密的加工组成。比如教科书(教材第132页)，从“医院就诊管理系统”的第一层数据流图可以看出，它由三（或四）个相对功能独立的子系统组成，分别是挂号子系统、问诊子系统、交费（和取药）子系统。
-
 ### 子系统1：调节子系统
-
 #### 数据流图
-
 ![调节子系统数据流图](diagrams/调节子系统数据流图.svg)
 
 #### 功能结构图
-
 ![调节子系统系统结构图](diagrams/调节子系统系统结构图.svg)
 
 #### 功能模块说明
@@ -132,90 +115,90 @@
 
 5. 模块名字 获取调节请求
   - 处理说明 “获取调节请求”模块可以获取信息，并将信息传递到“获取调节请求记录模块”
-  - 接口说明\
-    PROCEDURE getRequest\
-	INTERFACE RETURNS\
-	TYPE Request IS STRUCT\
-	No external I/O or global data Used\
-	Called by getRequestRec\
-	Calls getTempSpeed,getSconfigureinfo,adjust
+  - 接口说明
+    - PROCEDURE getRequest
+    - INTERFACE RETURNS 
+    - TYPE Request IS STRUCT
+    - No external I/O or global data Used
+    - Called by getRequestRec
+    - Calls getTempSpeed,getSconfigureinfo,adjust
 
 6. 模块名字 获取目标风速温度
   - 处理说明 “获取目标风速温度”模块可以获取信息，并将信息传递到“获取调节请求模块”
-  - 接口说明\
-    PROCEDURE getTempSpeed\
-	INTERFACE RETURNS\
-	TYPE TempSpeed IS INTEGER\
-	No external I/O or global data Used\
-	Called by getRequest\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getTempSpeed
+    - INTERFACE RETURNS-
+    - TYPE TempSpeed IS INTEGER
+    - No external I/O or global data Used
+    - Called by getRequest
+    - Calls no subordinate modules
 
 7. 模块名字 获取从控机配置信息
   - 处理说明 “获取从控机配置信息”模块可以获取信息，并将信息传递到“获取调节请求模块”
-  - 接口说明\
-    PROCEDURE getSconfigureinfo\
-	INTERFACE RETURNS\
-	TYPE Sconfigureinfo IS STRING\
-	No external I/O or global data Used\
-	Called by getRequest\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getSconfigureinfo
+    - INTERFACE RETURNS
+    - TYPE Sconfigureinfo IS STRING
+    - No external I/O or global data Used
+    - Called by getRequest
+    - Calls no subordinate modules
 
 8. 模块名字 界面调节
   - 处理说明 “界面调节模块”获得从控机配置信息、目标温度和风速信息，并将他们转化为调节请求,将信息传递到“获取调节请求模块”
-  - 接口说明\
-    PROCEDURE adjust\
-    INTERFACE ACCEPTS\
-    TYPE information IS STRUCT\
-    INTERFACE RETURNS\
-    TYPE Request IS STRUCT\
-    No external I/O or global data Used\
-    Called by getRequest\
-    Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE adjust
+    - INTERFACE ACCEPTS
+    - TYPE information IS STRUCT
+    - INTERFACE RETURNS
+    - TYPE Request IS STRUCT
+    - No external I/O or global data Used
+    - Called by getRequest
+    - Calls no subordinate modules
 
 9. 模块名字 接收温度调节信息
   - 处理说明 “接收温度调节信息”获得从控机配置信息、目标温度和风速信息，并将他们转化为调节请求,将信息传递到“获取调节请求模块”
-  - 接口说明\
-    PROCEDURE recvRequestInfo\
-    INTERFACE ACCEPTS\
-    TYPE Auth IS BOOL\
-    TYPE Request IS STRUCT\
-    INTERFACE RETURNS\
-    TYPE RequestRec IS STRUCT\
-    No external I/O or global data Used\
-    Called by getRequestRec\
-    Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE recvRequestInfo
+    - INTERFACE ACCEPTS
+    - TYPE Auth IS BOOL
+    - TYPE Request IS STRUCT
+    - INTERFACE RETURNS
+    - TYPE RequestRec IS STRUCT
+    - No external I/O or global data Used
+    - Called by getRequestRec
+    - Calls no subordinate modules
 
 10. 模块名字 负载均衡
    - 处理说明 “负载均衡”模块接收调解请求记录，主控机配置信息和房间信息，对空调请求做负载均衡处理，转化为空调运行状态和从控机及房间信息
-   - 接口说明\
-     PROCEDURE loadBalancing\
-	 INTERFACE ACCEPTS\
-     TYPE Roominfo IS STRING\
-     TYPE Mconfigureinfo IS STRUCT\
-     TYPE RequestRec IS STRUCT\
-     INTERFACE RETURNS\
-	 TYPE runningStatus IS STRUCT\
-     TYPE slaveInfo IS STRUCT\
-	 No external I/O or global data Used\
-	 Called by main\
-	 Calls no subordinate modules
+   - 接口说明
+     - PROCEDURE loadBalancing
+     - INTERFACE ACCEPTS
+     - TYPE Roominfo IS STRING
+     - TYPE Mconfigureinfo IS STRUCT
+     - TYPE RequestRec IS STRUCT
+     - INTERFACE RETURNS
+     - TYPE runningStatus IS STRUCT
+     - TYPE slaveInfo IS STRUCT
+     - No external I/O or global data Used
+     - Called by main
+     - Calls no subordinate modules
 
 11. 模块名字 给出空调运行状态
   - 处理说明 “给出空调运行状态”从主模块获得空调运行状态，给出结果
-  - 接口说明\
-    PROCEDURE resultRunningStatus\
-	INTERFACE ACCEPTS\
-	TYPE runningStatus IS STRUCT\
-    No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE resultRunningStatus
+    - INTERFACE ACCEPTS
+    - TYPE runningStatus IS STRUCT
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 12. 模块名字 给出从控机及房间信息
   - 处理说明 “给出从控机及房间信息”从主模块获得从控机及房间信息，给出结果
-  - 接口说明\
-    PROCEDURE resultSlaveInfo\
-	INTERFACE ACCEPTS\
-    TYPE slaveInfo IS STRUCT\
+  - 接口说明
+    - PROCEDURE resultSlaveInfo
+    - INTERFACE ACCEPTS
+    - TYPE slaveInfo IS STRUCT\
 	No external I/O or global data Used\
 	Called by main\
 	Calls no subordinate modules
@@ -409,36 +392,35 @@
 
 1. 模块名字 取得数据
   - 处理说明 "取得数据"模块可以获得房客信息并将该信息返回主模块
-  - 接口说明\
-        PROCEDURE getdata\
-	    INTERFACE RETURNS\
-	    TYPE guestinfo IS STRING\
-	    No external I/O or global data Used\
-	    Called by main\
-	    Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getdata
+    - INTERFACE RETURNS
+    - TYPE guestinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 2. 模块名字 管理房客信息 
   - 处理说明 "管理房客信息"模块可以接收来自主模块的房客信息，并管理房客信息，及将他们返回给主模块
-  - 接口说明\
-        PROCEDURE manageinfo\
-		INTERFACE ACCEPTS\
-		TYPE guestinfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE allguestinfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE manageinfo
+    - INTERFACE ACCEPTS
+    - TYPE guestinfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE allguestinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 3. 模块名字 给出结果
   - 处理说明 "给出结果"模块可以接收来自主模块的全部房客信息，并将之给出
-  - 接口说明\
-        PROCEDURE giveresult\
-		INTERFACE ACCEPTS\
-		TYPE allguestinfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE giveresult
+    - INTERFACE ACCEPTS
+    - TYPE allguestinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 ### 子系统5：实时信息查看子系统
-
 #### 数据流图
 
 ![实时信息查看子系统数据流图](diagrams/实时信息查看子系统数据流图.svg)
@@ -450,258 +432,234 @@
 
 1. 模块名字 获取从控机及房间信息
   - 处理说明 “获取从控机及房间信息”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-    PROCEDURE getClientinfoAndRoominfo\
-	INTERFACE RETURNS\
-	TYPE ClientinfoAndRoominfo IS STRING\
-	No external I/O or global data Used\
-	Called by main\
-	Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getClientinfoAndRoominfo
+    - INTERFACE RETURNS
+    - TYPE ClientinfoAndRoominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
     
 2. 模块名字 查看实时信息
   - 处理说明 “查看实时信息”模块获取来自主模块的从控机及房间信息，并将其转化为全部从控机及房间信息
-  - 接口说明\
-        PROCEDURE ViewingRealtimeInformation\
-		INTERFACE ACCEPTS\
-		TYPE ClientinfoAndRoominfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE AllClientinfoAndRoominfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE ViewingRealtimeInformation
+    - INTERFACE ACCEPTS
+    - TYPE ClientinfoAndRoominfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE AllClientinfoAndRoominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 3. 模块名字 显示结果
   - 处理说明 “显示结果”模块接收来自主模块的全部从控机房间信息，并将其进行显示
-  - 接口说明\
-        PROCEDURE showresult\
-		INTERFACE ACCEPTS\
-		TYPE AllClientinfoAndRoominfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
-
+  - 接口说明
+    - PROCEDURE showresult
+    - INTERFACE ACCEPTS
+    - TYPE AllClientinfoAndRoominfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 ### 子系统6：配置空调参数子系统
-
 #### 数据流图
-
 ![配置空调参数子系统数据流图](diagrams/配置空调参数子系统数据流图.svg)
 
 #### 功能结构图
-
 ![配置空调参数子系统系统结构图](diagrams/配置空调参数子系统系统结构图.svg)
 #### 功能模块说明
 1. 模块名字 取得配置信息
   - 处理说明 “取得配置信息”模块可以获取信息，并将信息传递到主模块
-  - 接口说明\
-        PROCEDURE getconfigureinfo\
-		INTERFACE RETURNS\
-		TYPE configureinfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getconfigureinfo
+    - INTERFACE RETURNS
+    - TYPE configureinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 2. 模块名字 配置空调参数
   - 处理说明 “配置空调参数”模块可以获取来自主模块的配置信息，并将其转化为主控机配置返回给主模块
-  - 接口说明\
-        PROCEDURE configureParameter\
-		INTERFACE ACCEPTS\
-		TYPE configureinfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE Mconfigureinfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE configureParameter
+    - INTERFACE ACCEPTS
+    - TYPE configureinfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE Mconfigureinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 3. 模块名字 给出结果
   - 处理说明 “给出结果”模块可以接收来自主控机的主控机配置信息，并将结果给出
-  - 接口说明\
-        PROCEDURE giveresult\
-		INTERFACE ACCEPTS\
-		TYPE Mconfigureinfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
-
-
+  - 接口说明
+    - PROCEDURE giveresult
+    - INTERFACE ACCEPTS
+    - TYPE Mconfigureinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 ### 子系统7：能耗费用计算子系统
-
 #### 数据流图
-
 ![能耗费用计算子系统数据流图](diagrams/能耗费用计算子系统数据流图.svg)
 
 #### 功能结构图
-
 ![能耗费用计算子系统系统结构图](diagrams/能耗费用计算子系统系统结构图.svg)
 
 #### 功能模块说明
 1. 模块名字 取得空调运行状态
   - 处理说明 "取得空调运行状态"模块可以获取空调运行状态，并将该信息传给主模块
-  - 接口说明\
-        PROCEDURE getrunstate\
-		INTERFACE RETURNS\
-		TYPE runstate IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getrunstate
+    - INTERFACE RETURNS
+    - TYPE runstate IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 
 2. 模块名字 费用能耗计算
   - 处理说明 "费用能耗计算"模块可以接收来自主模块的空调运行状态信息，进行费用能耗计算，并将计算所得费用能耗返回给主模块
-  - 接口说明\
-        PROCEDURE computecost\
-		INTERFACE ACCEPTS\
-		TYPE runstate IS STRING\
-		INTERFACE RETURNS\
-		TYPE cost IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE computecost
+    - INTERFACE ACCEPTS
+    - TYPE runstate IS STRING
+    - INTERFACE RETURNS
+    - TYPE cost IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
 3. 模块名字 给出结果
   - 处理说明 "给出结果"模块可以接收来自主控机的费用能耗，并将结果给出
-  - 接口说明\
-        PROCEDURE givere\
-		INTERFACE ACCEPTS\
-		TYPE cost IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE givere
+    - INTERFACE ACCEPTS
+    - TYPE cost IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
         
 ### 子系统8：从控机信息显示子系统
-
 #### 数据流图
-
 ![从控机信息显示子系统数据流图](diagrams/从控机信息显示子系统数据流图.svg)
 
 #### 功能结构图
-
 ![从控机信息显示子系统系统结构图](diagrams/从控机信息显示子系统系统结构图.svg)
 
-
 #### 功能模块说明
-
-> 为功能结构图中每一个模块写一份处理说明和一份接口说明
-
 1. 模块名字 取得数据
   - 处理说明 "取得数据"模块可以获得能耗费用、从控机配置信息和空调运行状态，并将该信息返回主模块
-  - 接口说明\
-        PROCEDURE getdata\
-	    INTERFACE RETURNS\
-	    TYPE cost,Cconfigureinfo,runstate IS STRING\
-	    No external I/O or global data Used\
-	    Called by main\
-	    Calls no subordinate modules 
+  - 接口说明
+    - PROCEDURE getdata
+    - INTERFACE RETURNS
+    - TYPE cost,Cconfigureinfo,runstate IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules 
 2. 模块名字 显示信息
   - 处理说明 "显示信息"模块可以获得来自主模块的能耗费用、从控机配置信息和空调运行状态信息，并将它们转化为空调房间状态返回主模块
-  - 接口说明\
-        PROCEDURE showinfo\
-		INTERFACE ACCEPTS\
-		TYPE cost,Cconfigureinfo,runstate IS STRING\
-		INTERFACE RETURNS\
-		TYPE roomstate IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE showinfo
+    - INTERFACE ACCEPTS
+    - TYPE cost,Cconfigureinfo,runstate IS STRING
+    - INTERFACE RETURNS
+    - TYPE roomstate IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
  3. 模块名字 给出结果
    - 处理说明 "给出结果"模块接收来自主模块的空调房间状态，并给出结果
-   - 接口说明\
-        PROCEDURE giveresult\
-		INTERFACE ACCEPTS\
-		TYPE roomstate IS STRING\
-		No external I/O or global data Used\
-		Called by main
-		Calls no subordinate module
+   - 接口说明
+     - PROCEDURE giveresult
+     - INTERFACE ACCEPTS
+     - TYPE roomstate IS STRING
+     - No external I/O or global data Used
+     - Called by main
+     - Calls no subordinate module
 ### 子系统9：从控机登录认证子系统
-
 #### 数据流图
-
 ![从控机登录认证子系统数据流图](diagrams/从控机登录认证子系统数据流图.svg)
 
 #### 功能结构图
-
 ![从控机登录认证子系统系统结构图](diagrams/从控机登录认证子系统系统结构图.svg)
 
 1. 模块名字 取得数据
   - 处理说明 "取得数据"模块将获取的目标房客信息返回主模块
-  - 接口说明\
-        PROCEDURE getdata\
-	    INTERFACE RETURNS\
-	    TYPE targetroommateinfo IS STRING\
-	    No external I/O or global data Used\
-	    Called by main\
-	    Calls no subordinate modules 
+  - 接口说明
+    - PROCEDURE getdata
+    - INTERFACE RETURNS
+    - TYPE targetroommateinfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules 
 2. 模块名字 获取登录信息
   - 处理说明 “获取登录信息”模块可以获取信息，并将信息传递到"获取身份认证信息"模块
-  - 接口说明\
-        PROCEDURE getlogoninfo\
-		INTERFACE RETURNS\
-		TYPE logoninfo IS STRING\
-		No external I/O or global data Used\
-		Called by getauthinfo\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getlogoninfo
+    - INTERFACE RETURNS
+    - TYPE logoninfo IS STRING
+    - No external I/O or global data Used
+    - Called by getauthinfo
+    - Calls no subordinate modules
  3. 模块名字 取得从控机配置信息
   - 处理说明 “取得从控机配置信息”模块可以获取从控机配置信息，并将信息传递到"获取身份认证信息"模块
-  - 接口说明\
-        PROCEDURE getCconfigureinfo\
-		INTERFACE RETURNS\
-		TYPE Cconfigureinfo IS STRING\
-		No external I/O or global data Used\
-		Called by getauthinfo\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE getCconfigureinfo
+    - INTERFACE RETURNS
+    - TYPE Cconfigureinfo IS STRING
+    - No external I/O or global data Used
+    - Called by getauthinfo
+    - Calls no subordinate modules
  4. 模块名字 
   - 处理说明 “取得从控机配置信息”模块可以获取从控机配置信息和登录信息，并将身份认证信息返回到"获取身份认证信息"模块
-  - 接口说明\
-        PROCEDURE showinfo\
-		INTERFACE ACCEPTS\
-		TYPE cost,Cconfigureinfo,runstate IS STRING\
-		INTERFACE RETURNS\
-		TYPE roomstate IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE showinfo
+    - INTERFACE ACCEPTS
+    - TYPE cost,Cconfigureinfo,runstate IS STRING
+    - INTERFACE RETURNS
+    - TYPE roomstate IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
  5. 模块名字 获取身份认证信息
   - 处理说明 "获取身份认证信息"模块可以获取身份认证信息，并将之传递给主模块
-  - 接口说明\
-        PROCEDURE getauthinfo\
-		INTERFACE ACCEPTS\
-		TYPE logoninfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE logoninfo IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls getlogoninfo,getCconfigureinfo modules
+  - 接口说明
+    - PROCEDURE getauthinfo
+    - INTERFACE ACCEPTS
+    - TYPE logoninfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE logoninfo IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls getlogoninfo,getCconfigureinfo modules
  6. 模块名字 房客登录认证
   - 处理说明 "房客登录认证"模块可以获取来自主模块的目标房客信息和身份认证信息，并在完成登录认证之后将从控机开机信息和使用授权返回主模块
-  - 接口说明\
-        PROCEDURE auth\
-		INTERFACE ACCEPTS\
-		TYPE targetroommateinfo,logoninfo IS STRING\
-		INTERFACE RETURNS\
-		TYPE Coninfo,useauth IS STRING\
-		No external I/O or global data Used\
-		Called by main\
-		Calls no subordinate modules
+  - 接口说明
+    - PROCEDURE auth
+    - INTERFACE ACCEPTS
+    - TYPE targetroommateinfo,logoninfo IS STRING
+    - INTERFACE RETURNS
+    - TYPE Coninfo,useauth IS STRING
+    - No external I/O or global data Used
+    - Called by main
+    - Calls no subordinate modules
  7. 模块名字 给出结果
    - 处理说明 "给出结果"模块接收来自主模块的从控机开机信息和使用授权，并给出结果
-   - 接口说明\
-        PROCEDURE giveresult\
-		INTERFACE ACCEPTS\
-		TYPE Coninfo,useauth IS STRING\
-		No external I/O or global data Used\
-		Called by main
-		Calls no subordinate module
+   - 接口说明
+     - PROCEDURE giveresult
+     - INTERFACE ACCEPTS
+     - TYPE Coninfo,useauth IS STRING
+     - No external I/O or global data Used
+     - Called by main
+     - Calls no subordinate module
 ## 系统级初始功能结构图
-
 ![分布式温控系统系统结构图](diagrams/分布式温控系统系统结构图.svg)
 
 ## 优化后的系统级功能结构图
-
 减少一些模块的扇入扇出
 ![分布式温控系统系统结构图优化](diagrams/分布式温控系统系统结构图优化.svg)
 
-
 ## 数据设计
-
 ### 数据库设计
-
 #### E-R图
 
 ![E R Diagram](diagrams/ER-diagram.svg)
@@ -778,11 +736,9 @@ timeBeg | double | 5 | not null | 温控请求结束时间
 cost | double | 10 | not null | 费用
 
 #### 数据表关系
-
 ![Data Table Relation E R](diagrams/dataTable-relation-ER.svg)
 
 ### 全局数据结构设计
-
 #### 变量说明
 
 ``` cpp
@@ -808,7 +764,6 @@ cost | double | 10 | not null | 费用
 - PulseFreq 脉冲频率
 
 #### 数据结构说明
-
  - 房客信息录入，包括房间号和房客身份证号
 ``` cpp
     struct GuestInfo
