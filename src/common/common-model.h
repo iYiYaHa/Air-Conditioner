@@ -20,7 +20,6 @@ namespace Air_Conditioner
     using Cost = double;
 
     using WorkingMode = int; // Summer, Winter = 0, 1
-    using PulseFreq = int;  // in second
 }
 
 namespace Air_Conditioner
@@ -31,16 +30,11 @@ namespace Air_Conditioner
         GuestId guest;
     };
 
-    struct RoomInfo
-    {
-        RoomId room;
-        Temperature temp;
-    };
-
     struct RoomRequest
     {
         RoomId room;
-        Temperature temp;
+        Temperature current;
+        Temperature target;
         Wind wind;
     };
 
@@ -55,7 +49,6 @@ namespace Air_Conditioner
     {
         bool isOn = false;
         WorkingMode mode = 0;
-        PulseFreq pulseFreq = 1;
     };
 }
 

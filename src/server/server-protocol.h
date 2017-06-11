@@ -30,17 +30,10 @@ namespace Air_Conditioner
                 response = "Auth Done";
             });
 
-            SetHandler (REQUEST, [&] (json &response, const json &request)
-            {
-                auto ret = controller.Request (
-                    Protocol::JsonToRoomRequest (request));
-                response = Protocol::ClientServerInfoToJson (ret.first, ret.second);
-            });
-
             SetHandler (PULSE, [&] (json &response, const json &request)
             {
                 auto ret = controller.Pulse (
-                    Protocol::JsonToRoomInfo (request));
+                    Protocol::JsonToRoomRequest (request));
                 response = Protocol::ClientServerInfoToJson (ret.first, ret.second);
             });
         }

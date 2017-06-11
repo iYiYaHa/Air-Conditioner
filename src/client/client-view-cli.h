@@ -66,8 +66,8 @@ namespace Air_Conditioner
     class ControlViewCLI : public ControlView
     {
         GuestInfo _guestInfo;
-        RoomInfo _roomInfo;
         RoomRequest _roomRequest;
+        std::mutex _mtxRoomRequest;
         ClientInfo _clientInfo;
         ServerInfo _serverInfo;
 
@@ -98,9 +98,10 @@ namespace Air_Conditioner
                     continue;
                 }
 
-                _roomRequest.temp = temp;
+                std::lock_guard<std::mutex> lg { _mtxRoomRequest };
+                _roomRequest.target = temp;
                 _roomRequest.wind = wind;
-                return;
+                break;
             }
         }
 
@@ -128,47 +129,29 @@ namespace Air_Conditioner
             std::cout << std::fixed
                 << std::setprecision (2)
                 << "\rRoom: " << _guestInfo.room
-                << " Current: " << _roomInfo.temp
-                << " Target: " << _roomRequest.temp
+                << " Current: " << _roomRequest.current
+                << " Target: " << _roomRequest.target
                 << " Wind: " << windStr.at (_clientInfo.hasWind ? _roomRequest.wind : 0)
                 << " Energy: " << _clientInfo.energy
                 << " Cost: " << _clientInfo.cost
                 << "        ";
         }
 
-        // Allow callback only once at a time
-        void _Callback (const std::function<void ()> &fn)
-        {
-            static std::mutex mtxCallback;
-            try
-            {
-                std::lock_guard<std::mutex> lg (mtxCallback);
-                fn ();
-            }
-            catch (const std::exception &ex)
-            {
-                std::cerr << ex.what () << std::endl;
-            }
-        }
-
-        OnRequest _onRequest;
         OnPulse _onPulse;
         OnSim _onSim;
 
     public:
         ControlViewCLI (const GuestInfo &guestInfo,
-                        OnRequest &&onRequest,
                         OnPulse &&onPulse,
                         OnSim &&onSim)
-            : _guestInfo (guestInfo),
-            _onRequest (onRequest), _onPulse (onPulse), _onSim (onSim),
-            _roomInfo { guestInfo.room, 26 },
-            _roomRequest { guestInfo.room, 0, 0 }
+            : _guestInfo (guestInfo), _onPulse (onPulse), _onSim (onSim),
+            _roomRequest { guestInfo.room, 26, 0, 0 }
         {}
 
         virtual void Show () override
         {
-            std::chrono::seconds sleepTime;
+            constexpr auto sleepTime = std::chrono::seconds { 1 };
+
             auto isQuit = false;
             auto isPause = false;
 
@@ -177,11 +160,9 @@ namespace Air_Conditioner
                 _clientInfo = ret.first;
                 _serverInfo = ret.second;
 
-                if (_roomRequest.temp == 0)
-                    _roomRequest.temp = _serverInfo.mode == 0 ?
+                if (_roomRequest.target == 0)
+                    _roomRequest.target = _serverInfo.mode == 0 ?
                     Temperature { 22 } : Temperature { 28 };
-
-                sleepTime = std::chrono::seconds (_serverInfo.pulseFreq);
             };
 
             std::cout << "Welcom " << _guestInfo.guest
@@ -192,14 +173,17 @@ namespace Air_Conditioner
                 auto lastHit = std::chrono::system_clock::now ();
                 while (!isQuit)
                 {
-                    _Callback ([&] {
-                        if (_onPulse)
-                            updateState (_onPulse (_roomInfo));
-                        if (_onSim)
-                            _onSim (_roomInfo, _roomRequest, _clientInfo.hasWind);
-                        if (!isPause)
-                            _PrintInfo ();
-                    });
+                    try
+                    {
+                        std::lock_guard<std::mutex> lg { _mtxRoomRequest };
+                        if (_onPulse) updateState (_onPulse (_roomRequest));
+                        if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
+                        if (!isPause) _PrintInfo ();
+                    }
+                    catch (const std::exception &ex)
+                    {
+                        std::cerr << ex.what () << std::endl;
+                    }
 
                     // To prevent over sleep :-)
                     auto timeWasted = std::chrono::system_clock::now () - lastHit;
@@ -226,10 +210,6 @@ namespace Air_Conditioner
                     if (cmd == "req")
                     {
                         _GetRequest ();
-                        _Callback ([&] {
-                            if (_onRequest)
-                                updateState (_onRequest (_roomRequest));
-                        });
                         std::cout << "Request Done\n";
                     }
                     else if (cmd == "quit")

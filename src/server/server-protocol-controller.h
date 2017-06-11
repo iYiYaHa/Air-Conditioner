@@ -18,12 +18,6 @@ namespace Air_Conditioner
         static std::pair<ClientInfo, ServerInfo> _GetResponse (
             const RoomId &room)
         {
-            const auto &clientState = ScheduleManager::GetClient (room);
-            ClientInfo clientInfo {
-                clientState.wind != 0, clientState.energy, clientState.cost
-            };
-            return std::make_pair (std::move (clientInfo),
-                                   ScheduleManager::GetConfig ());
         }
 
     public:
@@ -33,16 +27,16 @@ namespace Air_Conditioner
             ScheduleManager::AddClient (guest);
         }
 
-        std::pair<ClientInfo, ServerInfo> Request (const RoomRequest &req)
+        std::pair<ClientInfo, ServerInfo> Pulse (const RoomRequest &req)
         {
-            ScheduleManager::Request (req);
-            return _GetResponse(req.room);
-        }
+            ScheduleManager::Pulse (req);
 
-        std::pair<ClientInfo, ServerInfo> Pulse (const RoomInfo &info)
-        {
-            ScheduleManager::Pulse (info);
-            return _GetResponse (info.room);
+            const auto &clientState = ScheduleManager::GetClient (req.room);
+            ClientInfo clientInfo {
+                clientState.wind != 0, clientState.energy, clientState.cost
+            };
+            return std::make_pair (std::move (clientInfo),
+                                   ScheduleManager::GetConfig ());
         }
     };
 }

@@ -22,12 +22,10 @@ namespace Air_Conditioner
     {
     public:
         using ResponseFmt = std::pair<ClientInfo, ServerInfo>;
-        using OnRequest = std::function<
-             ResponseFmt (const RoomRequest &)>;
         using OnPulse = std::function<
-             ResponseFmt (const RoomInfo &)>;
+             ResponseFmt (const RoomRequest &)>;
         using OnSim = std::function<
-            void (RoomInfo &, const RoomRequest &, const bool)>;
+            void (RoomRequest &, const bool)>;
     };
 
     class ClientViewManager : public ViewManager
