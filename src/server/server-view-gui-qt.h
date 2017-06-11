@@ -1,6 +1,12 @@
 
-#ifndef SERVER_VIEW_GUI_H
-#define SERVER_VIEW_GUI_H
+//
+// Air Conditioner - Server MVC View (GUI View - QT)
+// Youjie Zhang, 2017
+//
+
+#ifndef AC_SERVER_VIEW_GUI_QT_H
+#define AC_SERVER_VIEW_GUI_QT_H
+
 #include <QWidget>
 #include <functional>
 #include <QCloseEvent>
@@ -153,4 +159,4 @@ private:
     ServerInfo _config;
 };
 
-#endif SERVER_VIEW_GUI_H
+#endif AC_SERVER_VIEW_GUI_QT_H

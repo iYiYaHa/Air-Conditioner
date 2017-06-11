@@ -1,5 +1,3 @@
-#ifndef SERVERVIEWGUI_H
-#define SERVERVIEWGUI_H
 
 //
 // Air Conditioner - Server MVC View (GUI View)
@@ -15,8 +13,8 @@
 #include <unordered_map>
 #include <thread>
 #include <chrono>
-#include <QApplication>
 
+#include <QApplication>
 #include "server-view-gui-qt.h"
 
 namespace Air_Conditioner
@@ -27,11 +25,7 @@ namespace Air_Conditioner
     public:
         WelcomeViewGUI (OnNav &&onNav)
             : _onNav (onNav)
-        {
-        }
-
-        ~WelcomeViewGUI(){
-        }
+        {}
 
         virtual void Show () override
         {
@@ -289,4 +283,3 @@ namespace Air_Conditioner
 }
 
 #endif AC_SERVER_VIEW_GUI_H
-#endif // SERVERVIEWGUI_H

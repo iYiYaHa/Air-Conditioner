@@ -1,10 +1,16 @@
-#include "server-view-gui-qt.h"
+
+//
+// Air Conditioner - Server MVC View (GUI View - QT Implementation)
+// Youjie Zhang, 2017
+//
 
 #include "ui_welcomewindow.h"
 #include "ui_statisticwindow.h"
 #include "ui_clientwindow.h"
 #include "ui_configwindow.h"
 #include "ui_guestwindow.h"
+
+#include "server-view-gui-qt.h"
 
 GuestWindow::GuestWindow(QWidget *parent) :
     QWidget(parent),
