@@ -716,48 +716,64 @@ Index | guestID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-guestID | nvarchar | 30 | not null | ID of guest
-roomID | nvarchar | 30 | not null | ID of room
+guestID | string | 30 | not null | ID of guest
+roomID | string | 30 | not null | ID of room
 
 ##### 主控机参数配置表
 Table | masterInfo
 --|--
 Version | v0.1
 Purpose | to set the config of master
-Primary Key | 
-Foreign Key | 
-Index | 
+Primary Key | guestID
+Foreign Key | NULL
+Index | guestID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
+guestID | string | 30 | not null | ID of guest
+roomID | string | 30 | not null | ID of room
+currentTemp | double | 10 | not null | current temperature
+targetTemp | double | 10 | not null | target temperature
+wind | int | 10 | not null | speed of wind
+energy | double | 30 | not null | consuming energy
+cost | double | 30 | not null | expense 
 
 ##### 从控机参数配置表
 Table | slaveInfo
 --|--
 Version | v0.1
 Purpose | to set the config of slave
-Primary Key | 
-Foreign Key | 
-Index | 
+Primary Key | guestID
+Foreign Key | NULL
+Index | guestID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-guestID | nvarchar | 30 | not null | ID of guest
-roomID | nvarchar | 30 | not null | ID of room
+guestID | string | 30 | not null | ID of guest
+currentTemp | double | 10 | not null | current temperature
+targetTemp | double | 10 | not null | target temperature
+wind | int | 10 | not null | speed of wind
+energy | double | 30 | not null | consuming energy
+cost | double | 30 | not null | expense 
 
 ##### 报表
 Table | log
 --|--
 Version | v0.1
 Purpose | to get log
-Primary Key | guestID, roomID
-Foreign Key | 
-Index | 
+Primary Key | roomID
+Foreign Key | NULL
+Index | roomID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-guestID | nvarchar | 30 | not null | ID of guest
-roomID | nvarchar | 30 | not null | ID of room
+roomID | string | 30 | not null | ID of room
+wind | int | 10 | not null | speed of wind
+tempBeg | double | 10 | not null | begin temperature
+tempEnd | double | 10 | not null | end temperature
+temeBeg | double | 10 | not null | begin time
+temeBeg | double | 10 | not null | end time
+cost | double | 30 | not null | expense 
 
 #### 数据表关系
 
