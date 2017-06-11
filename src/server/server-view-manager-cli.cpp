@@ -54,7 +54,6 @@ namespace Air_Conditioner
         using namespace std::placeholders;
         auto controller = std::make_shared<ClientController> ();
         _Navigate<ClientViewCLI> (
-            ConfigController ().GetConfig ().pulseFreq,
             std::bind (&ClientController::GetClientList,
             std::move (controller)),
             [&] { ToWelcomeView (); });

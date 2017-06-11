@@ -177,14 +177,10 @@ namespace Air_Conditioner
             });
         }
 
-        static void Request (const RoomRequest &req)
-        {
-            // TODO: impl request
-            LogManager::BegRequest (req.room, GetClient (req.room));
-        }
-        static void Pulse (const RoomInfo &info)
+        static void Pulse (const RoomRequest &req)
         {
             // TODO: impl pulse
+            //LogManager::BegRequest (req.room, GetClient (req.room));
         }
         static const ClientState &GetClient (const RoomId &room)
         {

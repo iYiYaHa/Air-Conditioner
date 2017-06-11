@@ -15,7 +15,8 @@
 #define ROOM "room"
 #define GUEST "guest"
 
-#define TEMP "temp"
+#define CURRENT "current"
+#define TARGET "target"
 #define WIND "wind"
 
 #define HASWIND "hasWind"
@@ -29,7 +30,6 @@
 // Action
 
 #define AUTH "auth"
-#define REQUEST "request"
 #define PULSE "pulse"
 
 // Helper
@@ -60,7 +60,8 @@ namespace Air_Conditioner
         {
             return json {
                 { ROOM, request.room },
-                { TEMP, request.temp },
+                { CURRENT, request.current },
+                { TARGET, request.target },
                 { WIND, request.wind }
             };
         }
@@ -68,23 +69,9 @@ namespace Air_Conditioner
         {
             return RoomRequest {
                 j.at (ROOM).get<RoomId> (),
-                j.at (TEMP).get<Temperature> (),
+                j.at (CURRENT).get<Temperature> (),
+                j.at (TARGET).get<Temperature> (),
                 j.at (WIND).get<Wind> ()
-            };
-        }
-
-        static json RoomInfoToJson (const RoomInfo &info)
-        {
-            return json {
-                { ROOM, info.room },
-                { TEMP, info.temp }
-            };
-        }
-        static RoomInfo JsonToRoomInfo (const json &j)
-        {
-            return RoomInfo {
-                j.at (ROOM).get<RoomId> (),
-                j.at (TEMP).get<Temperature> ()
             };
         }
 
@@ -96,8 +83,7 @@ namespace Air_Conditioner
                 { ENERGY, client.energy },
                 { COST, client.cost },
                 { SERVERON, server.isOn },
-                { WORKINGMODE, server.mode },
-                { PULSEFREQ, server.pulseFreq }
+                { WORKINGMODE, server.mode }
             };
         }
         static ClientInfo JsonToClientInfo (const json &j)
@@ -112,8 +98,7 @@ namespace Air_Conditioner
         {
             return ServerInfo {
                 j.at (SERVERON).get<bool> (),
-                j.at (WORKINGMODE).get<WorkingMode> (),
-                j.at (PULSEFREQ).get<PulseFreq> ()
+                j.at (WORKINGMODE).get<WorkingMode> ()
             };
         }
     };

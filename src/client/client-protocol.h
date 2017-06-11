@@ -48,16 +48,9 @@ namespace Air_Conditioner
             Request (AUTH, Protocol::GuestInfoToJson (guest));
         }
 
-        std::pair<ClientInfo, ServerInfo> Req (const RoomRequest &request)
+        std::pair<ClientInfo, ServerInfo> Pulse (const RoomRequest &req)
         {
-            auto ret = Request (REQUEST, Protocol::RoomRequestToJson (request));
-            return std::make_pair (Protocol::JsonToClientInfo (ret),
-                                   Protocol::JsonToServerInfo (ret));
-        }
-
-        std::pair<ClientInfo, ServerInfo> Pulse (const RoomInfo &info)
-        {
-            auto ret = Request (PULSE, Protocol::RoomInfoToJson (info));
+            auto ret = Request (PULSE, Protocol::RoomRequestToJson (req));
             return std::make_pair (Protocol::JsonToClientInfo (ret),
                                    Protocol::JsonToServerInfo (ret));
         }

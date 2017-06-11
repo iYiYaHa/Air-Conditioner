@@ -29,27 +29,21 @@ namespace Air_Conditioner
             _viewManager.ToControlView (guest);
         }
 
-        std::pair<ClientInfo, ServerInfo> Request (const RoomRequest &req)
+        std::pair<ClientInfo, ServerInfo> Pulse (const RoomRequest &req)
         {
-            return _client.Req (req);
+            return _client.Pulse (req);
         }
 
-        std::pair<ClientInfo, ServerInfo> Pulse (const RoomInfo &info)
-        {
-            return _client.Pulse (info);
-        }
-
-        void Simulate (RoomInfo &room,
-                       const RoomRequest &request,
+        void Simulate (RoomRequest &request,
                        const bool hasWind)
         {
             // TODO: impl sim algorithm
             // using static variables to store states
 
             if (hasWind)
-                room.temp = request.temp + Temperature { 1 };
+                request.current= request.target + Temperature { 1 };
             else
-                room.temp = request.temp - Temperature { 1 };
+                request.current = request.target - Temperature { 1 };
         }
     };
 }

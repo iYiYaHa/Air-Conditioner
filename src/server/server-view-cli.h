@@ -80,7 +80,6 @@ namespace Air_Conditioner
             std::cout << "Current Config:"
                 << "\n - Master is " << (_config.isOn ? "ON" : "OFF")
                 << "\n - Mode: " << (!_config.mode ? "Summer" : "Winter")
-                << "\n - Slave Pulse Frequency: " << _config.pulseFreq
                 << " s\n";
         }
 
@@ -100,7 +99,6 @@ namespace Air_Conditioner
             std::cout << "\nWhat you wanna do? Enter command to update config or back\n"
                 " - 'on' / 'off' to turn on/off the master\n"
                 " - 'summer' / 'winter' to update working mode\n"
-                " - 'freq' to update slave pulse frequency\n"
                 " - 'back' to go back to welcome page\n";
 
             while (true)
@@ -116,18 +114,6 @@ namespace Air_Conditioner
                     _config.mode = 0;
                 else if (cmd == "winter")
                     _config.mode = 1;
-                else if (cmd == "freq")
-                {
-                    PulseFreq freq = 0;
-                    std::cout << "New Pulse Frequency: ";
-                    std::cin >> freq;
-                    if (freq <= 0)
-                    {
-                        std::cerr << "Invalid freq\n\n";
-                        continue;
-                    }
-                    _config.pulseFreq = freq;
-                }
                 else if (cmd == "back")
                 {
                     if (_onBack) _onBack ();
@@ -310,21 +296,20 @@ namespace Air_Conditioner
         }
 
         ClientList _clients;
-        PulseFreq _freq;
         OnUpdate _onUpdate;
         OnBack _onBack;
 
     public:
-        ClientViewCLI (PulseFreq freq,
-                       OnUpdate &&onUpdate, OnBack &&onBack)
-            : _freq (freq), _onUpdate (onUpdate), _onBack (onBack)
+        ClientViewCLI (OnUpdate &&onUpdate, OnBack &&onBack)
+            : _onUpdate (onUpdate), _onBack (onBack)
         {}
 
         virtual void Show () override
         {
             std::cout << "Press 'Enter' to Back to the Welcome Page\n";
 
-            auto sleepTime = std::chrono::seconds { _freq };
+            // TODO: config refresh rate
+            auto sleepTime = std::chrono::seconds { 1 };
             auto isQuit = false;
 
             std::thread thread ([&] {

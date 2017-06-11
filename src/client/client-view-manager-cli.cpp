@@ -28,8 +28,7 @@ namespace Air_Conditioner
         auto controller = std::make_shared<ClientFacadeController> (*this);
         _Navigate<ControlViewCLI> (
             guestInfo,
-            std::bind (&ClientFacadeController::Request, controller, _1),
             std::bind (&ClientFacadeController::Pulse, controller, _1),
-            std::bind (&ClientFacadeController::Simulate, controller, _1, _2, _3));
+            std::bind (&ClientFacadeController::Simulate, controller, _1, _2));
     }
 }
