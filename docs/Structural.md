@@ -710,58 +710,58 @@
 ##### 房客信息录入表
 Table | getGuestInfo
 --|--
-Version | v0.1
-Purpose | to get guest information
+Version | v1.0
+Purpose | 获取房客信息并进行录入
 Primary Key | guestID
 Foreign Key | roomID
 Index | guestID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-guestID | string | 30 | not null | ID of guest
-roomID | string | 30 | not null | ID of room
+guestID | string | 10 | not null | 房客身份证号
+roomID | string | 10 | not null | 房间号
 
 ##### 主控机参数配置表
 Table | masterInfo
 --|--
-Version | v0.1
-Purpose | to set the config of master
+Version | v1.0
+Purpose | 设置主控机的相关参数
 Primary Key | guestID
 Foreign Key | NULL
 Index | guestID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-guestID | string | 30 | not null | ID of guest
-roomID | string | 30 | not null | ID of room
-currentTemp | double | 10 | not null | current temperature
-targetTemp | double | 10 | not null | target temperature
-wind | int | 10 | not null | speed of wind
-energy | double | 30 | not null | consuming energy
-cost | double | 30 | not null | expense 
+guestID | string | 10 | not null | 房客身份证号
+roomID | string | 10 | not null | 房间号
+currentTemp | double | 5 | not null | 获取从控机房间的当前温度
+targetTemp | double | 5 | not null | 获取从控机目标温度
+wind | int | 5 | not null | 获取风速大小
+energy | double | 10 | not null | 反馈能耗
+cost | double | 10 | not null | 反馈费用消耗
 
 ##### 从控机参数配置表
 Table | slaveInfo
 --|--
-Version | v0.1
-Purpose | to set the config of slave
+Version | v1.0
+Purpose | 配置从控机的相关参数
 Primary Key | guestID
 Foreign Key | NULL
 Index | guestID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-guestID | string | 30 | not null | ID of guest
-currentTemp | double | 10 | not null | current temperature
-targetTemp | double | 10 | not null | target temperature
-wind | int | 10 | not null | speed of wind
-energy | double | 30 | not null | consuming energy
-cost | double | 30 | not null | expense 
+guestID | string | 10 | not null | 房客身份证号
+currentTemp | double | 5 | not null | 从控机房间的当前温度
+targetTemp | double | 5 | not null | 发送目标温度请求
+wind | int | 5 | not null | 发送风速大小请求
+energy | double | 10 | not null | 获取能耗
+cost | double | 10 | not null | 获取费用消耗
 
 ##### 报表
 Table | log
 --|--
-Version | v0.1
+Version | v1.0
 Purpose | to get log
 Primary Key | roomID
 Foreign Key | NULL
@@ -769,13 +769,13 @@ Index | roomID
 
 Column | Type | Length | NULL | Illustration
 --|--|--|--|--
-roomID | string | 30 | not null | ID of room
-wind | int | 10 | not null | speed of wind
-tempBeg | double | 10 | not null | begin temperature
-tempEnd | double | 10 | not null | end temperature
-temeBeg | double | 10 | not null | begin time
-temeBeg | double | 10 | not null | end time
-cost | double | 30 | not null | expense 
+roomID | string | 10 | not null | 房间号
+wind | int | 5 | not null | 风速大小
+tempBeg | double | 5 | not null | 当前温度
+tempEnd | double | 5 | not null | 目标温度
+timeBeg | double | 5 | not null | 温控请求开始时间
+timeBeg | double | 5 | not null | 温控请求结束时间
+cost | double | 10 | not null | 费用
 
 #### 数据表关系
 
