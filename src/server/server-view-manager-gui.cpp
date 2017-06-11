@@ -1,21 +1,22 @@
 
 //
-// Air Conditioner - Server MVC View (CLI View Manager)
-// BOT Man, 2017
+// Air Conditioner - Server MVC View (GUI View Manager)
+// Youjie Zhang, 2017
 //
 
 #include <memory>
 #include <functional>
 
 #include "server-view-controller.h"
-#include "server-view-cli.h"
+#include "server-view-gui.h"
+
 namespace Air_Conditioner
 {
     void ServerViewManager::ToWelcomeView ()
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<WelcomeController> (*this);
-        _Navigate<WelcomeViewCLI> (
+        _Navigate<WelcomeViewGUI> (
             std::bind (&WelcomeController::Nav,
             std::move (controller), _1));
     }
@@ -24,7 +25,7 @@ namespace Air_Conditioner
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<ConfigController> ();
-        _Navigate<ConfigViewCLI> (
+        _Navigate<ConfigViewGUI> (
             controller->GetConfig (),
             std::bind (&ConfigController::SetConfig, controller, _1),
             [&] { ToWelcomeView (); });
@@ -34,7 +35,7 @@ namespace Air_Conditioner
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<GuestInfoController> ();
-        _Navigate<GuestViewCLI> (
+        _Navigate<GuestViewGUI> (
             controller->GetGuestList (),
             std::bind (&GuestInfoController::AddGuest, controller, _1),
             std::bind (&GuestInfoController::RemoveGuest, controller, _1),
@@ -52,7 +53,7 @@ namespace Air_Conditioner
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<ClientController> ();
-        _Navigate<ClientViewCLI> (
+        _Navigate<ClientViewGUI> (
             ConfigController ().GetConfig ().pulseFreq,
             std::bind (&ClientController::GetClientList,
             std::move (controller)),

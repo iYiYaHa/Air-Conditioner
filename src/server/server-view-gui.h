@@ -1,0 +1,289 @@
+#ifndef SERVERVIEWGUI_H
+#define SERVERVIEWGUI_H
+
+//
+// Air Conditioner - Server MVC View (CLI View)
+// BOT Man, 2017
+//
+
+#ifndef AC_SERVER_VIEW_GUI_H
+#define AC_SERVER_VIEW_GUI_H
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <unordered_map>
+#include <thread>
+#include <chrono>
+#include <QApplication>
+
+#include "server-view.h"
+#include "server-window-gui.h"
+
+namespace Air_Conditioner
+{
+    class WelcomeViewGUI : public WelcomeView
+    {     
+        OnNav _onNav;
+    public:
+        WelcomeViewGUI (OnNav &&onNav)
+            : _onNav (onNav)
+        {
+        }
+
+        ~WelcomeViewGUI(){
+        }
+
+        virtual void Show () override
+        {
+
+            int tmpArgc = 0;
+            char ** tmpArgv = nullptr;
+            QApplication app(tmpArgc,tmpArgv);
+            WelcomeWindow welcome;
+            welcome.setOnQuit([&]{
+                welcome.close();
+                _onNav(ViewType::Quit);
+
+            });
+
+            welcome.setOnConfig([&]{
+                welcome.close();
+                _onNav(ViewType::ConfigView);
+            });
+
+            welcome.setOnStatistic([&]{
+                _onNav(ViewType::LogView);
+            });
+            welcome.setOnClient([&]{
+                welcome.close();
+                _onNav(ViewType::ClientView);
+            });
+
+            welcome.setOnGuest([&]{
+                welcome.close();
+                _onNav(ViewType::GuestView);
+            });
+
+            welcome.show();
+            app.exec();
+
+        }
+    };
+
+    class ConfigViewGUI : public ConfigView
+    {
+//        void _PrintInfo () const
+//        {
+//            std::cout << "Current Config:"
+//                << "\n - Master is " << (_config.isOn ? "ON" : "OFF")
+//                << "\n - Mode: " << (!_config.mode ? "Summer" : "Winter")
+//                << "\n - Slave Pulse Frequency: " << _config.pulseFreq
+//                << " s\n";
+//        }
+
+        ServerInfo _config;
+        OnSet _onSet;
+        OnBack _onBack;
+    public:
+        ConfigViewGUI (const ServerInfo &config,
+                       OnSet &&onSet, OnBack &&onBack)
+            : _config (config), _onSet (onSet), _onBack (onBack)
+        {
+        }
+
+        virtual void Show () override
+        {                    
+            int tmpArgc = 0;
+            char ** tmpArgv = nullptr;
+            QApplication app(tmpArgc,tmpArgv);
+            ConfigWindow configWin;
+            configWin.SetOnBack([&]{
+                _onBack();
+            });
+            configWin.show();
+            app.exec();
+        }
+    };
+
+    class GuestViewGUI : public GuestView
+    {
+        GuestInfo _GetGuestInfo () const
+        {
+            RoomId roomId;
+            GuestId guestId;
+
+            std::cout << "Room ID: ";
+            std::cin >> roomId;
+            std::cout << "Guest ID: ";
+            std::cin >> guestId;
+
+            return GuestInfo {
+                roomId, guestId
+            };
+        }
+
+        RoomId _GetRoomId () const
+        {
+            RoomId roomId;
+
+            std::cout << "Room ID: ";
+            std::cin >> roomId;
+
+            return roomId;
+        }
+
+        void _PrintList () const
+        {
+            if (_list.empty ())
+            {
+                std::cout << "No guest is registered...\n";
+                return;
+            }
+
+            std::cout << "Guest on the list:\n";
+            for (const auto &guest : _list)
+            {
+                std::cout
+                    << " - Room: " << guest.room
+                    << " Guest: " << guest.guest
+                    << "\n";
+            }
+        }
+
+        std::list<GuestInfo> _list;
+        OnAdd _onAdd;
+        OnDel _onDel;
+        OnBack _onBack;
+
+    public:
+        GuestViewGUI (const std::list<GuestInfo> &list,
+                      OnAdd &&onAdd, OnDel &&onDel,
+                      OnBack &&onBack)
+            : _list (list),
+            _onAdd (onAdd), _onDel (onDel), _onBack (onBack)
+        {}
+
+        virtual void Show () override
+        {        
+            int tmpArgc = 0;
+            char ** tmpArgv = nullptr;
+            QApplication app(tmpArgc,tmpArgv);
+            GuestWindow guest;
+
+            guest.show();
+            app.exec();
+        }
+    };
+
+    class LogViewGUI : public LogView
+    {
+        OnBack _onBack;
+
+    public:
+        // TODO: impl log view
+
+        virtual void Show () override
+        {
+            if (_onBack) _onBack ();
+            int tmpArgc = 0;
+            char ** tmpArgv = nullptr;
+            QApplication app(tmpArgc,tmpArgv);
+            LogWindow log;
+
+            log.show();
+            app.exec();
+        }
+    };
+
+    class ClientViewGUI : public ClientView
+    {
+        void _PrintInfo () const
+        {
+            if (_clients.empty ())
+            {
+                std::cout << "No slave is connecting...\n";
+                return;
+            }
+
+            static std::unordered_map<Wind, std::string> windStr
+            {
+                { 0, "Stop" },
+                { 1, "Weak" },
+                { 2, "Mid" },
+                { 3, "Strong" }
+            };
+
+            std::cout << "Client List:\n";
+            for (const auto &client : _clients)
+            {
+                std::cout << std::fixed
+                    << std::setprecision (2)
+                    << " - Room: " << client.first
+                    << " Guest: " << client.second.guest
+                    << " Cur Temp: " << client.second.curTemp
+                    << " Target Temp: " << client.second.targetTemp
+                    << " Wind: " << client.second.wind
+                    << " Energy: " << client.second.energy
+                    << " Cost: " << client.second.cost
+                    << "\n";
+            }
+        }
+
+        ClientList _clients;
+        PulseFreq _freq;
+        OnUpdate _onUpdate;
+        OnBack _onBack;
+
+    public:
+        ClientViewGUI (PulseFreq freq,
+                       OnUpdate &&onUpdate, OnBack &&onBack)
+            : _freq (freq), _onUpdate (onUpdate), _onBack (onBack)
+        {}
+
+        virtual void Show () override
+        {
+            std::cout << "Press 'Enter' to Back to the Welcome Page\n";
+
+            auto sleepTime = std::chrono::seconds { _freq };
+            auto isQuit = false;
+
+            std::thread thread ([&] {
+                auto lastHit = std::chrono::system_clock::now ();
+                while (!isQuit)
+                {
+                    try
+                    {
+                        if (_onUpdate) _clients = _onUpdate ();
+                        _PrintInfo ();
+                    }
+                    catch (const std::exception &ex)
+                    {
+                        std::cerr << ex.what () << std::endl;
+                    }
+
+                    // To prevent over sleep :-)
+                    auto timeWasted = std::chrono::system_clock::now () - lastHit;
+                    if (timeWasted < sleepTime)
+                        std::this_thread::sleep_for (sleepTime - timeWasted);
+                    lastHit = std::chrono::system_clock::now ();
+                }
+            });
+            int tmpArgc = 0;
+            char ** tmpArgv = nullptr;
+            QApplication app(tmpArgc,tmpArgv);
+            //ClientWindow configWin;
+
+            //configWin.show();
+            app.exec();
+            // TODO: handle invalid input
+            getchar (); getchar ();
+            if (_onBack) _onBack ();
+            isQuit = true;
+            if (thread.joinable ()) thread.join ();
+        }
+    };
+}
+
+#endif AC_SERVER_VIEW_GUI_H
+#endif // SERVERVIEWGUI_H

@@ -11,7 +11,8 @@
 #include "server-protocol.h"
 
 #define PORT 5768
-
+#include<QApplication>
+#include"server-window-gui.h"
 int main (int argc, char *argv[])
 {
     using namespace Air_Conditioner;
