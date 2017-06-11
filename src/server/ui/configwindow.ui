@@ -16,9 +16,9 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>70</x>
      <y>40</y>
-     <width>254</width>
+     <width>241</width>
      <height>131</height>
     </rect>
    </property>
@@ -45,7 +45,7 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>10</y>
+           <y>20</y>
            <width>80</width>
            <height>16</height>
           </rect>
@@ -64,7 +64,7 @@
          <property name="geometry">
           <rect>
            <x>60</x>
-           <y>10</y>
+           <y>20</y>
            <width>122</width>
            <height>16</height>
           </rect>
@@ -107,7 +107,7 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>10</y>
+           <y>20</y>
            <width>51</width>
            <height>16</height>
           </rect>
@@ -123,7 +123,7 @@
          <property name="geometry">
           <rect>
            <x>60</x>
-           <y>10</y>
+           <y>20</y>
            <width>61</width>
            <height>16</height>
           </rect>
@@ -136,20 +136,6 @@
          </property>
         </widget>
        </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
-       <widget class="QLabel" name="PulseText">
-        <property name="text">
-         <string>从控机心跳频率</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="spinBox"/>
       </item>
      </layout>
     </item>

@@ -26,8 +26,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     ../../src/server/server.cpp \
     ../../src/server/ormlite/sqlite3.c \
-    ../../src/server/server-window-gui.cpp \
-    ../../src/server/server-view-manager-gui.cpp
+    ../../src/server/server-view-manager-gui.cpp \
+    ../../src/server/server-view-gui-qt.cpp
 
 HEADERS += \
     ../../src/server/ormlite/ormlite.h \
@@ -45,15 +45,15 @@ HEADERS += \
     ../../src/common/common-protocol.h \
     ../../src/common/common-view.h \
     ../../src/common/json/json.hpp \
-    ../../src/server/server-window-gui.h \
-    ../../src/server/server-view-gui.h
+    ../../src/server/server-view-gui.h \
+    ../../src/server/server-view-gui-qt.h
 
 FORMS += \
     ../../src/server/ui/configwindow.ui \
     ../../src/server/ui/guestwindow.ui \
-    ../../src/server/ui/logwindow.ui \
     ../../src/server/ui/statisticwindow.ui \
-    ../../src/server/ui/welcomewindow.ui
+    ../../src/server/ui/welcomewindow.ui \
+    ../../src/server/ui/clientwindow.ui
 
 DISTFILES += \
     ../../src/server/ormlite/ormlite.h.zip \
