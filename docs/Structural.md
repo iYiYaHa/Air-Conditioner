@@ -25,27 +25,34 @@
 > - v0.9 | 2017/6/11 | 董星彤 左旭彤 | 修改处理说明和接口模块格式
 
 ## 文档说明
+
 ### 文档目的
+
 该文档的主要目的是将分析分布式温控系统的结构，将该系统细分为各个功能相对独立的模块和子系统，
 并对每个模块和子系统进行详细的描述和说明，完成结构化概要设计。
 
 ### 文档范围
+
 围绕分布式温控系统展开，给出基于需求分析得到的各层数据流；
 详细地描述各个模块和子系统的结构及功能，得出系统级的初始功能结构图和
 优化后的结构图；最后完成数据库层面上的相关设计。
 
 ### 读者对象
+
 软件设计人员、编码人员、测试人员等。
 
 ### 参考文档
+
 - 《分布式温控系统用户需求说明书》
 - 《用例模型说明书模板》
 - 《分布式温控系统详细要求》
 
 ### 术语和缩写
+
 见各个模块和子系统的详细说明
 
 ## 项目背景
+
 根据如下需求，设计中央空调系统：
 1. 空调系统由中央空调和房间空调（从控机）两部分构成。中央空调由特定的管理人员操控，房间空调由用户来操控。
 2. 中央空调具备开关按钮，只可人工开启和关闭，正常开启后处于待机状态。有冷暖两种工作模式，每种模式有特定的缺省温度以及温度区间，可根据季节进行工作模式的调整。中央空调能够实时监测个房间的温度和状态，并且能够根据实时刷新的频率进行配置。
@@ -55,21 +62,29 @@
 6. 中央空调同时只能处理三台从控机的请求，为此主机要有负载均衡的能力。如果有超过三台从控机请求，则需要对所有请求机器进行调度，调度算法自行定义。
 
 ## 需求分析结果
+
 ### 第 0 层数据流图
+
 ![0-data-flow-diagram](diagrams/0-data-flow-diagram.svg)
 
 ### 第 1 层数据流图
+
 ![1-data-flow-diagram](diagrams/1-data-flow-diagram.svg)
 
 ### 第 2 层数据流图
+
 ![2-data-flow-diagram](diagrams/2-data-flow-diagram.svg)
 
 ## 基于功能需求的初始功能结构图
+
 ### 子系统1：调节子系统
+
 #### 数据流图
+
 ![调节子系统数据流图](diagrams/调节子系统数据流图.svg)
 
 #### 功能结构图
+
 ![调节子系统系统结构图](diagrams/调节子系统系统结构图.svg)
 
 #### 功能模块说明
@@ -192,6 +207,7 @@
 	- No external I/O or global data Used
 	- Called by main
 	- Calls no subordinate modules
+ 
 ### 子系统2：报表管理子系统
 
 #### 数据流图
@@ -213,8 +229,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
-
 2. 模块名字 获取报表
   - 处理说明 “获取报表”模块可以获取信息，并将信息传递到主模块
   - 接口说明
@@ -224,7 +238,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls getCost,getStartup,getRunningStatus,produceReport
-
 3. 模块名字 获取能耗费用
   - 处理说明 “获取能耗费用”模块可以获取信息，并将信息传递到“获取报表模块”
   - 接口说明
@@ -234,7 +247,6 @@
     - No external I/O or global data Used
     - Called by getReport
     - Calls no subordinate modules
-
 4. 模块名字 获取从控机开机信息
   - 处理说明 “获取从控机开机信息”模块可以获取信息，并将信息传递到“获取报表模块”
   - 接口说明
@@ -244,7 +256,6 @@
     - No external I/O or global data Used
     - Called by getReport
     - Calls no subordinate modules
-
 5. 模块名字 获取空调运行状态
   - 处理说明 “获取空调运行状态”模块可以获取信息，并将信息传递到“获取调节请求模块”
   - 接口说明
@@ -254,7 +265,6 @@
     - No external I/O or global data Used
     - Called by getReport
     - Calls no subordinate modules
-
 6. 模块名字 生成报表
  - 处理说明 “接收温度调节信息”获得从控机配置信息、目标温度和风速信息，并将他们转化为调节请求,将信息传递到“获取调节请求模块”
  - 接口说明
@@ -268,7 +278,6 @@
    - No external I/O or global data Used
    - Called by getReport
    - Calls no subordinate modules
-
 7. 模块名字 管理报表
  - 处理说明 “管理报表”模块接收报表和查询请求，根据查询请求查询报表，产生目标报表发送给主模块
  - 接口说明
@@ -281,7 +290,6 @@
    - No external I/O or global data Used
    - Called by main
    - Calls no subordinate modules
-
 8. 模块名字 给出目标报表
   - 处理说明 “给出目标报表”从主模块获得目标报表，给出结果
   - 接口说明
@@ -291,7 +299,7 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
+ 
 ### 子系统3：房间信息定时更新子系统
 
 #### 数据流图
@@ -316,7 +324,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls getroomtemp,getCconfigureinfo and sendroominfo modules
-
 2. 模块名字 获取房间温度
   - 处理说明 "获取房间温度"模块可以获取房间温度，并将其传给"获取房间信息"模块
   - 接口说明
@@ -326,7 +333,6 @@
     - No external I/O or global data Used
     - Called by getroominfo
     - Calls no subordinate modules
-
 3. 模块名字 获取从控机配置信息
   - 处理说明 "获取从控机配置信息"模块可以获取从控机配置信息，并将其传给"获取房间信息"模块
   - 接口说明
@@ -368,6 +374,7 @@
      - No external I/O or global data Used
      - Called by main
      - Calls no subordinate modules
+ 
 ### 子系统4：房客信息管理子系统
 
 #### 数据流图
@@ -377,6 +384,7 @@
 #### 功能结构图
 
 ![房客信息管理子系统系统结构图](diagrams/房客信息管理子系统系统结构图.svg)
+
 #### 功能模块说明
 
 1. 模块名字 取得数据
@@ -408,9 +416,9 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
-
+ 
 ### 子系统5：实时信息查看子系统
+
 #### 数据流图
 
 ![实时信息查看子系统数据流图](diagrams/实时信息查看子系统数据流图.svg)
@@ -418,6 +426,7 @@
 #### 功能结构图
 
 ![实时信息查看子系统系统结构图](diagrams/实时信息查看子系统系统结构图.svg)
+
 #### 功能模块说明
 
 1. 模块名字 获取从控机及房间信息
@@ -429,7 +438,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-    
 2. 模块名字 查看实时信息
   - 处理说明 “查看实时信息”模块获取来自主模块的从控机及房间信息，并将其转化为全部从控机及房间信息
   - 接口说明
@@ -450,14 +458,19 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
+ 
 ### 子系统6：配置空调参数子系统
+
 #### 数据流图
+
 ![配置空调参数子系统数据流图](diagrams/配置空调参数子系统数据流图.svg)
 
 #### 功能结构图
+
 ![配置空调参数子系统系统结构图](diagrams/配置空调参数子系统系统结构图.svg)
+
 #### 功能模块说明
+
 1. 模块名字 取得配置信息
   - 处理说明 “取得配置信息”模块可以获取信息，并将信息传递到主模块
   - 接口说明
@@ -467,7 +480,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
 2. 模块名字 配置空调参数
   - 处理说明 “配置空调参数”模块可以获取来自主模块的配置信息，并将其转化为主控机配置返回给主模块
   - 接口说明
@@ -488,15 +500,19 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
+ 
 ### 子系统7：能耗费用计算子系统
+
 #### 数据流图
+
 ![能耗费用计算子系统数据流图](diagrams/能耗费用计算子系统数据流图.svg)
 
 #### 功能结构图
+
 ![能耗费用计算子系统系统结构图](diagrams/能耗费用计算子系统系统结构图.svg)
 
 #### 功能模块说明
+
 1. 模块名字 取得空调运行状态
   - 处理说明 "取得空调运行状态"模块可以获取空调运行状态，并将该信息传给主模块
   - 接口说明
@@ -506,7 +522,6 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-
 2. 模块名字 费用能耗计算
   - 处理说明 "费用能耗计算"模块可以接收来自主模块的空调运行状态信息，进行费用能耗计算，并将计算所得费用能耗返回给主模块
   - 接口说明
@@ -527,15 +542,19 @@
     - No external I/O or global data Used
     - Called by main
     - Calls no subordinate modules
-        
+  
 ### 子系统8：从控机信息显示子系统
+
 #### 数据流图
+
 ![从控机信息显示子系统数据流图](diagrams/从控机信息显示子系统数据流图.svg)
 
 #### 功能结构图
+
 ![从控机信息显示子系统系统结构图](diagrams/从控机信息显示子系统系统结构图.svg)
 
 #### 功能模块说明
+
 1. 模块名字 取得数据
   - 处理说明 "取得数据"模块可以获得能耗费用、从控机配置信息和空调运行状态，并将该信息返回主模块
   - 接口说明
@@ -565,12 +584,18 @@
      - No external I/O or global data Used
      - Called by main
      - Calls no subordinate module
+ 
 ### 子系统9：从控机登录认证子系统
+
 #### 数据流图
+
 ![从控机登录认证子系统数据流图](diagrams/从控机登录认证子系统数据流图.svg)
 
 #### 功能结构图
+
 ![从控机登录认证子系统系统结构图](diagrams/从控机登录认证子系统系统结构图.svg)
+
+#### 功能模块说明
 
 1. 模块名字 取得数据
   - 处理说明 "取得数据"模块将获取的目标房客信息返回主模块
@@ -641,21 +666,28 @@
      - No external I/O or global data Used
      - Called by main
      - Calls no subordinate module
+ 
 ## 系统级初始功能结构图
+
 ![分布式温控系统系统结构图](diagrams/分布式温控系统系统结构图.svg)
 
 ## 优化后的系统级功能结构图
+
 减少一些模块的扇入扇出
 ![分布式温控系统系统结构图优化](diagrams/分布式温控系统系统结构图优化.svg)
 
 ## 数据设计
+
 ### 数据库设计
+
 #### E-R图
 
 ![E R Diagram](diagrams/ER-diagram.svg)
 
 #### 数据库表结构
+
 ##### 房客信息录入表
+
 Table | getGuestInfo
 --|--
 Version | v1.0
@@ -670,6 +702,7 @@ guestID | string | 10 | not null | 房客身份证号
 roomID | string | 10 | not null | 房间号
 
 ##### 主控机参数配置表
+
 Table | masterInfo
 --|--
 Version | v1.0
@@ -689,6 +722,7 @@ energy | double | 10 | not null | 反馈能耗
 cost | double | 10 | not null | 反馈费用消耗
 
 ##### 从控机参数配置表
+
 Table | slaveInfo
 --|--
 Version | v1.0
@@ -707,6 +741,7 @@ energy | double | 10 | not null | 获取能耗
 cost | double | 10 | not null | 获取费用消耗
 
 ##### 报表
+
 Table | log
 --|--
 Version | v1.0
@@ -726,9 +761,11 @@ timeBeg | double | 5 | not null | 温控请求结束时间
 cost | double | 10 | not null | 费用
 
 #### 数据表关系
+
 ![Data Table Relation E R](diagrams/dataTable-relation-ER.svg)
 
 ### 全局数据结构设计
+
 #### 变量说明
 
 ``` cpp
@@ -754,6 +791,7 @@ cost | double | 10 | not null | 费用
 - PulseFreq 脉冲频率
 
 #### 数据结构说明
+
  - 房客信息录入，包括房间号和房客身份证号
 ``` cpp
     struct GuestInfo
