@@ -220,3 +220,6 @@ sqlite3.c
 # Log
 log.txt
 *.db
+
+# QT
+ui_*.h
