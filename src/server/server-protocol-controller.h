@@ -26,12 +26,13 @@ namespace Air_Conditioner
         {
             ScheduleManager::Pulse (req);
 
+            const auto &serverInfo = ScheduleManager::GetConfig ();
             const auto &clientState = ScheduleManager::GetClient (req.room);
             ClientInfo clientInfo {
-                clientState.wind != 0, clientState.energy, clientState.cost
+                clientState.wind != 0 && serverInfo.isOn, clientState.energy, clientState.cost
             };
             return std::make_pair (std::move (clientInfo),
-                                   ScheduleManager::GetConfig ());
+                                   serverInfo);
         }
     };
 }
