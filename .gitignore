@@ -222,4 +222,4 @@ log.txt
 *.db
 
 # QT
-ui_*.h
+qt-proj/build-*/*
