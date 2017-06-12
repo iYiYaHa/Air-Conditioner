@@ -250,10 +250,17 @@ namespace Air_Conditioner
 
     class LogViewCLI : public LogView
     {
+        OnQueryOnOff _onQueryOnOff;
+        OnQueryRequest _onQueryRequest;
         OnBack _onBack;
 
     public:
-        // TODO: impl log view
+        LogViewCLI (OnQueryOnOff &&onQueryOnOff,
+                    OnQueryRequest &&onQueryRequest,
+                    OnBack &&onBack)
+            : _onQueryOnOff (onQueryOnOff), _onQueryRequest (onQueryRequest),
+            _onBack (onBack)
+        {}
 
         virtual void Show () override
         {
@@ -263,6 +270,19 @@ namespace Air_Conditioner
 
     class ClientViewCLI : public ClientView
     {
+        int _GetRefreshRate () const
+        {
+            // TODO: Handle invalid input
+            while (true)
+            {
+                int ret = 0;
+                std::cout << "Refresh Rate: ";
+                std::cin >> ret;
+                if (ret > 0) return ret;
+                std::cout << "Invalid Refresh Rate\n";
+            }
+        }
+
         void _PrintInfo () const
         {
             if (_clients.empty ())
@@ -311,8 +331,8 @@ namespace Air_Conditioner
         {
             std::cout << "Press 'Enter' to Back to the Welcome Page\n";
 
-            // TODO: config refresh rate
-            auto sleepTime = std::chrono::seconds { 1 };
+            auto refreshRate = _GetRefreshRate ();
+            auto sleepTime = std::chrono::seconds { refreshRate };
             auto isQuit = false;
 
             std::thread thread ([&] {

@@ -41,7 +41,8 @@ namespace Air_Conditioner
     class LogView : public ViewBase
     {
     public:
-        // TODO: design log view interfaces
+        using OnQueryOnOff = std::function<LogOnOffList (const TimePoint &, const TimePoint &)>;
+        using OnQueryRequest = std::function<LogRequestList (const TimePoint &, const TimePoint &)>;
         using OnBack = std::function<void ()>;
     };
 

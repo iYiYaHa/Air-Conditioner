@@ -39,8 +39,16 @@ namespace Air_Conditioner
             // impl end req
         }
 
-        static std::list<LogOnOff> GetOnOff (const TimePoint &from, const TimePoint &to);
-        static std::list<LogRequest> GetRequest (const TimePoint &from, const TimePoint &to);
+        static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
+        {
+            // impl here
+            return LogOnOffList {};
+        }
+        static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
+        {
+            // impl here
+            return LogRequestList {};
+        }
     };
 
     class GuestManager
@@ -59,10 +67,7 @@ namespace Air_Conditioner
 
             if (!hasInit)
             {
-                try
-                {
-                    mapper.CreateTbl (GuestEntity {});
-                }
+                try { mapper.CreateTbl (GuestEntity {}); }
                 catch (...) {}
                 hasInit = true;
             }

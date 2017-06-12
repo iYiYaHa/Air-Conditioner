@@ -18,18 +18,20 @@ namespace Air_Conditioner
 
     struct LogOnOff
     {
-        RoomId room;
         TimePoint timeBeg, timeEnd;
     };
 
+    using LogOnOffList = std::unordered_multimap<RoomId, LogOnOff>;
+
     struct LogRequest
     {
-        RoomId room;
-        Wind wind;
-        Temperature tempBeg, tempEnd;
         TimePoint timeBeg, timeEnd;
+        Temperature tempBeg, tempEnd;
+        Wind wind;
         Cost cost;
     };
+
+    using LogRequestList = std::unordered_multimap<RoomId, LogRequest>;
 
     struct ClientState
     {
