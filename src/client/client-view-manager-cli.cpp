@@ -17,8 +17,7 @@ namespace Air_Conditioner
         using namespace std::placeholders;
         auto controller = std::make_shared<ClientFacadeController> (*this);
         _Navigate<AuthViewCLI> (
-            std::bind (&ClientFacadeController::Auth,
-            std::move (controller), _1));
+            std::bind (&ClientFacadeController::Auth, controller, _1));
     }
 
     void ClientViewManager::ToControlView (

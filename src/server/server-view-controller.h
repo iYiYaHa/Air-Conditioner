@@ -79,13 +79,14 @@ namespace Air_Conditioner
     class LogController
     {
     public:
-        // LogManager::GetOnOff/GetRequest
-        std::list<LogOnOff> GetDayOnOff (const TimePoint &date);
-        std::list<LogOnOff> GetWeekOnOff (const TimePoint &date);
-        std::list<LogOnOff> GetMonthOnOff (const TimePoint &date);
-        std::list<LogRequest> GetDayRequest (const TimePoint &date);
-        std::list<LogRequest> GetWeekRequest (const TimePoint &date);
-        std::list<LogRequest> GetMonthRequest (const TimePoint &date);
+        LogOnOffList GetLogOnOff (const TimePoint &from, const TimePoint &to)
+        {
+            return LogManager::GetOnOff (from, to);
+        }
+        LogRequestList GetLogRequest (const TimePoint &from, const TimePoint &to)
+        {
+            return LogManager::GetRequest (from, to);
+        }
     };
 
     class ClientController

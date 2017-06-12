@@ -17,8 +17,7 @@ namespace Air_Conditioner
         using namespace std::placeholders;
         auto controller = std::make_shared<WelcomeController> (*this);
         _Navigate<WelcomeViewCLI> (
-            std::bind (&WelcomeController::Nav,
-            std::move (controller), _1));
+            std::bind (&WelcomeController::Nav, controller, _1));
     }
 
     void ServerViewManager::ToConfigView ()
@@ -28,7 +27,7 @@ namespace Air_Conditioner
         _Navigate<ConfigViewCLI> (
             controller->GetConfig (),
             std::bind (&ConfigController::SetConfig, controller, _1),
-            [&] { ToWelcomeView (); });
+            std::bind (&ServerViewManager::ToWelcomeView, this));
     }
 
     void ServerViewManager::ToGuestView ()
@@ -39,14 +38,17 @@ namespace Air_Conditioner
             controller->GetGuestList (),
             std::bind (&GuestInfoController::AddGuest, controller, _1),
             std::bind (&GuestInfoController::RemoveGuest, controller, _1),
-            [&] { ToWelcomeView (); });
+            std::bind (&ServerViewManager::ToWelcomeView, this));
     }
 
     void ServerViewManager::ToLogView ()
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<LogController> ();
-        // TODO: impl navigate to log view
+        _Navigate<LogViewCLI> (
+            std::bind (&LogController::GetLogOnOff, controller, _1, _2),
+            std::bind (&LogController::GetLogRequest, controller, _1, _2),
+            std::bind (&ServerViewManager::ToWelcomeView, this));
     }
 
     void ServerViewManager::ToClientView ()
@@ -54,8 +56,7 @@ namespace Air_Conditioner
         using namespace std::placeholders;
         auto controller = std::make_shared<ClientController> ();
         _Navigate<ClientViewCLI> (
-            std::bind (&ClientController::GetClientList,
-            std::move (controller)),
-            [&] { ToWelcomeView (); });
+            std::bind (&ClientController::GetClientList, controller),
+            std::bind (&ServerViewManager::ToWelcomeView, this));
     }
 }
