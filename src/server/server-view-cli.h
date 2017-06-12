@@ -225,6 +225,19 @@ namespace Air_Conditioner
                     try
                     {
                         auto room = _GetRoomId ();
+                        auto hasFound = false;
+                        for (auto p = _list.begin (); p != _list.end ();)
+                        {
+                            if (p->room == room)
+                            {
+                                p = _list.erase (p);
+                                hasFound = true;
+                            }
+                            else ++p;
+                        }
+                        if (!hasFound)
+                            throw std::runtime_error ("No Such Registered Room");
+
                         if (_onDel) _onDel (room);
                         std::cout << "Deleting Done\n";
                     }
