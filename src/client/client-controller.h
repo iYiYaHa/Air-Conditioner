@@ -7,9 +7,20 @@
 #ifndef AC_CLIENT_CONTROLLER_H
 #define AC_CLIENT_CONTROLLER_H
 
+#include <chrono>
+#include <algorithm>
+
 #include "client-model.h"
 #include "client-view.h"
 #include "client-protocol.h"
+
+// Fix hell of Windows.h
+#ifdef max
+#undef max
+#endif // max
+#ifdef min
+#undef min
+#endif // min
 
 namespace Air_Conditioner
 {
@@ -18,9 +29,14 @@ namespace Air_Conditioner
         ProtocolClient &_client;
         ClientViewManager &_viewManager;
 
+        using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+        TimePoint _lastSim;
+        bool _hasStartSim;
+
     public:
         ClientFacadeController (ClientViewManager &viewManager)
-            : _client (ProtocolClient::Instance ()), _viewManager (viewManager)
+            : _client (ProtocolClient::Instance ()), _viewManager (viewManager),
+            _hasStartSim (false)
         {}
 
         void Auth (const GuestInfo &guest)
@@ -37,13 +53,39 @@ namespace Air_Conditioner
         void Simulate (RoomRequest &request,
                        const bool hasWind)
         {
-            // TODO: impl sim algorithm
-            // using static variables to store states
+            // Init Sim
+            if (!_hasStartSim)
+            {
+                _lastSim = std::chrono::system_clock::now ();
+                request.current = DefaultRoomTemp;
+                _hasStartSim = true;
+                return;
+            }
 
+            // Get Delta Time
+            auto now = std::chrono::system_clock::now ();
+            std::chrono::duration<double> deltaTime = now - _lastSim;
+            _lastSim = now;
+
+            // Get Delta Temp and Target Temp
+            auto deltaTemp = Temperature { deltaTime.count () };
+            auto targetTemp = hasWind ? request.target : DefaultRoomTemp;
+
+            // Spec for has wind cases
             if (hasWind)
-                request.current= request.target + Temperature { 1 };
-            else
-                request.current = request.target - Temperature { 1 };
+                deltaTemp += deltaTemp * (request.wind - 2) / 4.0;
+
+            // Handle changes
+            if (request.current < targetTemp)
+            {
+                request.current += deltaTemp;
+                request.current = std::min (request.current, targetTemp);
+            }
+            else if (request.current > targetTemp)
+            {
+                request.current -= deltaTemp;
+                request.current = std::max (request.current, targetTemp);
+            }
         }
     };
 }

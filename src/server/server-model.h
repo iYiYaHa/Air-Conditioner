@@ -34,11 +34,12 @@ namespace Air_Conditioner
     struct ClientState
     {
         GuestId guest;
-        Temperature curTemp;
-        Temperature targetTemp;
+        Temperature current;
+        Temperature target;
         Wind wind;
         Energy energy;
         Cost cost;
+        TimePoint pulse;
     };
 
     using ClientList = std::unordered_map<RoomId, ClientState>;

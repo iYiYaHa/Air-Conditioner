@@ -15,11 +15,6 @@ namespace Air_Conditioner
 {
     class ProtocolController
     {
-        static std::pair<ClientInfo, ServerInfo> _GetResponse (
-            const RoomId &room)
-        {
-        }
-
     public:
         void Auth (const GuestInfo &guest)
         {
@@ -31,12 +26,13 @@ namespace Air_Conditioner
         {
             ScheduleManager::Pulse (req);
 
+            const auto &serverInfo = ScheduleManager::GetConfig ();
             const auto &clientState = ScheduleManager::GetClient (req.room);
             ClientInfo clientInfo {
-                clientState.wind != 0, clientState.energy, clientState.cost
+                clientState.wind != 0 && serverInfo.isOn, clientState.energy, clientState.cost
             };
             return std::make_pair (std::move (clientInfo),
-                                   ScheduleManager::GetConfig ());
+                                   serverInfo);
         }
     };
 }

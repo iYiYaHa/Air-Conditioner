@@ -9,9 +9,10 @@
 
 #include <exception>
 
+#define DEADTIME 3
 #define DBNAME "ac.db"
-#include "ormlite/ormlite.h"
 
+#include "ormlite/ormlite.h"
 #include "server-model.h"
 
 namespace Air_Conditioner
@@ -139,9 +140,18 @@ namespace Air_Conditioner
             // TODO: impl scheduling scheme
             // EnergyCostManager::*
         }
+
         static void CheckAlive ()
         {
             // TODO: impl check alive and write to log
+
+            const auto deadTime = std::chrono::system_clock::now () -
+                std::chrono::seconds { DEADTIME };
+            auto &clients = _clients ();
+            for (auto p = clients.begin (); p != clients.end ();)
+                if (p->second.pulse < deadTime)
+                    p = clients.erase (p);
+                else ++p;
         }
 
     private:
@@ -173,26 +183,29 @@ namespace Air_Conditioner
         {
             _clients ().emplace (room.room, ClientState {
                 room.guest, Temperature { 0 }, Temperature { 0 },
-                Wind { 0 }, Energy { 0 }, Cost { 0 }
+                Wind { 0 }, Energy { 0 }, Cost { 0 },
+                std::chrono::system_clock::now ()
             });
         }
 
         static void Pulse (const RoomRequest &req)
         {
             // TODO: impl pulse
-            //LogManager::BegRequest (req.room, GetClient (req.room));
+            // LogManager::BegRequest
+
+            CheckAlive ();
+
+            auto &roomState = GetClient (req.room);
+            roomState.current = req.current;
+            roomState.target = req.target;
+            roomState.wind = req.wind;
+            roomState.pulse = std::chrono::system_clock::now ();
         }
-        static const ClientState &GetClient (const RoomId &room)
+
+        static ClientState &GetClient (const RoomId &room)
         {
-            const auto &clients = _clients ();
-            try
-            {
-                return clients.at (room);
-            }
-            catch (...)
-            {
-                throw std::runtime_error ("No Such Room");
-            }
+            try { return _clients ().at (room); }
+            catch (...) { throw std::runtime_error ("No Such Room"); }
         }
 
         static const ClientList &GetClientList ()

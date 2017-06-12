@@ -80,10 +80,11 @@ namespace Air_Conditioner
                 Temperature temp = 31;
                 Wind wind = 4;
 
-                std::cout << "Target Temp (18 - 30): ";
+                std::cout << "Target Temp (" << MinTemp
+                    << " - " << MaxTemp << "): ";
                 std::cin.getline (buf, 1024);
                 std::istringstream iss (buf); iss >> temp;
-                if (temp < 18 || temp > 30)
+                if (temp < MinTemp || temp > MaxTemp)
                 {
                     std::cerr << "Invalid Temperature Input :-(\n";
                     continue;
@@ -107,33 +108,31 @@ namespace Air_Conditioner
 
         void _PrintInfo () const
         {
-            if (!_serverInfo.isOn)
-            {
-                std::cout << "\rServer is OFF      "
-                    "                    "
-                    "                    "
-                    "                    "
-                    "                    "
-                    "                    ";
-                return;
-            }
-
             static std::unordered_map<Wind, std::string> windStr
             {
+                { -1, "Off" },
                 { 0, "Stop" },
                 { 1, "Weak" },
                 { 2, "Mid" },
                 { 3, "Strong" }
             };
 
+            Wind wind;
+            if (!_serverInfo.isOn)
+                wind = -1;
+            else if (!_clientInfo.hasWind)
+                wind = 0;
+            else
+                wind = _roomRequest.wind;
+
             std::cout << std::fixed
                 << std::setprecision (2)
                 << "\rRoom: " << _guestInfo.room
                 << " Current: " << _roomRequest.current
                 << " Target: " << _roomRequest.target
-                << " Wind: " << windStr.at (_clientInfo.hasWind ? _roomRequest.wind : 0)
                 << " Energy: " << _clientInfo.energy
                 << " Cost: " << _clientInfo.cost
+                << " Wind: " << windStr.at (wind)
                 << "        ";
         }
 
@@ -145,7 +144,7 @@ namespace Air_Conditioner
                         OnPulse &&onPulse,
                         OnSim &&onSim)
             : _guestInfo (guestInfo), _onPulse (onPulse), _onSim (onSim),
-            _roomRequest { guestInfo.room, 26, 0, 0 }
+            _roomRequest { guestInfo.room, DefaultRoomTemp, 0, 0 }
         {}
 
         virtual void Show () override
@@ -162,7 +161,9 @@ namespace Air_Conditioner
 
                 if (_roomRequest.target == 0)
                     _roomRequest.target = _serverInfo.mode == 0 ?
-                    Temperature { 22 } : Temperature { 28 };
+                    DefaultSummerTemp : DefaultWinterTemp;
+                if (_roomRequest.wind == 0)
+                    _roomRequest.wind = 2;
             };
 
             std::cout << "Welcom " << _guestInfo.guest

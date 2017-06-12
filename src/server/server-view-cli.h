@@ -80,7 +80,7 @@ namespace Air_Conditioner
             std::cout << "Current Config:"
                 << "\n - Master is " << (_config.isOn ? "ON" : "OFF")
                 << "\n - Mode: " << (!_config.mode ? "Summer" : "Winter")
-                << " s\n";
+                << "\n";
         }
 
         ServerInfo _config;
@@ -282,15 +282,18 @@ namespace Air_Conditioner
             std::cout << "Client List:\n";
             for (const auto &client : _clients)
             {
+                const auto &roomId = client.first;
+                const auto &roomState = client.second;
+
                 std::cout << std::fixed
                     << std::setprecision (2)
-                    << " - Room: " << client.first
-                    << " Guest: " << client.second.guest
-                    << " Cur Temp: " << client.second.curTemp
-                    << " Target Temp: " << client.second.targetTemp
-                    << " Wind: " << client.second.wind
-                    << " Energy: " << client.second.energy
-                    << " Cost: " << client.second.cost
+                    << " - Room: " << roomId
+                    << " Guest: " << roomState.guest
+                    << " Cur Temp: " << roomState.current
+                    << " Target Temp: " << roomState.target
+                    << " Wind: " << roomState.wind
+                    << " Energy: " << roomState.energy
+                    << " Cost: " << roomState.cost
                     << "\n";
             }
         }
