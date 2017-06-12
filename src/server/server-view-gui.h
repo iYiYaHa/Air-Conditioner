@@ -46,8 +46,10 @@ namespace Air_Conditioner
             });
 
             welcome.setOnLog([&]{
+                welcome.close();
                 _onNav(ViewType::LogView);
             });
+
             welcome.setOnClient([&]{
                 welcome.close();
                 _onNav(ViewType::ClientView);
@@ -162,10 +164,11 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             GuestWindow guest;
-            guest.SetOnBack([&]{
-                _onBack();
-            });
-
+            guest.SetOnBack(std::move(_onBack));
+            guest.LoadGuest(_list);
+            guest.SetOnAdd(std::move(_onAdd));
+            guest.SetOnDel(std::move(_onDel));
+            guest.SetOnBack(std::move(_onBack));
             guest.show();
             app.exec();
         }
@@ -173,19 +176,26 @@ namespace Air_Conditioner
 
     class LogViewGUI : public LogView
     {
+        OnQueryOnOff _onQueryOnOff;
+        OnQueryRequest _onQueryRequest;
         OnBack _onBack;
 
     public:
-        // TODO: impl log view
+        LogViewGUI (OnQueryOnOff &&onQueryOnOff,
+                    OnQueryRequest &&onQueryRequest,
+                    OnBack &&onBack)
+            : _onQueryOnOff (onQueryOnOff), _onQueryRequest (onQueryRequest),
+            _onBack (onBack)
+        {}
 
         virtual void Show () override
         {
-            if (_onBack) _onBack ();
+            //if (_onBack) _onBack ();
             int tmpArgc = 0;
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             StatisticWindow statistic;
-
+            statistic.SetOnBack(std::move(_onBack));
             statistic.show();
             app.exec();
         }
@@ -216,8 +226,6 @@ namespace Air_Conditioner
                     << std::setprecision (2)
                     << " - Room: " << client.first
                     << " Guest: " << client.second.guest
-                    << " Cur Temp: " << client.second.curTemp
-                    << " Target Temp: " << client.second.targetTemp
                     << " Wind: " << client.second.wind
                     << " Energy: " << client.second.energy
                     << " Cost: " << client.second.cost
@@ -268,9 +276,7 @@ namespace Air_Conditioner
                char ** tmpArgv = nullptr;
                QApplication app(tmpArgc,tmpArgv);
                ClientWindow client;
-               client.SetOnBack([&]{
-                   _onBack();
-               });
+               client.SetOnBack(std::move(_onBack));
                client.show();
                app.exec();
 

@@ -211,7 +211,7 @@ namespace Air_Conditioner
                     try
                     {
                         auto guest = _GetGuestInfo ();
-                        if (_onDel) _onAdd (guest);
+                        if (_onAdd) _onAdd (guest);
                         _list.emplace_back (std::move (guest));
                         std::cout << "Adding Done\n";
                     }

@@ -5,7 +5,10 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+CONFIG += c++11
+CONFIG += c++14
+QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++14
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Air-Conditioner-Server
