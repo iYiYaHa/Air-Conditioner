@@ -194,36 +194,6 @@ namespace Air_Conditioner
 
     class ClientViewGUI : public ClientView
     {
-        void _PrintInfo () const
-        {
-            if (_clients.empty ())
-            {
-                std::cout << "No slave is connecting...\n";
-                return;
-            }
-
-            static std::unordered_map<Wind, std::string> windStr
-            {
-                { 0, "Stop" },
-                { 1, "Weak" },
-                { 2, "Mid" },
-                { 3, "Strong" }
-            };
-
-            std::cout << "Client List:\n";
-            for (const auto &client : _clients)
-            {
-                std::cout << std::fixed
-                    << std::setprecision (2)
-                    << " - Room: " << client.first
-                    << " Guest: " << client.second.guest
-                    << " Wind: " << client.second.wind
-                    << " Energy: " << client.second.energy
-                    << " Cost: " << client.second.cost
-                    << "\n";
-            }
-        }
-
         ClientList _clients;
         OnUpdate _onUpdate;
         OnBack _onBack;
@@ -235,34 +205,6 @@ namespace Air_Conditioner
 
         virtual void Show () override
            {
-               std::cout << "Press 'Enter' to Back to the Welcome Page\n";
-
-               // TODO: config refresh rate
-               auto sleepTime = std::chrono::seconds { 1 };
-               auto isQuit = false;
-
-               std::thread thread ([&] {
-                   auto lastHit = std::chrono::system_clock::now ();
-                   while (!isQuit)
-                   {
-                       try
-                       {
-                           if (_onUpdate) _clients = _onUpdate ();
-                           _PrintInfo ();
-                       }
-                       catch (const std::exception &ex)
-                       {
-                           std::cerr << ex.what () << std::endl;
-                       }
-
-                       // To prevent over sleep :-)
-                       auto timeWasted = std::chrono::system_clock::now () - lastHit;
-                       if (timeWasted < sleepTime)
-                           std::this_thread::sleep_for (sleepTime - timeWasted);
-                       lastHit = std::chrono::system_clock::now ();
-                   }
-               });
-
                int tmpArgc = 0;
                char ** tmpArgv = nullptr;
                QApplication app(tmpArgc,tmpArgv);
@@ -271,12 +213,6 @@ namespace Air_Conditioner
                client.SetOnUpdate(std::move(_onUpdate));
                client.show();
                app.exec();
-
-               // TODO: handle invalid input
-               //getchar (); getchar ();
-               if (_onBack) _onBack ();
-               isQuit = true;
-               if (thread.joinable ()) thread.join ();
            }
 
 

@@ -11,11 +11,11 @@
 #include "ui_guestwindow.h"
 #include "server-view-gui-qt.h"
 
-#include <iostream>//删除
-
 #include <QHeaderView>
 #include <QMessageBox>
 #include <QStandardItemModel>
+
+#include <iostream>
 
 WelcomeWindow::WelcomeWindow(QWidget *parent) :
     QWidget(parent),
@@ -338,11 +338,7 @@ void ClientWindow::UpdateClient(){
         }
         _itemModel->setItem(row,5,new QStandardItem(QString().setNum(state.energy)));
         _itemModel->setItem(row,6,new QStandardItem(QString().setNum(state.cost)));
-//        std::chrono::time_point<std::chrono::system_clock, minutes_type> minutes = std::chrono::time_point_cast
-//                <minutes_type>(state.pulse);
-//        std::cout<<minutes.time_since_epoch().count()<<std::endl;
          time_t t = std::chrono::system_clock :: to_time_t(state.pulse);
-         std :: cout<< ctime(&t)<< std :: endl;
         _itemModel->setItem(row,7,new QStandardItem(QString(ctime(&t))));
     }
 }
