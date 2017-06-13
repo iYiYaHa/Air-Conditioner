@@ -49,13 +49,13 @@ namespace Air_Conditioner
     public:
         void SetConfig (const ServerInfo &config)
         {
-            ScheduleManager::SetConfig (config);
+            ConfigManager::SetConfig (config);
         }
 
         // For ConfigView
         const ServerInfo &GetConfig () const
         {
-            return ScheduleManager::GetConfig ();
+            return ConfigManager::GetConfig ();
         }
     };
 

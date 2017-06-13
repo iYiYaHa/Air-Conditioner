@@ -40,6 +40,8 @@ namespace Air_Conditioner
         Temperature current;
         Temperature target;
         Wind wind;
+
+        bool hasWind;
         Energy energy;
         Cost cost;
         TimePoint pulse;

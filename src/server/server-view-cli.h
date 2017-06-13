@@ -431,6 +431,7 @@ namespace Air_Conditioner
             {
                 const auto &roomId = client.first;
                 const auto &roomState = client.second;
+                auto wind = roomState.hasWind ? roomState.wind : 0;
 
                 std::cout << std::fixed
                     << std::setprecision (2)
@@ -438,7 +439,7 @@ namespace Air_Conditioner
                     << " Guest: " << roomState.guest
                     << " Cur Temp: " << roomState.current
                     << " Target Temp: " << roomState.target
-                    << " Wind: " << roomState.wind
+                    << " Wind: " << windStr.at (wind)
                     << " Energy: " << roomState.energy
                     << " Cost: " << roomState.cost
                     << "\n";
