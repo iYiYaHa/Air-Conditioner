@@ -1,4 +1,4 @@
-
+﻿
 //
 // Air Conditioner - Server MVC View (GUI View)
 // Youjie Zhang, 2017
@@ -68,15 +68,6 @@ namespace Air_Conditioner
 
     class ConfigViewGUI : public ConfigView
     {
-//        void _PrintInfo () const
-//        {
-//            std::cout << "Current Config:"
-//                << "\n - Master is " << (_config.isOn ? "ON" : "OFF")
-//                << "\n - Mode: " << (!_config.mode ? "Summer" : "Winter")
-//                << "\n - Slave Pulse Frequency: " << _config.pulseFreq
-//                << " s\n";
-//        }
-
         ServerInfo _config;
         OnSet _onSet;
         OnBack _onBack;
@@ -277,11 +268,12 @@ namespace Air_Conditioner
                QApplication app(tmpArgc,tmpArgv);
                ClientWindow client;
                client.SetOnBack(std::move(_onBack));
+               client.SetOnUpdate(std::move(_onUpdate));
                client.show();
                app.exec();
 
                // TODO: handle invalid input
-               getchar (); getchar ();
+               //getchar (); getchar ();
                if (_onBack) _onBack ();
                isQuit = true;
                if (thread.joinable ()) thread.join ();

@@ -1,4 +1,4 @@
-
+﻿
 //
 // Air Conditioner - Server MVC View (GUI View - QT Implementation)
 // Youjie Zhang, 2017
@@ -11,7 +11,7 @@
 #include "ui_guestwindow.h"
 #include "server-view-gui-qt.h"
 
-#include <iostream>//删除！！！
+#include <iostream>//删除
 
 #include <QHeaderView>
 #include <QMessageBox>
@@ -31,27 +31,37 @@ WelcomeWindow::~WelcomeWindow()
 
 void WelcomeWindow::on_QuitBtn_clicked()
 {
-    if(_onQuit) _onQuit();
+    if(_onQuit) {
+        _onQuit();
+    }
 }
 
 void WelcomeWindow::on_ConfigBtn_clicked()
 {
-    if(_onConfig) _onConfig();
+    if(_onConfig){
+        _onConfig();
+    }
 }
 
 void WelcomeWindow::on_GuestBtn_clicked()
 {
-    if(_onGuest) _onGuest();
+    if(_onGuest){
+        _onGuest();
+    }
 }
 
 void WelcomeWindow::on_StatisticBtn_clicked()
 {
-    if(_onLog) _onLog();
+    if(_onLog) {
+        _onLog();
+    }
 }
 
 void WelcomeWindow::on_ClientBtn_clicked()
 {
-    if(_onClient) _onClient();
+    if(_onClient){
+        _onClient();
+    }
 }
 
 
@@ -64,8 +74,8 @@ GuestWindow::GuestWindow(QWidget *parent) :
     //Create data model
     _itemModel = new QStandardItemModel();
     _itemModel->setColumnCount(2);
-    _itemModel->setHeaderData(0, Qt::Horizontal, QString::fromUtf8("房间 ID "));
-    _itemModel->setHeaderData(1, Qt::Horizontal, QString::fromUtf8("房客 ID "));
+    _itemModel->setHeaderData(0, Qt::Horizontal, QString(QStringLiteral("房间 ID")));
+    _itemModel->setHeaderData(1, Qt::Horizontal, QString(QStringLiteral("房客 ID")));
 
     //Bind data model to the table.
     ui->GuestTable->setModel(_itemModel);
@@ -91,7 +101,8 @@ GuestWindow::~GuestWindow()
 }
 
 void GuestWindow::closeEvent(QCloseEvent * event){
-    if(_onBack) _onBack();
+    if(_onBack)
+        _onBack();
     else{
         event->accept();
     }
@@ -138,15 +149,15 @@ void GuestWindow::on_ConfirmBtn_clicked()
         _list.emplace_back (std::move (guest));
         QMessageBox::information(this,
                          QString(""),
-                         QString("添加成功"));
+                         QString(QStringLiteral("添加成功")));
         RefreshGuest();
         on_CancelBtn_clicked();//Return to the previous gui.
     }
-    catch (const std::exception &ex)//TODO：处理添加失败的情况
+    catch (const std::exception &ex)
     {
         std::cerr << ex.what() << std::endl;
         QMessageBox::information(this,
-                         QString("添加失败"),
+                         QString(QStringLiteral("添加失败")),
                          QString(ex.what()));
         ui->GuestID->clear();
         ui->RoomID->clear();
@@ -156,8 +167,10 @@ void GuestWindow::on_ConfirmBtn_clicked()
 
 void GuestWindow::on_QuitBtn_clicked()
 {
-    this->close();
-    _onBack();
+    if(_onBack){
+        this->close();
+        _onBack();
+    }
 }
 
 void GuestWindow::LoadGuest(const std::list<GuestInfo> &list)
@@ -178,27 +191,33 @@ void GuestWindow::RefreshGuest()
 
 void GuestWindow::on_DelBtn_clicked()
 {
-    //加个确认框
     try{
         QModelIndex ind = ui->GuestTable->currentIndex();
         int row = ind.row();
         RoomId roomId = ind.sibling(row,0).data().toString().toStdString();
-        _onDel(roomId);
-        for(auto i = _list.begin();i!=_list.end();++i){
-            if(i->room == roomId){
-                _list.erase(i);
-                break;
+        int ret = QMessageBox::information(this,QStringLiteral("提示"),
+                       QStringLiteral("确定删除该房客信息？"),QStringLiteral("确定"),
+                                           QStringLiteral("取消"));
+        if(ret == 1)
+            return;
+        else{
+            _onDel(roomId);
+            for(auto i = _list.begin();i!=_list.end();++i){
+                if(i->room == roomId){
+                    _list.erase(i);
+                    break;
             }
         }
         RefreshGuest();
         QMessageBox::information(this,
                          QString(""),
-                         QString("删除成功"));
+                         QStringLiteral("删除成功"));
+        }
     }
     catch(const std::exception &ex){
         std::cerr << ex.what() << std::endl;
         QMessageBox::information(this,
-                         QString("删除失败"),
+                         QStringLiteral("删除失败"),
                          QString(ex.what()));
     }
 
@@ -229,10 +248,38 @@ ClientWindow::ClientWindow(QWidget *parent) :
     ui(new Ui::ClientWindow)
 {
     ui->setupUi(this);
+
+    //Create data model
+    _itemModel = new QStandardItemModel();
+    _itemModel->setColumnCount(8);
+
+    _itemModel->setHeaderData(0, Qt::Horizontal, QString(QStringLiteral("房间 ID ")));
+    _itemModel->setHeaderData(1, Qt::Horizontal, QString(QStringLiteral("房客 ID ")));
+    _itemModel->setHeaderData(2, Qt::Horizontal, QString(QStringLiteral("当前温度")));
+    _itemModel->setHeaderData(3, Qt::Horizontal, QString(QStringLiteral("目标温度")));
+    _itemModel->setHeaderData(4, Qt::Horizontal, QString(QStringLiteral("风速")));
+    _itemModel->setHeaderData(5, Qt::Horizontal, QString(QStringLiteral("能耗")));
+    _itemModel->setHeaderData(6, Qt::Horizontal, QString(QStringLiteral("费用")));
+    _itemModel->setHeaderData(7, Qt::Horizontal, QString(QStringLiteral("最近一次心跳")));
+
+    //Bind data model to the table.
+    ui->ClientTable->setModel(_itemModel);
+    ui->ClientTable->showGrid();
+    ui->ClientTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->ClientTable->setSortingEnabled(true);
+    ui->ClientTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->ClientTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    //Update clients information periodically
+    timer = new QTimer();
+    connect(timer,SIGNAL(timeout()),this,SLOT(UpdateClient()));
+    timer->setInterval(1000);
 }
 
 ClientWindow::~ClientWindow()
 {
+    delete _itemModel;
+    delete timer;
     delete ui;
 }
 
@@ -242,6 +289,56 @@ void ClientWindow::closeEvent(QCloseEvent *event){
     }
     else{
         event->accept();
+    }
+}
+
+void ClientWindow::on_BackBtn_clicked()
+{
+    if(_onBack){
+        this->close();
+        _onBack();
+    }
+}
+
+void ClientWindow::UpdateClient(){
+    _clients = _onUpdate();
+    using minutes_type = std::chrono::duration<int,std::ratio<60*60>> ;
+    int row = 0;
+    _itemModel->removeRows(0,_itemModel->rowCount());
+
+    for(auto i = _clients.begin();i != _clients.end();++i,++row){
+        RoomId room= i->first;
+        ClientState state = i->second;
+        _itemModel->setItem(row,0,new QStandardItem(QString::fromStdString(room)));
+        _itemModel->setItem(row,1,new QStandardItem(QString::fromStdString(state.guest)));
+
+        //TODO: Fix the precision of display temperature.
+        _itemModel->setItem(row,2,new QStandardItem(QString().setNum(state.current)));
+        _itemModel->setItem(row,3,new QStandardItem(QString().setNum(state.target)));
+        switch(state.wind){
+        case 0:
+            _itemModel->setItem(row,4,new QStandardItem(QString(QStringLiteral("停止送风"))));
+            break;
+        case 1:
+            _itemModel->setItem(row,4,new QStandardItem(QString(QStringLiteral("低速风"))));
+            break;
+        case 2:
+            _itemModel->setItem(row,4,new QStandardItem(QString(QStringLiteral("中速风"))));
+            break;
+        case 3:
+            _itemModel->setItem(row,4,new QStandardItem(QString(QStringLiteral("高速风"))));
+            break;
+         default:
+            break;
+        }
+        _itemModel->setItem(row,5,new QStandardItem(QString().setNum(state.energy)));
+        _itemModel->setItem(row,6,new QStandardItem(QString().setNum(state.cost)));
+//        std::chrono::time_point<std::chrono::system_clock, minutes_type> minutes = std::chrono::time_point_cast
+//                <minutes_type>(state.pulse);
+//        std::cout<<minutes.time_since_epoch().count()<<std::endl;
+         time_t t = std::chrono::system_clock :: to_time_t(state.pulse);
+         std :: cout<< ctime(&t)<< std :: endl;
+        _itemModel->setItem(row,7,new QStandardItem(QString(ctime(&t))));
     }
 }
 
@@ -293,6 +390,4 @@ void ConfigWindow::on_CancelBtn_clicked()
     this->close();
     _onBack();
 }
-
-
 

@@ -1,4 +1,4 @@
-
+﻿
 //
 // Air Conditioner - Server MVC View (GUI View - QT)
 // Youjie Zhang, 2017
@@ -7,9 +7,12 @@
 #ifndef AC_SERVER_VIEW_GUI_QT_H
 #define AC_SERVER_VIEW_GUI_QT_H
 
-#include <QWidget>
+
 #include <functional>
+
+#include <QWidget>
 #include <QCloseEvent>
+#include <QTimer>
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include "server-view.h"
@@ -89,17 +92,36 @@ class ClientWindow : public QWidget
 {
     Q_OBJECT
     using OnBack = std::function<void ()>;
+    using OnUpdate = std::function<const ClientList &()>;
 public:
     explicit ClientWindow(QWidget *parent = 0);
     ~ClientWindow();
+
     void SetOnBack(OnBack && onBack){
         _onBack = onBack;
     }
+
+    void SetOnUpdate(OnUpdate && onUpdate){
+        _onUpdate = onUpdate;
+
+        timer->start();
+    }
+
+
 protected:
     void closeEvent(QCloseEvent *event);
+
+private slots:
+    void on_BackBtn_clicked();
+    void UpdateClient();
+
 private:
     Ui::ClientWindow *ui;
+    OnUpdate _onUpdate;
     OnBack _onBack;
+    ClientList _clients;
+    QStandardItemModel * _itemModel;
+    QTimer * timer;
 };
 
 class GuestWindow : public QWidget
@@ -111,7 +133,6 @@ class GuestWindow : public QWidget
 
     OnAdd _onAdd;
     OnDel _onDel;
-    QStandardItemModel * _itemModel;
 public:
     explicit GuestWindow(QWidget *parent = 0);
     ~GuestWindow();
@@ -150,6 +171,7 @@ private:
     std::list<GuestInfo> _list;
     Ui::GuestWindow *ui;
     OnBack _onBack;
+    QStandardItemModel * _itemModel;
 };
 
 

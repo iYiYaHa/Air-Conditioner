@@ -1,9 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>ClientWindow</class>
- <widget name="ClientWindow" class="QWidget">
+ <widget class="QWidget" name="ClientWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +13,30 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <widget class="QTableView" name="ClientTable">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>70</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BackBtn">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>返回</string>
+   </property>
+  </widget>
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>
