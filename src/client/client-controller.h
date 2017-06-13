@@ -74,6 +74,8 @@ namespace Air_Conditioner
             // Spec for has wind cases
             if (hasWind)
                 deltaTemp += deltaTemp * (request.wind - 2) / 4.0;
+            else
+                deltaTemp /= 2.0;  // changing slower than hasWind
 
             // Handle changes
             if (request.current < targetTemp)

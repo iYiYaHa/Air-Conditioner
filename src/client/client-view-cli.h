@@ -11,32 +11,17 @@
 #include <iomanip>
 #include <unordered_map>
 #include <string>
-#include <sstream>
 #include <thread>
 #include <mutex>
 #include <chrono>
 
 #include "client-view.h"
+#include "../common/cli-helper.h"
 
 namespace Air_Conditioner
 {
     class AuthViewCLI : public AuthView
     {
-        GuestInfo _GetGuestInfo () const
-        {
-            RoomId roomId;
-            GuestId guestId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-            std::cout << "Guest ID: ";
-            std::cin >> guestId;
-
-            return GuestInfo {
-                roomId, guestId
-            };
-        }
-
         OnAuth _onAuth;
 
     public:
@@ -50,9 +35,13 @@ namespace Air_Conditioner
 
             while (true)
             {
+                auto roomId = InputHelper::Get<RoomId> ("Room ID");
+                auto guestId = InputHelper::Get<GuestId> ("Guest ID");
                 try
                 {
-                    _onAuth (_GetGuestInfo ());
+                    _onAuth (GuestInfo {
+                        std::move (roomId), std::move (guestId)
+                    });
                     break;
                 }
                 catch (const std::exception &ex)
@@ -65,44 +54,70 @@ namespace Air_Conditioner
 
     class ControlViewCLI : public ControlView
     {
+        std::mutex _mtxData;
         GuestInfo _guestInfo;
         RoomRequest _roomRequest;
-        std::mutex _mtxRoomRequest;
         ClientInfo _clientInfo;
         ServerInfo _serverInfo;
 
-        void _GetRequest ()
+        std::pair<Temperature, Temperature> _GetTempRange () const
         {
-            getchar ();
-            char buf[1024];
-            while (true)
+            if (_serverInfo.mode == 0)  // Summer
+                return std::make_pair (MinTemp, DefaultRoomTemp);
+            else                        // Winter
+                return std::make_pair (DefaultRoomTemp, MaxTemp);
+        }
+
+        void _UpdateTemp ()
+        {
+            auto temp = InputHelper::Get<Temperature> ("Target Temp");
+
+            std::lock_guard<std::mutex> lg { _mtxData };
+            auto tempRange = _GetTempRange ();
+            if (temp < tempRange.first || temp > tempRange.second)
             {
-                Temperature temp = 31;
-                Wind wind = 4;
+                std::cout << "Temperature should be in range ["
+                    << tempRange.first << ", " << tempRange.second << "]\n";
+                return;
+            }
+            _roomRequest.target = temp;
+            std::cout << "Updated\n";
+        }
 
-                std::cout << "Target Temp (" << MinTemp
-                    << " - " << MaxTemp << "): ";
-                std::cin.getline (buf, 1024);
-                std::istringstream iss (buf); iss >> temp;
-                if (temp < MinTemp || temp > MaxTemp)
-                {
-                    std::cerr << "Invalid Temperature Input :-(\n";
-                    continue;
-                }
+        void _UpdateWind ()
+        {
+            constexpr auto minWind = Wind { 1 };
+            constexpr auto maxWind = Wind { 3 };
 
-                std::cout << "Target Wind (0 - 3): ";
-                std::cin.getline (buf, 1024);
-                std::istringstream iss2 (buf); iss2 >> wind;
-                if (wind < 0 || wind > 3)
-                {
-                    std::cerr << "Invalid Wind Input :-(\n";
-                    continue;
-                }
+            auto wind = InputHelper::Get<Wind> ("Target Wind");
+            if (wind < minWind || wind > maxWind)
+            {
+                std::cout << "Wind should be in range ["
+                    << minWind << ", " << maxWind << "]\n";
+                return;
+            }
 
-                std::lock_guard<std::mutex> lg { _mtxRoomRequest };
-                _roomRequest.target = temp;
-                _roomRequest.wind = wind;
-                break;
+            std::lock_guard<std::mutex> lg { _mtxData };
+            _roomRequest.wind = wind;
+            std::cout << "Updated\n";
+        }
+
+        void _Pulse ()
+        {
+            if (!_onPulse) return;
+
+            auto ret = _onPulse (_roomRequest);
+
+            _clientInfo = ret.first;
+            _serverInfo = ret.second;
+
+            // Handle server update working mode
+            auto tempRange = _GetTempRange ();
+            if (_roomRequest.target < tempRange.first ||
+                _roomRequest.target > tempRange.second)
+            {
+                _roomRequest.target = _serverInfo.mode == 0 ?
+                    DefaultSummerTemp : DefaultWinterTemp;
             }
         }
 
@@ -144,7 +159,7 @@ namespace Air_Conditioner
                         OnPulse &&onPulse,
                         OnSim &&onSim)
             : _guestInfo (guestInfo), _onPulse (onPulse), _onSim (onSim),
-            _roomRequest { guestInfo.room, DefaultRoomTemp, 0, 0 }
+            _roomRequest { guestInfo.room, DefaultRoomTemp, 0, Wind { 2 } }
         {}
 
         virtual void Show () override
@@ -153,18 +168,6 @@ namespace Air_Conditioner
 
             auto isQuit = false;
             auto isPause = false;
-
-            auto updateState = [&] (const ResponseFmt &ret)
-            {
-                _clientInfo = ret.first;
-                _serverInfo = ret.second;
-
-                if (_roomRequest.target == 0)
-                    _roomRequest.target = _serverInfo.mode == 0 ?
-                    DefaultSummerTemp : DefaultWinterTemp;
-                if (_roomRequest.wind == 0)
-                    _roomRequest.wind = 2;
-            };
 
             std::cout << "Welcom " << _guestInfo.guest
                 << " to Room " << _guestInfo.room
@@ -176,8 +179,8 @@ namespace Air_Conditioner
                 {
                     try
                     {
-                        std::lock_guard<std::mutex> lg { _mtxRoomRequest };
-                        if (_onPulse) updateState (_onPulse (_roomRequest));
+                        std::lock_guard<std::mutex> lg { _mtxData };
+                        _Pulse ();
                         if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
                         if (!isPause) _PrintInfo ();
                     }
@@ -186,7 +189,7 @@ namespace Air_Conditioner
                         std::cerr << ex.what () << std::endl;
                     }
 
-                    // To prevent over sleep :-)
+                    // Prevent over sleep :-)
                     auto timeWasted = std::chrono::system_clock::now () - lastHit;
                     if (timeWasted < sleepTime)
                         std::this_thread::sleep_for (sleepTime - timeWasted);
@@ -196,37 +199,31 @@ namespace Air_Conditioner
 
             while (!isQuit)
             {
-                // TODO: handle invalid input
-                getchar (); getchar (); isPause = true;
-                std::cout << "What you wanna do? Enter command to send request or quit\n"
-                    " - 'req' to send request\n"
+                InputHelper::GetLine ();
+                isPause = true;
+                std::cout << "What you wanna do? Enter command to update request or quit\n"
+                    " - 'temp' to update temperature\n"
+                    " - 'wind' to update wind\n"
                     " - 'quit' to quit\n"
-                    " - 'resume' to resume\n";
+                    " - Press Enter to resume\n"
+                    "$ ";
 
                 std::string cmd;
-                while (true)
+                if (!InputHelper::GetByRef (cmd))
                 {
-                    std::cout << "$ ";
-                    std::cin >> cmd;
-                    if (cmd == "req")
-                    {
-                        _GetRequest ();
-                        std::cout << "Request Done\n";
-                    }
-                    else if (cmd == "quit")
-                    {
-                        isQuit = true;
-                        break;
-                    }
-                    else if (cmd == "resume")
-                    {
-                        std::cout << std::endl;
-                        isPause = false;
-                        break;
-                    }
-                    else
-                        std::cerr << "Invalid command\n";
+                    isPause = false;
+                    continue;
                 }
+
+                if (cmd == "quit")
+                {
+                    isQuit = true;
+                    break;
+                }
+                else if (cmd == "temp") _UpdateTemp ();
+                else if (cmd == "wind") _UpdateWind ();
+                else std::cout << "Invalid Command\n";
+                isPause = false;
             }
             if (thread.joinable ()) thread.join ();
         }

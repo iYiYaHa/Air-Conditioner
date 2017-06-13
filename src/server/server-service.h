@@ -8,7 +8,10 @@
 #define AC_SERVER_SERVICE_H
 
 #include <exception>
+#include <queue>
 
+#define MAXCLIENT 2
+#define THRESHOLD 1
 #define DEADTIME 3
 #define DBNAME "ac.db"
 
@@ -22,31 +25,43 @@ namespace Air_Conditioner
     public:
         static void TurnOn (const RoomId &room)
         {
-            // impl turn on
+            // TODO: impl turn on
         }
         static void TurnOff (const RoomId &room)
         {
-            // impl turn off
+            // TODO: impl turn off
         }
 
         static void BegRequest (const RoomId &room,
                                 const ClientState &state)
         {
-            // impl beg req
+            // TODO: impl beg req
         }
         static void EndRequest (const RoomId &room)
         {
-            // impl end req
+            // TODO: impl end req
         }
 
+        static std::pair<TimePoint, TimePoint> GetTimeRange ()
+        {
+            // TODO: impl here
+            return std::make_pair (std::chrono::system_clock::now (),
+                                   std::chrono::system_clock::now () + std::chrono::hours { 24 });
+        }
         static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
         {
-            // impl here
-            return LogOnOffList {};
+            // TODO: impl here
+            LogOnOffList ret;
+            ret["john"].emplace_back (LogOnOff {
+                std::chrono::system_clock::now (),
+                std::chrono::system_clock::now () + std::chrono::hours { 1 }
+            });
+            ret["lee"];
+            return ret;
         }
         static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
         {
-            // impl here
+            // TODO: impl here
             return LogRequestList {};
         }
     };
@@ -60,6 +75,7 @@ namespace Air_Conditioner
             ORMAP ("Guest", room, guest);
         };
 
+        // In Database
         static BOT_ORM::ORMapper &_mapper ()
         {
             static BOT_ORM::ORMapper mapper (DBNAME);
@@ -130,36 +146,9 @@ namespace Air_Conditioner
         }
     };
 
-    class EnergyCostManager
+    class ConfigManager
     {
-    public:
-        static void AddEnergy (const RoomId &room, const Energy &energy);
-        static Energy GetEnergy (const RoomId &room);
-        static Cost GetCost (const RoomId &room);
-    };
-
-    class ScheduleManager
-    {
-        static void AdjustSchedule ()
-        {
-            // TODO: impl scheduling scheme
-            // EnergyCostManager::*
-        }
-
-        static void CheckAlive ()
-        {
-            // TODO: impl check alive and write to log
-
-            const auto deadTime = std::chrono::system_clock::now () -
-                std::chrono::seconds { DEADTIME };
-            auto &clients = _clients ();
-            for (auto p = clients.begin (); p != clients.end ();)
-                if (p->second.pulse < deadTime)
-                    p = clients.erase (p);
-                else ++p;
-        }
-
-    private:
+        // In Memory
         static ServerInfo &_config ()
         {
             static ServerInfo config;
@@ -175,6 +164,84 @@ namespace Air_Conditioner
         {
             return _config ();
         }
+    };
+
+    class ScheduleManager
+    {
+        static void Schedule ()
+        {
+            auto &clients = _clients ();
+
+            // Handle Server Off
+            if (!ConfigManager::GetConfig ().isOn)
+            {
+                for (auto &client : clients)
+                    client.second.hasWind = false;
+                return;
+            }
+
+            using Entry = std::pair<RoomId, ClientState>;
+
+            // Comp strategy (hard coded)
+            auto cmp = [] (const Entry &a, const Entry &b)
+            {
+                auto scoreA = std::abs (a.second.current - a.second.target);
+                auto scoreB = std::abs (b.second.current - b.second.target);
+                return scoreA < scoreB;
+            };
+
+            // Need to Change strategy (hard coded)
+            auto needToChange = [] (const ClientState &a)
+            {
+                return std::abs (a.target - a.current) >
+                    Temperature { THRESHOLD };
+            };
+
+            // Add clients that need to change and Sort in heap
+            std::priority_queue<Entry, std::vector<Entry>,
+                decltype (cmp)> queue (cmp);
+            for (auto &client : clients)
+                if (needToChange (client.second))
+                    queue.push (client);
+                else
+                    client.second.hasWind = false;
+
+            // Select top 'MAXCLIENT
+            auto count = 0;
+            std::unordered_map<RoomId, bool> hasWindList;
+            while (!queue.empty ())
+            {
+                if (++count > MAXCLIENT)
+                    break;
+
+                hasWindList[queue.top ().first] = true;
+                queue.pop ();
+            }
+
+            // Set their hasWind
+            for (auto &client : clients)
+                if (hasWindList[client.first])
+                    client.second.hasWind = true;
+        }
+
+        static void CheckAlive ()
+        {
+            const auto deadTime = std::chrono::system_clock::now () -
+                std::chrono::seconds { DEADTIME };
+
+            auto &clients = _clients ();
+            for (auto p = clients.begin (); p != clients.end ();)
+                if (p->second.pulse < deadTime)
+                {
+                    auto room = p->first;
+                    p = clients.erase (p);
+
+                    // Write to log
+                    LogManager::TurnOff (room);
+                    LogManager::EndRequest (room);
+                }
+                else ++p;
+        }
 
     private:
         static ClientList &_clients ()
@@ -188,29 +255,61 @@ namespace Air_Conditioner
         {
             _clients ().emplace (room.room, ClientState {
                 room.guest, Temperature { 0 }, Temperature { 0 },
-                Wind { 0 }, Energy { 0 }, Cost { 0 },
+                Wind { 0 }, Energy { 0 }, Cost { 0 }, false,
                 std::chrono::system_clock::now ()
             });
+
+            // Write to log
+            LogManager::TurnOn (room.room);
         }
 
         static void Pulse (const RoomRequest &req)
         {
-            // TODO: impl pulse
-            // LogManager::BegRequest
-
+            // Check Alive
             CheckAlive ();
 
             auto &roomState = GetClient (req.room);
+            auto isChanged =
+                roomState.current != req.current ||
+                roomState.target != req.target ||
+                roomState.wind != req.wind;
+
             roomState.current = req.current;
             roomState.target = req.target;
             roomState.wind = req.wind;
-            roomState.pulse = std::chrono::system_clock::now ();
+
+            // Write to log
+            if (isChanged)
+                LogManager::BegRequest (req.room, roomState);
+
+            // Schedule
+            Schedule ();
+
+            // Get Delta Time and Pulse
+            auto now = std::chrono::system_clock::now ();
+            std::chrono::duration<double> deltaTime = now - roomState.pulse;
+            roomState.pulse = now;
+
+            // Calc Energy and Cost
+            if (roomState.hasWind)
+            {
+                // Get Delta Energy
+                auto deltaEnergy = Energy { deltaTime.count () };
+                if (roomState.wind == 1)
+                    deltaEnergy = deltaEnergy * 0.8;
+                else if (roomState.wind == 3)
+                    deltaEnergy = deltaEnergy * 1.3;
+
+                // Add up energy
+                roomState.energy += deltaEnergy;
+                roomState.cost = roomState.energy * 5;
+            }
         }
 
         static ClientState &GetClient (const RoomId &room)
         {
             try { return _clients ().at (room); }
-            catch (...) { throw std::runtime_error ("No Such Room"); }
+            catch (...) { throw std::runtime_error ("No such active room, try login again"); }
         }
 
         static const ClientList &GetClientList ()
