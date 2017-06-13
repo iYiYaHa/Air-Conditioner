@@ -271,15 +271,20 @@ ClientWindow::ClientWindow(QWidget *parent) :
     ui->ClientTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     //Update clients information periodically
-    timer = new QTimer();
-    connect(timer,SIGNAL(timeout()),this,SLOT(UpdateClient()));
-    timer->setInterval(1000);
+    //Bind signal and slot
+    _timer = new QTimer();
+    connect(_timer,SIGNAL(timeout()),this,SLOT(UpdateClient()));
+
+    //Pulse defualt value
+    _pulseInterval = 1000;
+    ui->PulseInterval->setValue(_pulseInterval/1000);
+
 }
 
 ClientWindow::~ClientWindow()
 {
     delete _itemModel;
-    delete timer;
+    delete _timer;
     delete ui;
 }
 
@@ -339,6 +344,23 @@ void ClientWindow::UpdateClient(){
          time_t t = std::chrono::system_clock :: to_time_t(state.pulse);
          std :: cout<< ctime(&t)<< std :: endl;
         _itemModel->setItem(row,7,new QStandardItem(QString(ctime(&t))));
+    }
+}
+
+void ClientWindow::on_PulseInterval_valueChanged(int arg1)
+{
+    if(arg1 < 0){
+        QMessageBox::warning(this,
+                             QStringLiteral("范围错误"),
+                             QString(QStringLiteral("刷新频率必须为正数，请重新输入")));
+        ui->PulseInterval->setValue(1000);
+        return ;
+    }
+    else{
+        _pulseInterval = arg1 * 1000;
+        _timer->stop();
+        _timer->setInterval(_pulseInterval);
+        _timer->start();
     }
 }
 

@@ -93,6 +93,7 @@ class ClientWindow : public QWidget
     Q_OBJECT
     using OnBack = std::function<void ()>;
     using OnUpdate = std::function<const ClientList &()>;
+
 public:
     explicit ClientWindow(QWidget *parent = 0);
     ~ClientWindow();
@@ -103,8 +104,7 @@ public:
 
     void SetOnUpdate(OnUpdate && onUpdate){
         _onUpdate = onUpdate;
-
-        timer->start();
+        _timer->start();
     }
 
 
@@ -115,13 +115,16 @@ private slots:
     void on_BackBtn_clicked();
     void UpdateClient();
 
+    void on_PulseInterval_valueChanged(int arg1);
+
 private:
     Ui::ClientWindow *ui;
     OnUpdate _onUpdate;
     OnBack _onBack;
     ClientList _clients;
     QStandardItemModel * _itemModel;
-    QTimer * timer;
+    QTimer * _timer;
+    int _pulseInterval;
 };
 
 class GuestWindow : public QWidget
