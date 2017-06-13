@@ -7,6 +7,8 @@
 #ifndef AC_SERVER_VIEW_CONTROLLER_H
 #define AC_SERVER_VIEW_CONTROLLER_H
 
+#include <utility>
+
 #include "server-service.h"
 #include "server-view.h"
 
@@ -79,6 +81,10 @@ namespace Air_Conditioner
     class LogController
     {
     public:
+        std::pair<TimePoint, TimePoint> GetTimeRange () const
+        {
+            return LogManager::GetTimeRange ();
+        }
         LogOnOffList GetLogOnOff (const TimePoint &from, const TimePoint &to)
         {
             return LogManager::GetOnOff (from, to);

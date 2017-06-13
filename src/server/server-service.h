@@ -39,10 +39,22 @@ namespace Air_Conditioner
             // impl end req
         }
 
+        static std::pair<TimePoint, TimePoint> GetTimeRange ()
+        {
+            // impl here
+            return std::make_pair (std::chrono::system_clock::now (),
+                                   std::chrono::system_clock::now () + std::chrono::hours { 24 });
+        }
         static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
         {
             // impl here
-            return LogOnOffList {};
+            LogOnOffList ret;
+            ret["john"].emplace_back (LogOnOff {
+                std::chrono::system_clock::now (),
+                std::chrono::system_clock::now () + std::chrono::hours { 1 }
+            });
+            ret["lee"];
+            return ret;
         }
         static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
         {

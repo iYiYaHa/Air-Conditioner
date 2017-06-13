@@ -9,6 +9,7 @@
 
 #include <chrono>
 #include <unordered_map>
+#include <list>
 
 #include "../common/common-model.h"
 
@@ -21,7 +22,7 @@ namespace Air_Conditioner
         TimePoint timeBeg, timeEnd;
     };
 
-    using LogOnOffList = std::unordered_multimap<RoomId, LogOnOff>;
+    using LogOnOffList = std::unordered_map<RoomId, std::list<LogOnOff>>;
 
     struct LogRequest
     {
@@ -31,7 +32,7 @@ namespace Air_Conditioner
         Cost cost;
     };
 
-    using LogRequestList = std::unordered_multimap<RoomId, LogRequest>;
+    using LogRequestList = std::unordered_map<RoomId, std::list<LogRequest>>;
 
     struct ClientState
     {
