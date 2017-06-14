@@ -43,9 +43,10 @@ namespace Air_Conditioner
             return *_Instance ();
         }
 
-        void Auth (const GuestInfo &guest)
+        ServerInfo Auth (const GuestInfo &guest)
         {
-            Request (AUTH, Protocol::GuestInfoToJson (guest));
+            auto ret = Request (AUTH, Protocol::GuestInfoToJson (guest));
+            return Protocol::JsonToServerInfo (ret);
         }
 
         std::pair<ClientInfo, ServerInfo> Pulse (const RoomRequest &req)

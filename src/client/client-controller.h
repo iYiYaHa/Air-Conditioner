@@ -41,8 +41,8 @@ namespace Air_Conditioner
 
         void Auth (const GuestInfo &guest)
         {
-            _client.Auth (guest);
-            _viewManager.ToControlView (guest);
+            auto serverInfo = _client.Auth (guest);
+            _viewManager.ToControlView (guest, serverInfo);
         }
 
         std::pair<ClientInfo, ServerInfo> Pulse (const RoomRequest &req)

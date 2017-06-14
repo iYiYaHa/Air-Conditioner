@@ -48,6 +48,10 @@ namespace Air_Conditioner
                 {
                     std::cerr << ex.what () << std::endl;
                 }
+                catch (int)
+                {
+                    throw std::runtime_error ("Server Close the connection");
+                }
             }
         }
     };
@@ -66,6 +70,17 @@ namespace Air_Conditioner
                 return std::make_pair (MinTemp, DefaultRoomTemp);
             else                        // Winter
                 return std::make_pair (DefaultRoomTemp, MaxTemp);
+        }
+
+        void _UpdateWorkingMode ()
+        {
+            auto tempRange = _GetTempRange ();
+            if (_roomRequest.target < tempRange.first ||
+                _roomRequest.target > tempRange.second)
+            {
+                _roomRequest.target = _serverInfo.mode == 0 ?
+                    DefaultSummerTemp : DefaultWinterTemp;
+            }
         }
 
         void _UpdateTemp ()
@@ -107,18 +122,12 @@ namespace Air_Conditioner
             if (!_onPulse) return;
 
             auto ret = _onPulse (_roomRequest);
-
             _clientInfo = ret.first;
             _serverInfo = ret.second;
 
-            // Handle server update working mode
-            auto tempRange = _GetTempRange ();
-            if (_roomRequest.target < tempRange.first ||
-                _roomRequest.target > tempRange.second)
-            {
-                _roomRequest.target = _serverInfo.mode == 0 ?
-                    DefaultSummerTemp : DefaultWinterTemp;
-            }
+            _UpdateWorkingMode ();
+            if (!_serverInfo.isOn)
+                _clientInfo.hasWind = false;
         }
 
         void _PrintInfo () const
@@ -156,22 +165,27 @@ namespace Air_Conditioner
 
     public:
         ControlViewCLI (const GuestInfo &guestInfo,
+                        const ServerInfo &serverInfo,
                         OnPulse &&onPulse,
                         OnSim &&onSim)
-            : _guestInfo (guestInfo), _onPulse (onPulse), _onSim (onSim),
+            : _guestInfo (guestInfo), _serverInfo (serverInfo),
+            _onPulse (onPulse), _onSim (onSim),
             _roomRequest { guestInfo.room, DefaultRoomTemp, 0, Wind { 2 } }
-        {}
+        {
+            _UpdateWorkingMode ();
+        }
 
         virtual void Show () override
         {
             constexpr auto sleepTime = std::chrono::seconds { 1 };
 
+            std::string errMsg;
             auto isQuit = false;
             auto isPause = false;
 
             std::cout << "Welcom " << _guestInfo.guest
                 << " to Room " << _guestInfo.room
-                << " :-)\n (Press 'Enter' to pause)\n";
+                << " :-)\n (Press Enter to pause)\n";
 
             std::thread thread ([&] {
                 auto lastHit = std::chrono::system_clock::now ();
@@ -180,13 +194,19 @@ namespace Air_Conditioner
                     try
                     {
                         std::lock_guard<std::mutex> lg { _mtxData };
-                        _Pulse ();
+
+                        try { _Pulse (); }
+                        catch (int)
+                        { throw std::runtime_error ("Server Close the connection"); }
+
                         if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
                         if (!isPause) _PrintInfo ();
                     }
                     catch (const std::exception &ex)
                     {
-                        std::cerr << ex.what () << std::endl;
+                        std::cerr << "\n" << ex.what () << " (Press Enter to stop)";
+                        errMsg = ex.what ();
+                        isQuit = true;
                     }
 
                     // Prevent over sleep :-)
@@ -200,6 +220,8 @@ namespace Air_Conditioner
             while (!isQuit)
             {
                 InputHelper::GetLine ();
+                if (isQuit) break;
+
                 isPause = true;
                 std::cout << "What you wanna do? Enter command to update request or quit\n"
                     " - 'temp' to update temperature\n"
@@ -226,6 +248,9 @@ namespace Air_Conditioner
                 isPause = false;
             }
             if (thread.joinable ()) thread.join ();
+
+            if (!errMsg.empty ())
+                throw std::runtime_error (errMsg.c_str ());
         }
     };
 }

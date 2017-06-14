@@ -21,9 +21,8 @@ namespace Air_Conditioner
     class ControlView : public ViewBase
     {
     public:
-        using ResponseFmt = std::pair<ClientInfo, ServerInfo>;
         using OnPulse = std::function<
-             ResponseFmt (const RoomRequest &)>;
+            std::pair<ClientInfo, ServerInfo> (const RoomRequest &)>;
         using OnSim = std::function<
             void (RoomRequest &, const bool)>;
     };
@@ -33,7 +32,8 @@ namespace Air_Conditioner
     public:
         // Implemented in 'client-view-manager-*.cpp'
         void ToAuthView ();
-        void ToControlView (const GuestInfo &guestInfo);
+        void ToControlView (const GuestInfo &guestInfo,
+                            const ServerInfo &serverInfo);
     };
 }
 

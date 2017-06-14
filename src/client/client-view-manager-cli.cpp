@@ -21,12 +21,13 @@ namespace Air_Conditioner
     }
 
     void ClientViewManager::ToControlView (
-        const GuestInfo &guestInfo)
+        const GuestInfo &guestInfo,
+        const ServerInfo &serverInfo)
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<ClientFacadeController> (*this);
         _Navigate<ControlViewCLI> (
-            guestInfo,
+            guestInfo, serverInfo,
             std::bind (&ClientFacadeController::Pulse, controller, _1),
             std::bind (&ClientFacadeController::Simulate, controller, _1, _2));
     }

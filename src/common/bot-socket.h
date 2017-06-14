@@ -339,7 +339,7 @@ namespace BOT_Socket
             {
                 CloseSocket (_sock);
                 _sock = -1;
-                throw std::runtime_error ("Server Close the Connection");
+                throw 0;
             }
 
             // Recv
@@ -362,8 +362,7 @@ namespace BOT_Socket
             }
 
             // Server Close the Connection
-            if (!isRead)
-                throw std::runtime_error ("Server Close the Connection");
+            if (!isRead) throw 0;
 
             return oss.str ();
         }
