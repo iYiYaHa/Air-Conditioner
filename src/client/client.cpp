@@ -20,16 +20,43 @@ int main (int argc, char *argv[])
     // Read from start-up args to Init Protocol
     auto serverIp = IPADDR;
     auto serverPort = PORT;
-    if (argc > 1) serverIp = argv[1];
-    if (argc > 2) serverPort = std::stoi (argv[2]);
 
-    // Dependency Injection
-    ProtocolClient::Init (serverIp, (unsigned short) serverPort);
+    try
+    {
+        if (argc > 1) serverIp = argv[1];
+        if (argc > 2) serverPort = std::stoi (argv[2]);
+    }
+    catch (...)
+    {
+        std::cerr << "Invalid command line args" << std::endl;
+        return 1;
+    }
 
-    // Start the view
-    ClientViewManager viewManager;
-    viewManager.ToAuthView ();
-    viewManager.Start ();
+    try
+    {
+        // Dependency Injection
+        ProtocolClient::Init (serverIp, (unsigned short) serverPort);
+
+        // Start the view
+        ClientViewManager viewManager;
+        viewManager.ToAuthView ();
+        viewManager.Start ();
+    }
+    catch (const std::exception &ex)
+    {
+        std::cerr << ex.what () << std::endl;
+        return 2;
+    }
+    catch (int)
+    {
+        std::cerr << "Server Close the Connection" << std::endl;
+        return 3;
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown Error" << std::endl;
+        return 4;
+    }
 
     return 0;
 }

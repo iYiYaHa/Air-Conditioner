@@ -22,12 +22,15 @@ namespace Air_Conditioner
             ScheduleManager::AddClient (guest);
         }
 
-        std::pair<ClientInfo, ServerInfo> Pulse (const RoomRequest &req)
+        void Pulse (const RoomRequest &req)
         {
             ScheduleManager::Pulse (req);
+        }
 
+        std::pair<ClientInfo, ServerInfo> GetInfo (const RoomId &room) const
+        {
             const auto &serverInfo = ConfigManager::GetConfig ();
-            const auto &clientState = ScheduleManager::GetClient (req.room);
+            const auto &clientState = ScheduleManager::GetClient (room);
             ClientInfo clientInfo {
                 clientState.hasWind, clientState.energy, clientState.cost
             };

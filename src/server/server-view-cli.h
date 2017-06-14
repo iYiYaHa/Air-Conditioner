@@ -437,8 +437,8 @@ namespace Air_Conditioner
                     << std::setprecision (2)
                     << " - Room: " << roomId
                     << " Guest: " << roomState.guest
-                    << " Cur Temp: " << roomState.current
-                    << " Target Temp: " << roomState.target
+                    << " Current: " << roomState.current
+                    << " Target: " << roomState.target
                     << " Wind: " << windStr.at (wind)
                     << " Energy: " << roomState.energy
                     << " Cost: " << roomState.cost

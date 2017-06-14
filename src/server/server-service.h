@@ -11,12 +11,14 @@
 #include <queue>
 
 #define MAXCLIENT 2
-#define THRESHOLD 1
+#define THRESHOLD 1.0
 #define DEADTIME 3
 #define DBNAME "ac.db"
 
 #include "ormlite/ormlite.h"
 #include "server-model.h"
+
+#include <iostream>
 
 namespace Air_Conditioner
 {
@@ -27,7 +29,8 @@ namespace Air_Conditioner
         {
             // TODO: impl turn on
         }
-        static void TurnOff (const RoomId &room)
+        static void TurnOff (const RoomId &room,
+                             const TimePoint &time)
         {
             // TODO: impl turn off
         }
@@ -168,66 +171,58 @@ namespace Air_Conditioner
 
     class ScheduleManager
     {
+        static ClientList &_clients ()
+        {
+            static ClientList clients;
+            return clients;
+        }
+
+        static bool HasWind (const ClientState &state,
+                             const ServerInfo &config)
+        {
+            // Case: Server Off
+            if (!config.isOn) return false;
+
+            // Case: Enough already
+            if (config.mode == 0 &&
+                state.current <= state.target) return false;
+            if (config.mode == 1 &&
+                state.current >= state.target) return false;
+
+            // Case: Need to send wind
+            if (config.mode == 0 &&
+                state.current - state.target >= THRESHOLD) return true;
+            if (config.mode == 1 &&
+                state.target - state.current >= THRESHOLD) return true;
+
+            // Case: Keep the state
+            return state.hasWind;
+        }
+
         static void Schedule ()
         {
             auto &clients = _clients ();
+            const auto &config = ConfigManager::GetConfig ();
 
-            // Handle Server Off
-            if (!ConfigManager::GetConfig ().isOn)
-            {
-                for (auto &client : clients)
-                    client.second.hasWind = false;
-                return;
-            }
-
-            using Entry = std::pair<RoomId, ClientState>;
-
-            // Comp strategy (hard coded)
-            auto cmp = [] (const Entry &a, const Entry &b)
-            {
-                auto scoreA = std::abs (a.second.current - a.second.target);
-                auto scoreB = std::abs (b.second.current - b.second.target);
-                return scoreA < scoreB;
-            };
-
-            // Need to Change strategy (hard coded)
-            auto needToChange = [] (const ClientState &a)
-            {
-                return std::abs (a.target - a.current) >
-                    Temperature { THRESHOLD };
-            };
-
-            // Add clients that need to change and Sort in heap
-            std::priority_queue<Entry, std::vector<Entry>,
-                decltype (cmp)> queue (cmp);
-            for (auto &client : clients)
-                if (needToChange (client.second))
-                    queue.push (client);
-                else
-                    client.second.hasWind = false;
-
-            // Select top 'MAXCLIENT
             auto count = 0;
             std::unordered_map<RoomId, bool> hasWindList;
-            while (!queue.empty ())
-            {
-                if (++count > MAXCLIENT)
-                    break;
-
-                hasWindList[queue.top ().first] = true;
-                queue.pop ();
-            }
-
-            // Set their hasWind
             for (auto &client : clients)
-                if (hasWindList[client.first])
-                    client.second.hasWind = true;
+                if (HasWind (client.second, config) && count < 3)
+                {
+                    hasWindList[client.first] = true;
+                    ++count;
+                }
+                else
+                    hasWindList[client.first] = false;
+
+            for (auto &client : clients)
+                client.second.hasWind = hasWindList[client.first];
         }
 
         static void CheckAlive ()
         {
-            const auto deadTime = std::chrono::system_clock::now () -
-                std::chrono::seconds { DEADTIME };
+            auto now = std::chrono::system_clock::now ();
+            auto deadTime = now - std::chrono::seconds { DEADTIME };
 
             auto &clients = _clients ();
             for (auto p = clients.begin (); p != clients.end ();)
@@ -237,23 +232,23 @@ namespace Air_Conditioner
                     p = clients.erase (p);
 
                     // Write to log
-                    LogManager::TurnOff (room);
+                    LogManager::TurnOff (room, now + std::chrono::seconds { 1 });
                     LogManager::EndRequest (room);
                 }
                 else ++p;
         }
 
-    private:
-        static ClientList &_clients ()
-        {
-            static ClientList clients;
-            return clients;
-        }
-
     public:
         static void AddClient (const GuestInfo &room)
         {
-            _clients ().emplace (room.room, ClientState {
+            auto &clients = _clients ();
+
+            // Login already
+            if (clients.find (room.room) != clients.end ())
+                throw std::runtime_error ("Login already");
+
+            // New Login
+            clients.emplace (room.room, ClientState {
                 room.guest, Temperature { 0 }, Temperature { 0 },
                 Wind { 0 }, Energy { 0 }, Cost { 0 }, false,
                 std::chrono::system_clock::now ()
@@ -294,7 +289,7 @@ namespace Air_Conditioner
             if (roomState.hasWind)
             {
                 // Get Delta Energy
-                auto deltaEnergy = Energy { deltaTime.count () };
+                auto deltaEnergy = Energy { deltaTime.count () / 60.0 };
                 if (roomState.wind == 1)
                     deltaEnergy = deltaEnergy * 0.8;
                 else if (roomState.wind == 3)
@@ -314,6 +309,9 @@ namespace Air_Conditioner
 
         static const ClientList &GetClientList ()
         {
+            // Check Alive
+            CheckAlive ();
+
             return _clients ();
         }
     };
