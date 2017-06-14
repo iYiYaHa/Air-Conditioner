@@ -1,4 +1,4 @@
-
+﻿
 //
 // Air Conditioner - Server MVC View (GUI View Manager)
 // Youjie Zhang, 2017
@@ -45,7 +45,9 @@ namespace Air_Conditioner
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<LogController> ();
+        auto timeRange = controller->GetTimeRange ();
         _Navigate<LogViewGUI> (
+            timeRange.first, timeRange.second,
             std::bind (&LogController::GetLogOnOff, controller, _1, _2),
             std::bind (&LogController::GetLogRequest, controller, _1, _2),
             std::bind (&ServerViewManager::ToWelcomeView, this));

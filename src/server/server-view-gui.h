@@ -167,29 +167,185 @@ namespace Air_Conditioner
 
     class LogViewGUI : public LogView
     {
+
+        void _PrintTime (const TimePoint &timePoint) const
+        {
+            auto timeT = std::chrono::system_clock::to_time_t (timePoint);
+            auto timeTm = std::localtime (&timeT);
+            std::cout << timeTm->tm_year + 1900
+                << "-" << timeTm->tm_mon + 1
+                << "-" << timeTm->tm_mday;
+        }
+
+        void _PrintTimeRange () const
+        {
+            std::cout << "Log starts from ";
+            _PrintTime (_timeBeg);
+            std::cout << " to ";
+            _PrintTime (_timeEnd);
+            std::cout << std::endl;
+        }
+
+//        TimePoint _GetTimeBeg () const
+//        {
+//            std::cout << "Select a time point to start with"
+//                " (Time Format: 'Year-Month-Day')\n";
+
+//            while (true)
+//            {
+//                auto str = InputHelper::Get<std::string> ("Time String");
+//                for (auto &ch : str) if (ch == '-') ch = ' ';
+//                std::istringstream iss (str);
+
+//                try
+//                {
+//                    std::tm timeTm { 0 };
+//                    auto count = 0;
+//                    while (iss >> str)
+//                    {
+//                        auto num = std::stoi (str);
+//                        if (!num) throw 0;
+
+//                        if (!timeTm.tm_year) timeTm.tm_year = num - 1900;
+//                        else if (!timeTm.tm_mon) timeTm.tm_mon = num - 1;
+//                        else if (!timeTm.tm_mday) timeTm.tm_mday = num;
+
+//                        ++count;
+//                    }
+
+//                    // Validation
+//                    if (count != 3 ||
+//                        timeTm.tm_year < 0 ||
+//                        timeTm.tm_mon < 0 ||
+//                        timeTm.tm_mon > 11 ||
+//                        timeTm.tm_mday < 1 ||
+//                        timeTm.tm_mday > 31)
+//                        throw 0;
+//                    auto timeT = mktime (&timeTm);
+//                    if (localtime (&timeT) == nullptr)
+//                        throw 0;
+
+//                    auto ret = std::chrono::system_clock::from_time_t (timeT);
+
+//                    // Range Validation
+//                    if (ret < _timeBeg - std::chrono::hours { 24 } ||
+//                        ret > _timeEnd + std::chrono::hours { 24 })
+//                    {
+//                        std::cout << "Time ";
+//                        _PrintTime (ret);
+//                        std::cout << " out of range\n";
+//                        _PrintTimeRange ();
+//                    }
+//                    else return ret;
+//                }
+//                catch (...)
+//                {
+//                    std::cout << "Invalid Time Format\n";
+//                }
+//            }
+//        }
+
+//        TimePoint _GetTimeEnd (const TimePoint &tBeg) const
+//        {
+//            std::cout << "Select a Log Type (day/week/month)\n";
+//            while (true)
+//            {
+//                auto type = InputHelper::Get<std::string> ("Log Mode");
+//                if (type == "day")
+//                    return tBeg + std::chrono::hours { 24 };
+//                else if (type == "week")
+//                    return tBeg + std::chrono::hours { 24 * 7 };
+//                else if (type == "month")
+//                    return tBeg + std::chrono::hours { 24 * 30 };
+//                else
+//                    std::cout << "Invalid Log Mode\n";
+//            }
+//        }
+
+        void _PrintLog (const LogOnOffList &onOffList,
+                        const LogRequestList &requestList)
+        {
+            std::cout << std::endl;
+            if (onOffList.empty ())
+                std::cout << "No On-Off records\n";
+            else
+            {
+                std::cout << "On-Off records:\n";
+                for (const auto &item : onOffList)
+                {
+                    std::cout << " - Room " << item.first
+                        << " has " << item.second.size ()
+                        << " On-Off records\n";
+                }
+            }
+
+            std::cout << std::endl;
+            if (requestList.empty ())
+                std::cout << "No Request records\n";
+            else
+            {
+                std::cout << "Request records:\n";
+                for (const auto &item : requestList)
+                {
+                    std::cout << " - Room " << item.first
+                        << " has " << item.second.size ()
+                        << " Request records\n";
+                    for (const auto &entry : item.second)
+                    {
+                        std::cout << "  - [";
+                        _PrintTime (entry.timeBeg);
+                        std::cout << " ~ ";
+                        _PrintTime (entry.timeEnd);
+                        std::cout << "] Temp: " << entry.tempBeg
+                            << " -> " << entry.tempEnd
+                            << " Wind: " << entry.wind
+                            << " Cost: " << entry.cost
+                            << std::endl;
+                    }
+                }
+            }
+        }
+
+        TimePoint _timeBeg, _timeEnd;
         OnQueryOnOff _onQueryOnOff;
         OnQueryRequest _onQueryRequest;
         OnBack _onBack;
 
     public:
-        LogViewGUI (OnQueryOnOff &&onQueryOnOff,
+        LogViewGUI (TimePoint timeBeg,
+                    TimePoint timeEnd,
+                    OnQueryOnOff &&onQueryOnOff,
                     OnQueryRequest &&onQueryRequest,
                     OnBack &&onBack)
-            : _onQueryOnOff (onQueryOnOff), _onQueryRequest (onQueryRequest),
+            : _timeBeg (timeBeg), _timeEnd (timeEnd),
+            _onQueryOnOff (onQueryOnOff),
+            _onQueryRequest (onQueryRequest),
             _onBack (onBack)
         {}
 
         virtual void Show () override
         {
-            //if (_onBack) _onBack ();
-            int tmpArgc = 0;
-            char ** tmpArgv = nullptr;
-            QApplication app(tmpArgc,tmpArgv);
-            StatisticWindow statistic;
-            statistic.SetOnBack(std::move(_onBack));
-            statistic.show();
-            app.exec();
+            std::cout << "\n";
+            _PrintTimeRange ();
+            auto timeBeg = _GetTimeBeg ();
+            auto timeEnd = _GetTimeEnd (timeBeg);
+
+            auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
+            auto requestList = _onQueryRequest (timeBeg, timeEnd);
+
+            _PrintLog (onOffList, requestList);
+            std::cout << std::endl;
+
+            if (_onBack) _onBack ();
+//            int tmpArgc = 0;
+//            char ** tmpArgv = nullptr;
+//            QApplication app(tmpArgc,tmpArgv);
+//            StatisticWindow statistic;
+//            statistic.SetOnBack(std::move(_onBack));
+//            statistic.show();
+//            app.exec();
         }
+
     };
 
     class ClientViewGUI : public ClientView

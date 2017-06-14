@@ -320,7 +320,8 @@ void ClientWindow::UpdateClient(){
         //TODO: Fix the precision of display temperature.
         _itemModel->setItem(row,2,new QStandardItem(QString::number(state.current)));
         _itemModel->setItem(row,3,new QStandardItem(QString::number(state.target)));
-        switch(state.wind){
+        auto wind = state.hasWind ? state.wind : 0;
+        switch(wind){
         case 0:
             _itemModel->setItem(row,4,new QStandardItem(QString(QStringLiteral("停止送风"))));
             break;
@@ -336,8 +337,8 @@ void ClientWindow::UpdateClient(){
          default:
             break;
         }
-        _itemModel->setItem(row,5,new QStandardItem(QString::number(state.energy)));
-        _itemModel->setItem(row,6,new QStandardItem(QString::number(state.cost)));
+        _itemModel->setItem(row,5,new QStandardItem(QString::number(state.energy,'g',3)));
+        _itemModel->setItem(row,6,new QStandardItem(QString::number(state.cost,'g',3)));
          time_t t = std::chrono::system_clock :: to_time_t(state.pulse);
         _itemModel->setItem(row,7,new QStandardItem(QString(ctime(&t))));
     }
