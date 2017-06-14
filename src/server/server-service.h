@@ -24,47 +24,66 @@ namespace Air_Conditioner
 {
     class LogManager
     {
-    public:
-        static void TurnOn (const RoomId &room)
+        struct OnOffEntity
         {
-            // TODO: impl turn on
-        }
-        static void TurnOff (const RoomId &room,
-                             const TimePoint &time)
+            std::string timeBeg, timeEnd;
+            ORMAP ("OnOffLog", timeBeg, timeEnd);
+        };
+
+        struct RequestEntity
         {
-            // TODO: impl turn off
+            std::string timeBeg, timeEnd;
+            Temperature tempBeg, tempEnd;
+            Wind wind;
+            Cost costBeg, costEnd;
+            ORMAP ("RequestLog", timeBeg, timeEnd,
+                   tempBeg, tempEnd, wind, costBeg, costEnd);
+        };
+
+        // In Database
+        static BOT_ORM::ORMapper &_mapper ()
+        {
+            static BOT_ORM::ORMapper mapper (DBNAME);
+            static auto hasInit = false;
+
+            if (!hasInit)
+            {
+                try { mapper.CreateTbl (OnOffEntity {}); }
+                catch (...) {}
+                try { mapper.CreateTbl (RequestEntity {}); }
+                catch (...) {}
+                hasInit = true;
+            }
+            return mapper;
         }
 
-        static void BegRequest (const RoomId &room,
-                                const ClientState &state)
+    public:
+        static void WriteOnOff (const RoomId &room,
+                                const LogOnOff &entry)
         {
-            // TODO: impl beg req
+            // TODO
         }
-        static void EndRequest (const RoomId &room)
+
+        static void WriteRequest (const RoomId &room,
+                                  const LogRequest &entry)
         {
-            // TODO: impl end req
+            // TODO
         }
 
         static std::pair<TimePoint, TimePoint> GetTimeRange ()
         {
-            // TODO: impl here
+            // TODO
             return std::make_pair (std::chrono::system_clock::now (),
                                    std::chrono::system_clock::now () + std::chrono::hours { 24 });
         }
         static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
         {
-            // TODO: impl here
-            LogOnOffList ret;
-            ret["john"].emplace_back (LogOnOff {
-                std::chrono::system_clock::now (),
-                std::chrono::system_clock::now () + std::chrono::hours { 1 }
-            });
-            ret["lee"];
-            return ret;
+            // TODO
+            return LogOnOffList {};
         }
         static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
         {
-            // TODO: impl here
+            // TODO
             return LogRequestList {};
         }
     };
@@ -219,6 +238,45 @@ namespace Air_Conditioner
                 client.second.hasWind = hasWindList[client.first];
         }
 
+        static void HandleReqBeg (const RoomId &room,
+                                  const TimePoint &time,
+                                  ClientState &state)
+        {
+            state.lastRequest.timeBeg = time;
+            state.lastRequest.tempBeg = state.current;
+            state.lastRequest.costBeg = state.cost;
+        }
+
+        static void HandleReqEnd (const RoomId &room,
+                                  const TimePoint &time,
+                                  ClientState &state)
+        {
+            state.lastRequest.timeEnd = time;
+            state.lastRequest.tempEnd = state.current;
+            state.lastRequest.costEnd = state.cost;
+
+            LogManager::WriteRequest (room, state.lastRequest);
+        }
+
+        static void HandleTurnOn (const RoomId &room,
+                                  const TimePoint &time,
+                                  ClientState &state)
+        {
+            state.lastOnOff.timeBeg = time;
+        }
+
+        static void HandleTurnOff (const RoomId &room,
+                                   const TimePoint &time,
+                                   ClientState &state)
+        {
+            if (state.lastRequest.costBeg != state.cost)
+                HandleReqEnd (room, time, state);
+
+            state.lastOnOff.timeEnd = state.pulse;
+
+            LogManager::WriteOnOff (room, state.lastOnOff);
+        }
+
         static void CheckAlive ()
         {
             auto now = std::chrono::system_clock::now ();
@@ -228,12 +286,8 @@ namespace Air_Conditioner
             for (auto p = clients.begin (); p != clients.end ();)
                 if (p->second.pulse < deadTime)
                 {
-                    auto room = p->first;
+                    HandleTurnOff (p->first, now, p->second);
                     p = clients.erase (p);
-
-                    // Write to log
-                    LogManager::TurnOff (room, now + std::chrono::seconds { 1 });
-                    LogManager::EndRequest (room);
                 }
                 else ++p;
         }
@@ -241,6 +295,9 @@ namespace Air_Conditioner
     public:
         static void AddClient (const GuestInfo &room)
         {
+            // Check Alive
+            CheckAlive ();
+
             auto &clients = _clients ();
 
             // Login already
@@ -248,14 +305,13 @@ namespace Air_Conditioner
                 throw std::runtime_error ("Login already");
 
             // New Login
-            clients.emplace (room.room, ClientState {
-                room.guest, Temperature { 0 }, Temperature { 0 },
-                Wind { 0 }, Energy { 0 }, Cost { 0 }, false,
-                std::chrono::system_clock::now ()
-            });
-
-            // Write to log
-            LogManager::TurnOn (room.room);
+            auto now = std::chrono::system_clock::now ();
+            auto state = ClientState {
+                room.guest, Temperature { 0 }, Temperature { 0 }, Wind { 0 },
+                false, Energy { 0 }, Cost { 0 }, now
+            };
+            HandleTurnOn (room.room, now, state);
+            clients.emplace (room.room, std::move (state));
         }
 
         static void Pulse (const RoomRequest &req)
@@ -263,27 +319,27 @@ namespace Air_Conditioner
             // Check Alive
             CheckAlive ();
 
+            // Update Client State
             auto &roomState = GetClient (req.room);
-            auto isChanged =
-                roomState.current != req.current ||
-                roomState.target != req.target ||
-                roomState.wind != req.wind;
-
             roomState.current = req.current;
             roomState.target = req.target;
             roomState.wind = req.wind;
 
-            // Write to log
-            if (isChanged)
-                LogManager::BegRequest (req.room, roomState);
-
             // Schedule
+            auto hasWindBefore = roomState.hasWind;
+            auto costBefore = roomState.cost;
             Schedule ();
 
             // Get Delta Time and Pulse
             auto now = std::chrono::system_clock::now ();
             std::chrono::duration<double> deltaTime = now - roomState.pulse;
             roomState.pulse = now;
+
+            // Handle Beg/End Request
+            if (!hasWindBefore && roomState.hasWind)
+                HandleReqBeg (req.room, now, roomState);
+            else if (hasWindBefore && roomState.hasWind)
+                HandleReqEnd (req.room, now, roomState);
 
             // Calc Energy and Cost
             if (roomState.hasWind)
@@ -304,7 +360,7 @@ namespace Air_Conditioner
         static ClientState &GetClient (const RoomId &room)
         {
             try { return _clients ().at (room); }
-            catch (...) { throw std::runtime_error ("No such active room, try login again"); }
+            catch (...) { throw std::runtime_error ("Logout already"); }
         }
 
         static const ClientList &GetClientList ()

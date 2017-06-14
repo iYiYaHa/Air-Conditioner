@@ -28,8 +28,8 @@ namespace Air_Conditioner
     {
         TimePoint timeBeg, timeEnd;
         Temperature tempBeg, tempEnd;
+        Cost costBeg, costEnd;
         Wind wind;
-        Cost cost;
     };
 
     using LogRequestList = std::unordered_map<RoomId, std::list<LogRequest>>;
@@ -37,6 +37,7 @@ namespace Air_Conditioner
     struct ClientState
     {
         GuestId guest;
+
         Temperature current;
         Temperature target;
         Wind wind;
@@ -44,7 +45,11 @@ namespace Air_Conditioner
         bool hasWind;
         Energy energy;
         Cost cost;
+
         TimePoint pulse;
+
+        LogOnOff lastOnOff;
+        LogRequest lastRequest;
     };
 
     using ClientList = std::unordered_map<RoomId, ClientState>;

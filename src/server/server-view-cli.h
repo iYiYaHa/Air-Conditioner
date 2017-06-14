@@ -367,7 +367,7 @@ namespace Air_Conditioner
                         std::cout << "] Temp: " << entry.tempBeg
                             << " -> " << entry.tempEnd
                             << " Wind: " << entry.wind
-                            << " Cost: " << entry.cost
+                            << " Cost: " << entry.costEnd - entry.costBeg
                             << std::endl;
                     }
                 }

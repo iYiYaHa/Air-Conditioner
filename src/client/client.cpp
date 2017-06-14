@@ -28,6 +28,7 @@ int main (int argc, char *argv[])
     }
     catch (...)
     {
+        // TODO: prompt in Qt
         std::cerr << "Invalid command line args" << std::endl;
         return 1;
     }
@@ -47,15 +48,10 @@ int main (int argc, char *argv[])
         std::cerr << ex.what () << std::endl;
         return 2;
     }
-    catch (int)
-    {
-        std::cerr << "Server Close the Connection" << std::endl;
-        return 3;
-    }
     catch (...)
     {
         std::cerr << "Unknown Error" << std::endl;
-        return 4;
+        return 3;
     }
 
     return 0;
