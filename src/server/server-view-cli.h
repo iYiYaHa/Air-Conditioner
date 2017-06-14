@@ -15,6 +15,7 @@
 #include <chrono>
 
 #include "server-view.h"
+#include "../common/cli-helper.h"
 
 namespace Air_Conditioner
 {
@@ -30,19 +31,16 @@ namespace Air_Conditioner
                 { "client", ViewType::ClientView },
                 { "quit", ViewType::Quit }
             };
+
             while (true)
             {
                 std::string cmd;
-                try
-                {
-                    std::cout << "$ ";
-                    std::cin >> cmd;
-                    return viewStr.at (cmd);
-                }
-                catch (...)
-                {
-                    std::cerr << "Invalid command\n";
-                }
+                std::cout << "$ ";
+                if (!InputHelper::GetByRef (cmd))
+                    continue;
+
+                try { return viewStr.at (cmd); }
+                catch (...) { std::cerr << "Invalid Command\n"; }
             }
         }
 
@@ -62,14 +60,8 @@ namespace Air_Conditioner
                 " - 'log': View logs\n"
                 " - 'client': View logs\n"
                 " - 'quit': Quit\n";
-            try
-            {
-                if (_onNav) _onNav (_GetViewType ());
-            }
-            catch (const std::exception &ex)
-            {
-                std::cerr << ex.what () << std::endl;
-            }
+            if (_onNav)
+                _onNav (_GetViewType ());
         }
     };
 
@@ -95,17 +87,24 @@ namespace Air_Conditioner
 
         virtual void Show () override
         {
-            _PrintInfo ();
-            std::cout << "\nWhat you wanna do? Enter command to update config or back\n"
+            std::cout << "\nWhat you wanna do?"
+                " Enter command to update config or back\n"
                 " - 'on' / 'off' to turn on/off the master\n"
                 " - 'summer' / 'winter' to update working mode\n"
-                " - 'back' to go back to welcome page\n";
+                " - Press Enter to go back to welcome page\n";
+            _PrintInfo ();
 
             while (true)
             {
-                std::cout << "$ ";
                 std::string cmd;
-                std::cin >> cmd;
+                std::cout << "$ ";
+                if (!InputHelper::GetByRef (cmd))
+                {
+                    if (_onBack) _onBack ();
+                    std::cout << std::endl;
+                    return;
+                }
+
                 if (cmd == "on")
                     _config.isOn = true;
                 else if (cmd == "off")
@@ -114,53 +113,22 @@ namespace Air_Conditioner
                     _config.mode = 0;
                 else if (cmd == "winter")
                     _config.mode = 1;
-                else if (cmd == "back")
-                {
-                    if (_onBack) _onBack ();
-                    std::cout << std::endl;
-                    break;
-                }
                 else
                 {
-                    std::cerr << "Invalid command\n";
+                    std::cout << "Invalid Command\n";
                     continue;
                 }
+
                 if (_onSet) _onSet (_config);
-                std::cout << "Config has been updated :-)\n";
+                std::cout << "Updated\n";
                 _PrintInfo ();
-                std::cout << std::endl;
             }
         }
     };
 
     class GuestViewCLI : public GuestView
     {
-        GuestInfo _GetGuestInfo () const
-        {
-            RoomId roomId;
-            GuestId guestId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-            std::cout << "Guest ID: ";
-            std::cin >> guestId;
-
-            return GuestInfo {
-                roomId, guestId
-            };
-        }
-
-        RoomId _GetRoomId () const
-        {
-            RoomId roomId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-
-            return roomId;
-        }
-
-        void _PrintList () const
+        void _List () const
         {
             if (_list.empty ())
             {
@@ -168,13 +136,60 @@ namespace Air_Conditioner
                 return;
             }
 
-            std::cout << "Guest on the list:\n";
+            std::cout << "Guests on the list:\n";
             for (const auto &guest : _list)
             {
                 std::cout
                     << " - Room: " << guest.room
                     << " Guest: " << guest.guest
                     << "\n";
+            }
+        }
+
+        void _Add ()
+        {
+            try
+            {
+                auto roomId = InputHelper::Get<RoomId> ("Room ID");
+                auto guestId = InputHelper::Get<GuestId> ("Guest ID");
+                auto guest = GuestInfo {
+                    std::move (roomId), std::move (guestId)
+                };
+
+                if (_onAdd) _onAdd (guest);  // throw here
+                _list.emplace_back (std::move (guest));
+                std::cout << "Added\n";
+            }
+            catch (const std::exception &ex)
+            {
+                std::cerr << ex.what () << std::endl;
+            }
+        }
+
+        void _Del ()
+        {
+            try
+            {
+                auto room = InputHelper::Get<RoomId> ("Room ID");
+                auto hasFound = false;
+                for (auto p = _list.begin (); p != _list.end ();)
+                {
+                    if (p->room == room)
+                    {
+                        p = _list.erase (p);
+                        hasFound = true;
+                    }
+                    else ++p;
+                }
+                if (!hasFound)
+                    throw std::runtime_error ("No Such Registered Room");
+
+                if (_onDel) _onDel (room);  // No throw here
+                std::cout << "Deleted\n";
+            }
+            catch (const std::exception &ex)
+            {
+                std::cerr << ex.what () << std::endl;
             }
         }
 
@@ -193,109 +208,208 @@ namespace Air_Conditioner
 
         virtual void Show () override
         {
-            std::cout << "\nWhat you wanna do? Enter command to update guest info or back\n"
+            std::cout << "\nWhat you wanna do?"
+                " Enter command to update guest info or back\n"
                 " - 'list' to view current list of guests\n"
                 " - 'add' to add new guest\n"
                 " - 'del' to delete existing guest\n"
-                " - 'back' to go back to welcome page\n";
+                " - Press Enter to go back to welcome page\n";
 
             while (true)
             {
-                std::cout << "$ ";
                 std::string cmd;
-                std::cin >> cmd;
-                if (cmd == "list")
-                    _PrintList ();
-                else if (cmd == "add")
-                {
-                    try
-                    {
-                        auto guest = _GetGuestInfo ();
-                        if (_onAdd) _onAdd (guest);
-                        _list.emplace_back (std::move (guest));
-                        std::cout << "Adding Done\n";
-                    }
-                    catch (const std::exception &ex)
-                    {
-                        std::cerr << ex.what () << std::endl;
-                    }
-                }
-                else if (cmd == "del")
-                {
-                    try
-                    {
-                        auto room = _GetRoomId ();
-                        auto hasFound = false;
-                        for (auto p = _list.begin (); p != _list.end ();)
-                        {
-                            if (p->room == room)
-                            {
-                                p = _list.erase (p);
-                                hasFound = true;
-                            }
-                            else ++p;
-                        }
-                        if (!hasFound)
-                            throw std::runtime_error ("No Such Registered Room");
-
-                        if (_onDel) _onDel (room);
-                        std::cout << "Deleting Done\n";
-                    }
-                    catch (const std::exception &ex)
-                    {
-                        std::cerr << ex.what () << std::endl;
-                    }
-                }
-                else if (cmd == "back")
+                std::cout << "$ ";
+                if (!InputHelper::GetByRef (cmd))
                 {
                     if (_onBack) _onBack ();
                     std::cout << std::endl;
-                    break;
+                    return;
                 }
-                else
-                {
-                    std::cerr << "Invalid command\n";
-                    continue;
-                }
+
+                if (cmd == "list") _List ();
+                else if (cmd == "add") _Add ();
+                else if (cmd == "del") _Del ();
+                else std::cerr << "Invalid Command\n";
             }
         }
     };
 
     class LogViewCLI : public LogView
     {
+        void _PrintTime (const TimePoint &timePoint) const
+        {
+            auto timeT = std::chrono::system_clock::to_time_t (timePoint);
+            auto timeTm = std::localtime (&timeT);
+            std::cout << timeTm->tm_year + 1900
+                << "-" << timeTm->tm_mon + 1
+                << "-" << timeTm->tm_mday;
+        }
+
+        void _PrintTimeRange () const
+        {
+            std::cout << "Log starts from ";
+            _PrintTime (_timeBeg);
+            std::cout << " to ";
+            _PrintTime (_timeEnd);
+            std::cout << std::endl;
+        }
+
+        TimePoint _GetTimeBeg () const
+        {
+            std::cout << "Select a time point to start with"
+                " (Time Format: 'Year-Month-Day')\n";
+
+            while (true)
+            {
+                auto str = InputHelper::Get<std::string> ("Time String");
+                for (auto &ch : str) if (ch == '-') ch = ' ';
+                std::istringstream iss (str);
+
+                try
+                {
+                    std::tm timeTm { 0 };
+                    auto count = 0;
+                    while (iss >> str)
+                    {
+                        auto num = std::stoi (str);
+                        if (!num) throw 0;
+
+                        if (!timeTm.tm_year) timeTm.tm_year = num - 1900;
+                        else if (!timeTm.tm_mon) timeTm.tm_mon = num - 1;
+                        else if (!timeTm.tm_mday) timeTm.tm_mday = num;
+
+                        ++count;
+                    }
+
+                    // Validation
+                    if (count != 3 ||
+                        timeTm.tm_year < 0 ||
+                        timeTm.tm_mon < 0 ||
+                        timeTm.tm_mon > 11 ||
+                        timeTm.tm_mday < 1 ||
+                        timeTm.tm_mday > 31)
+                        throw 0;
+                    auto timeT = mktime (&timeTm);
+                    if (localtime (&timeT) == nullptr)
+                        throw 0;
+
+                    auto ret = std::chrono::system_clock::from_time_t (timeT);
+
+                    // Range Validation
+                    if (ret < _timeBeg - std::chrono::hours { 24 } ||
+                        ret > _timeEnd + std::chrono::hours { 24 })
+                    {
+                        std::cout << "Time ";
+                        _PrintTime (ret);
+                        std::cout << " out of range\n";
+                        _PrintTimeRange ();
+                    }
+                    else return ret;
+                }
+                catch (...)
+                {
+                    std::cout << "Invalid Time Format\n";
+                }
+            }
+        }
+
+        TimePoint _GetTimeEnd (const TimePoint &tBeg) const
+        {
+            std::cout << "Select a Log Type (day/week/month)\n";
+            while (true)
+            {
+                auto type = InputHelper::Get<std::string> ("Log Mode");
+                if (type == "day")
+                    return tBeg + std::chrono::hours { 24 };
+                else if (type == "week")
+                    return tBeg + std::chrono::hours { 24 * 7 };
+                else if (type == "month")
+                    return tBeg + std::chrono::hours { 24 * 30 };
+                else
+                    std::cout << "Invalid Log Mode\n";
+            }
+        }
+
+        void _PrintLog (const LogOnOffList &onOffList,
+                        const LogRequestList &requestList)
+        {
+            std::cout << std::endl;
+            if (onOffList.empty ())
+                std::cout << "No On-Off records\n";
+            else
+            {
+                std::cout << "On-Off records:\n";
+                for (const auto &item : onOffList)
+                {
+                    std::cout << " - Room " << item.first
+                        << " has " << item.second.size ()
+                        << " On-Off records\n";
+                }
+            }
+
+            std::cout << std::endl;
+            if (requestList.empty ())
+                std::cout << "No Request records\n";
+            else
+            {
+                std::cout << "Request records:\n";
+                for (const auto &item : requestList)
+                {
+                    std::cout << " - Room " << item.first
+                        << " has " << item.second.size ()
+                        << " Request records\n";
+                    for (const auto &entry : item.second)
+                    {
+                        std::cout << "  - [";
+                        _PrintTime (entry.timeBeg);
+                        std::cout << " ~ ";
+                        _PrintTime (entry.timeEnd);
+                        std::cout << "] Temp: " << entry.tempBeg
+                            << " -> " << entry.tempEnd
+                            << " Wind: " << entry.wind
+                            << " Cost: " << entry.cost
+                            << std::endl;
+                    }
+                }
+            }
+        }
+
+        TimePoint _timeBeg, _timeEnd;
         OnQueryOnOff _onQueryOnOff;
         OnQueryRequest _onQueryRequest;
         OnBack _onBack;
 
     public:
-        LogViewCLI (OnQueryOnOff &&onQueryOnOff,
+        LogViewCLI (TimePoint timeBeg,
+                    TimePoint timeEnd,
+                    OnQueryOnOff &&onQueryOnOff,
                     OnQueryRequest &&onQueryRequest,
                     OnBack &&onBack)
-            : _onQueryOnOff (onQueryOnOff), _onQueryRequest (onQueryRequest),
+            : _timeBeg (timeBeg), _timeEnd (timeEnd),
+            _onQueryOnOff (onQueryOnOff),
+            _onQueryRequest (onQueryRequest),
             _onBack (onBack)
         {}
 
         virtual void Show () override
         {
+            std::cout << "\n";
+            _PrintTimeRange ();
+            auto timeBeg = _GetTimeBeg ();
+            auto timeEnd = _GetTimeEnd (timeBeg);
+
+            auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
+            auto requestList = _onQueryRequest (timeBeg, timeEnd);
+
+            _PrintLog (onOffList, requestList);
+            std::cout << std::endl;
+
             if (_onBack) _onBack ();
         }
     };
 
     class ClientViewCLI : public ClientView
     {
-        int _GetRefreshRate () const
-        {
-            // TODO: Handle invalid input
-            while (true)
-            {
-                int ret = 0;
-                std::cout << "Refresh Rate: ";
-                std::cin >> ret;
-                if (ret > 0) return ret;
-                std::cout << "Invalid Refresh Rate\n";
-            }
-        }
-
         void _PrintInfo () const
         {
             if (_clients.empty ())
@@ -317,6 +431,7 @@ namespace Air_Conditioner
             {
                 const auto &roomId = client.first;
                 const auto &roomState = client.second;
+                auto wind = roomState.hasWind ? roomState.wind : 0;
 
                 std::cout << std::fixed
                     << std::setprecision (2)
@@ -324,7 +439,7 @@ namespace Air_Conditioner
                     << " Guest: " << roomState.guest
                     << " Cur Temp: " << roomState.current
                     << " Target Temp: " << roomState.target
-                    << " Wind: " << roomState.wind
+                    << " Wind: " << windStr.at (wind)
                     << " Energy: " << roomState.energy
                     << " Cost: " << roomState.cost
                     << "\n";
@@ -342,9 +457,17 @@ namespace Air_Conditioner
 
         virtual void Show () override
         {
-            std::cout << "Press 'Enter' to Back to the Welcome Page\n";
+            std::cout << "\nInput the Refresh Rate of this Page\n";
+            int refreshRate;
 
-            auto refreshRate = _GetRefreshRate ();
+            while (true)
+            {
+                refreshRate = InputHelper::Get<int> ("Refresh Rate");
+                if (refreshRate > 0) break;
+                std::cout << "A positive Refresh Rate is required\n";
+            }
+
+            std::cout << "\nPress Enter to go back to welcome page\n";
             auto sleepTime = std::chrono::seconds { refreshRate };
             auto isQuit = false;
 
@@ -362,16 +485,16 @@ namespace Air_Conditioner
                         std::cerr << ex.what () << std::endl;
                     }
 
-                    // To prevent over sleep :-)
-                    auto timeWasted = std::chrono::system_clock::now () - lastHit;
+                    // Prevent over sleep :-)
+                    auto timeWasted =
+                        std::chrono::system_clock::now () - lastHit;
                     if (timeWasted < sleepTime)
                         std::this_thread::sleep_for (sleepTime - timeWasted);
                     lastHit = std::chrono::system_clock::now ();
                 }
             });
 
-            // TODO: handle invalid input
-            getchar (); getchar ();
+            InputHelper::GetLine ();
             if (_onBack) _onBack ();
             isQuit = true;
             if (thread.joinable ()) thread.join ();

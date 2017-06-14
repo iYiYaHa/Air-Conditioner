@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-06-13T11:29:14
+# Project created by QtCreator 2017-06-14T16:07:37
 #
 #-------------------------------------------------
 
@@ -24,23 +24,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    ../../src/client/client-view-manager-gui.cpp \
     ../../src/client/client.cpp \
-    ../../src/client/client-view-gui-qt.cpp
+    ../../src/client/client-view-gui-qt.cpp \
+    ../../src/client/client-view-manager-gui.cpp
 
 HEADERS += \
+    ../../src/client/client-controller.h \
+    ../../src/client/client-model.h \
+    ../../src/client/client-protocol.h \
+    ../../src/client/client-view.h \
     ../../src/common/json/json.hpp \
     ../../src/common/bot-cs.h \
     ../../src/common/bot-socket.h \
     ../../src/common/common-model.h \
     ../../src/common/common-protocol.h \
     ../../src/common/common-view.h \
-    ../../src/client/client-controller.h \
-    ../../src/client/client-model.h \
-    ../../src/client/client-protocol.h \
-    ../../src/client/client-view-gui-qt.h \
     ../../src/client/client-view-gui.h \
-    ../../src/client/client-view.h
+    ../../src/client/client-view-gui-qt.h
 
 FORMS += \
     ../../src/client/ui/authwindow.ui \

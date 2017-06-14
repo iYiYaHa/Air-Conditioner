@@ -65,8 +65,8 @@ void ControlWindow::ShowState(Air_Conditioner::ServerInfo _serverInfo,
                               Air_Conditioner::ClientInfo _clientInfo,
                               Air_Conditioner::RoomRequest _roomRequest)
 {
-    ui->Cost->setText(QString::number(_clientInfo.cost));
-    ui->Energy->setText(QString::number(_clientInfo.energy));
+    ui->Cost->setText(QString::number(_clientInfo.cost,'g',3));
+    ui->Energy->setText(QString::number(_clientInfo.energy,'g',3));
 
     if (!_serverInfo.isOn)
         ui->Wind->setText(QStringLiteral("主控机关机"));

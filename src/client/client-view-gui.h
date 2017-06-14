@@ -73,7 +73,7 @@ namespace Air_Conditioner
                 throw std::runtime_error(info.toStdString());
             }
             _roomRequest.target = temp;
-            std::cout << "Updated\n";
+          //  std::cout << "Updated\n";
         }
 
         void _UpdateWind (const Air_Conditioner::Wind wind)
@@ -90,7 +90,7 @@ namespace Air_Conditioner
 
             std::lock_guard<std::mutex> lg { _mtxData };
             _roomRequest.wind = wind;
-            std::cout << "Updated\n";
+           // std::cout << "Updated\n";
         }
 
         void _Pulse ()
