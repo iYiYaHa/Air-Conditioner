@@ -21,26 +21,12 @@
 #include "client-view-gui-qt.h"
 
 #include <QApplication>
+#include <QTimer>
 
 namespace Air_Conditioner
 {
     class AuthViewGUI : public AuthView
-    {
-        GuestInfo _GetGuestInfo () const
-        {
-            RoomId roomId;
-            GuestId guestId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-            std::cout << "Guest ID: ";
-            std::cin >> guestId;
-
-            return GuestInfo {
-                roomId, guestId
-            };
-        }
-
+    {  
         OnAuth _onAuth;
 
     public:
@@ -61,110 +47,93 @@ namespace Air_Conditioner
 
     class ControlViewGUI : public ControlView
     {
+        std::mutex _mtxData;
         GuestInfo _guestInfo;
         RoomRequest _roomRequest;
-        std::mutex _mtxRoomRequest;
         ClientInfo _clientInfo;
         ServerInfo _serverInfo;
 
-        void _GetRequest ()
+        std::pair<Temperature, Temperature> _GetTempRange () const
         {
-            getchar ();
-            char buf[1024];
-            while (true)
-            {
-                Temperature temp = 31;
-                Wind wind = 4;
-
-                std::cout << "Target Temp (" << MinTemp
-                    << " - " << MaxTemp << "): ";
-                std::cin.getline (buf, 1024);
-                std::istringstream iss (buf); iss >> temp;
-                if (temp < MinTemp || temp > MaxTemp)
-                {
-                    std::cerr << "Invalid Temperature Input :-(\n";
-                    continue;
-                }
-
-                std::cout << "Target Wind (0 - 3): ";
-                std::cin.getline (buf, 1024);
-                std::istringstream iss2 (buf); iss2 >> wind;
-                if (wind < 0 || wind > 3)
-                {
-                    std::cerr << "Invalid Wind Input :-(\n";
-                    continue;
-                }
-
-                std::lock_guard<std::mutex> lg { _mtxRoomRequest };
-                _roomRequest.target = temp;
-                _roomRequest.wind = wind;
-                break;
-            }
+            if (_serverInfo.mode == 0)  // Summer
+                return std::make_pair (MinTemp, DefaultRoomTemp);
+            else                        // Winter
+                return std::make_pair (DefaultRoomTemp, MaxTemp);
         }
 
-        void _PrintInfo () const
+        void _UpdateTemp (const Air_Conditioner::Temperature temp)
         {
-            static std::unordered_map<Wind, std::string> windStr
+            std::lock_guard<std::mutex> lg { _mtxData };
+            auto tempRange = _GetTempRange ();
+            if (temp < tempRange.first || temp > tempRange.second)
             {
-                { -1, "Off" },
-                { 0, "Stop" },
-                { 1, "Weak" },
-                { 2, "Mid" },
-                { 3, "Strong" }
-            };
+                QString info = "Temperature should be in range ["
+                    + QString().setNum(tempRange.first) + ", "
+                        + QString().setNum(tempRange.second) + "]\n";
+                throw std::runtime_error(info.toStdString());
+            }
+            _roomRequest.target = temp;
+            std::cout << "Updated\n";
+        }
 
-            Wind wind;
-            if (!_serverInfo.isOn)
-                wind = -1;
-            else if (!_clientInfo.hasWind)
-                wind = 0;
-            else
-                wind = _roomRequest.wind;
+        void _UpdateWind (const Air_Conditioner::Wind wind)
+        {
+            constexpr auto minWind = Wind { 1 };
+            constexpr auto maxWind = Wind { 3 };
 
-            std::cout << std::fixed
-                << std::setprecision (2)
-                << "\rRoom: " << _guestInfo.room
-                << " Current: " << _roomRequest.current
-                << " Target: " << _roomRequest.target
-                << " Energy: " << _clientInfo.energy
-                << " Cost: " << _clientInfo.cost
-                << " Wind: " << windStr.at (wind)
-                << "        ";
+            if (wind < minWind || wind > maxWind)
+            {
+                QString info =  "Wind should be in range ["
+                    + QString().setNum(minWind) + ", " + QString().setNum(maxWind) + "]\n";
+                throw std::runtime_error(info.toStdString());
+            }
+
+            std::lock_guard<std::mutex> lg { _mtxData };
+            _roomRequest.wind = wind;
+            std::cout << "Updated\n";
+        }
+
+        void _Pulse ()
+        {
+            if (!_onPulse) return;
+
+            auto ret = _onPulse (_roomRequest);
+
+            _clientInfo = ret.first;
+            _serverInfo = ret.second;
+
+            // Handle server update working mode
+            auto tempRange = _GetTempRange ();
+            if (_roomRequest.target < tempRange.first ||
+                _roomRequest.target > tempRange.second)
+            {
+                _roomRequest.target = _serverInfo.mode == 0 ?
+                    DefaultSummerTemp : DefaultWinterTemp;
+            }
         }
 
         OnPulse _onPulse;
         OnSim _onSim;
+
 
     public:
         ControlViewGUI (const GuestInfo &guestInfo,
                         OnPulse &&onPulse,
                         OnSim &&onSim)
             : _guestInfo (guestInfo), _onPulse (onPulse), _onSim (onSim),
-            _roomRequest { guestInfo.room, DefaultRoomTemp, 0, 0 }
+            _roomRequest { guestInfo.room, DefaultRoomTemp, 0, Wind { 2 } }
         {}
 
         virtual void Show () override
         {
             constexpr auto sleepTime = std::chrono::seconds { 1 };
 
+            int tmpArgc = 0;
+            char ** tmpArgv = nullptr;
+            QApplication app(tmpArgc,tmpArgv);
+            ControlWindow control;
+
             auto isQuit = false;
-            auto isPause = false;
-
-            auto updateState = [&] (const ResponseFmt &ret)
-            {
-                _clientInfo = ret.first;
-                _serverInfo = ret.second;
-
-                if (_roomRequest.target == 0)
-                    _roomRequest.target = _serverInfo.mode == 0 ?
-                    DefaultSummerTemp : DefaultWinterTemp;
-                if (_roomRequest.wind == 0)
-                    _roomRequest.wind = 2;
-            };
-
-            std::cout << "Welcom " << _guestInfo.guest
-                << " to Room " << _guestInfo.room
-                << " :-)\n (Press 'Enter' to pause)\n";
 
             std::thread thread ([&] {
                 auto lastHit = std::chrono::system_clock::now ();
@@ -172,17 +141,18 @@ namespace Air_Conditioner
                 {
                     try
                     {
-                        std::lock_guard<std::mutex> lg { _mtxRoomRequest };
-                        if (_onPulse) updateState (_onPulse (_roomRequest));
-                        if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
-                        if (!isPause) _PrintInfo ();
+                      std::lock_guard<std::mutex> lg { _mtxData };
+                      if(_onPulse) _Pulse();
+                      if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
+                      control.ShowState(_serverInfo,_clientInfo,_roomRequest);
                     }
                     catch (const std::exception &ex)
                     {
-                        std::cerr << ex.what () << std::endl;
+                      std::cerr << ex.what () << std::endl;
+                      control.Message(QString(ex.what()));
                     }
 
-                    // To prevent over sleep :-)
+                    // Prevent over sleep :-)
                     auto timeWasted = std::chrono::system_clock::now () - lastHit;
                     if (timeWasted < sleepTime)
                         std::this_thread::sleep_for (sleepTime - timeWasted);
@@ -190,43 +160,32 @@ namespace Air_Conditioner
                 }
             });
 
-            while (!isQuit)
-            {
-                // TODO: handle invalid input
-                //getchar (); getchar (); isPause = true;
-                std::cout << "What you wanna do? Enter command to send request or quit\n"
-                    " - 'req' to send request\n"
-                    " - 'quit' to quit\n"
-                    " - 'resume' to resume\n";
-
-                std::string cmd;
-                while (true)
-                {
-                    std::cout << "$ ";
-                    std::cin >> cmd;
-                    if (cmd == "req")
-                    {
-                        _GetRequest ();
-                        std::cout << "Request Done\n";
-                    }
-                    else if (cmd == "quit")
-                    {
-                        isQuit = true;
-                        break;
-                    }
-                    else if (cmd == "resume")
-                    {
-                        std::cout << std::endl;
-                        isPause = false;
-                        break;
-                    }
-                    else
-                        std::cerr << "Invalid command\n";
+            control.LoadGuestInfo(_guestInfo);
+            control.SetOnTempChanged([&](const Temperature temp){
+                try{
+                    _UpdateTemp(temp);
                 }
-            }
+                catch (std::exception &ex){
+                    control.Message(ex.what());
+                }
+            });
+
+            control.SetOnWindChanged([&](const Wind wind){
+                try{
+                    _UpdateWind(wind);
+                }
+                catch (std::exception &ex){
+                    control.Message(ex.what());
+                }
+            });
+
+            control.show();
+            app.exec();
+            isQuit = true;
+
             if (thread.joinable ()) thread.join ();
+
         }
     };
 }
-
 #endif AC_CLIENT_VIEW_GUI_H

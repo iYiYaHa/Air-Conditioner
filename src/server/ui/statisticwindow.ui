@@ -13,16 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QComboBox" name="MonthBox">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>40</y>
-     <width>69</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QTableView" name="StatisticTable">
    <property name="geometry">
     <rect>
@@ -30,16 +20,6 @@
      <y>70</y>
      <width>256</width>
      <height>192</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="DayBox">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>40</y>
-     <width>69</width>
-     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -56,16 +36,6 @@
     <string>查询</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="YearBox">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>40</y>
-     <width>69</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="QuitBtn">
    <property name="geometry">
     <rect>
@@ -78,6 +48,82 @@
    <property name="text">
     <string>退出</string>
    </property>
+  </widget>
+  <widget class="QDateEdit" name="StartTime">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>40</y>
+     <width>110</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="EndTime">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>40</y>
+     <width>110</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>0</y>
+     <width>201</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border:None
+</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QRadioButton" name="DayBtn">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>日报表</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="WeekBtn">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>10</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>周报表</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="MonthBtn">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>10</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>月报表</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
