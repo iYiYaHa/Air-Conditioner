@@ -182,7 +182,7 @@ namespace Air_Conditioner
             while (true)
             {
                 //auto type = InputHelper::Get<std::string> ("Log Mode");
-                auto type = "day";
+                auto type = "week";
                 if (type == "day")
                     return tBeg + std::chrono::hours { 24 };
                 else if (type == "week")
