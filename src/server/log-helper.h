@@ -51,7 +51,7 @@ namespace Air_Conditioner
                         << "," << TimeHelper::TimeToString (entry.timeEnd)
                         << "," << entry.tempBeg
                         << "," << entry.tempEnd
-                        << "," << windStr.at (entry.wind)
+                        << "," << windStr[entry.wind]
                         << "," << entry.costEnd - entry.costBeg;
                 }
             return oss.str ();
