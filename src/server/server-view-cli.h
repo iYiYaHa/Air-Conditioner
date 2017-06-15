@@ -362,6 +362,7 @@ namespace Air_Conditioner
             auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
             auto requestList = _onQueryRequest (timeBeg, timeEnd);
 
+            // TODO: save to csv file
             _PrintLog (onOffList, requestList);
             std::cout << std::endl;
 

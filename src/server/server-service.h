@@ -64,6 +64,7 @@ namespace Air_Conditioner
         static void WriteOnOff (const RoomId &room,
                                 const LogOnOff &entry)
         {
+            // TODO: time conversion
             auto &mapper = _mapper ();
             mapper.Insert (OnOffEntity {
                 0, room,
@@ -75,6 +76,7 @@ namespace Air_Conditioner
         static void WriteRequest (const RoomId &room,
                                   const LogRequest &entry)
         {
+            // TODO: time conversion
             auto &mapper = _mapper ();
             mapper.Insert (RequestEntity {
                 0, room,
@@ -111,20 +113,57 @@ namespace Air_Conditioner
             return std::make_pair (std::move (timeBeg), std::move (timeEnd));
         }
 
-        static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
+        static LogOnOffList GetOnOff (const TimePoint &from,
+                                      const TimePoint &to)
         {
             static OnOffEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
-            return LogOnOffList {};
+            auto &mapper = _mapper ();
+            auto result = mapper.Query (entity)
+                .Where (
+                    field (entity.timeBeg) >= std::chrono::system_clock::to_time_t (from) &&
+                    field (entity.timeEnd) < std::chrono::system_clock::to_time_t (to)
+                )
+                .ToList ();
+
+            LogOnOffList ret;
+            for (const auto &entry : result)
+            {
+                ret[entry.room].emplace_back (LogOnOff {
+                    std::chrono::system_clock::from_time_t (entry.timeBeg),
+                    std::chrono::system_clock::from_time_t (entry.timeEnd)
+                });
+            }
+            return ret;
         }
 
-        static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
+        static LogRequestList GetRequest (const TimePoint &from,
+                                          const TimePoint &to)
         {
             static RequestEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
-            return LogRequestList {};
+            auto &mapper = _mapper ();
+            auto result = mapper.Query (entity)
+                .Where (
+                    field (entity.timeBeg) >= std::chrono::system_clock::to_time_t (from) &&
+                    field (entity.timeEnd) < std::chrono::system_clock::to_time_t (to)
+                )
+                .ToList ();
+
+            LogRequestList ret;
+            for (const auto &entry : result)
+            {
+                ret[entry.room].emplace_back (LogRequest {
+                    std::chrono::system_clock::from_time_t (entry.timeBeg),
+                    std::chrono::system_clock::from_time_t (entry.timeEnd),
+                    entry.tempBeg, entry.tempEnd,
+                    entry.costBeg, entry.costEnd,
+                    entry.wind
+                });
+            }
+            return ret;
         }
     };
 
@@ -314,7 +353,6 @@ namespace Air_Conditioner
             std::chrono::duration<double> deltaTime = now - roomState.pulse;
             roomState.pulse = now;
 
-            // TODO: to be tested
             // Handle Beg/End Request
             if (!hasWindBefore && roomState.hasWind)
                 HandleReqBeg (req.room, now, roomState);

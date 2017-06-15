@@ -157,7 +157,7 @@ namespace Air_Conditioner
                 << " Energy: " << _clientInfo.energy
                 << " Cost: " << _clientInfo.cost
                 << " Wind: " << windStr.at (wind)
-                << "        ";
+                << "     ";
         }
 
         OnPulse _onPulse;

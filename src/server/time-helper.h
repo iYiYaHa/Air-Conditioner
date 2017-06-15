@@ -24,8 +24,8 @@ namespace Air_Conditioner
         {
             auto timeT = std::chrono::system_clock::to_time_t (timePoint);
             auto timeTm = std::localtime (&timeT);
-            return std::to_string (timeTm->tm_year + 1900) +
-                std::to_string (timeTm->tm_mon + 1) +
+            return std::to_string (timeTm->tm_year + 1900) + '-' +
+                std::to_string (timeTm->tm_mon + 1) + '-' +
                 std::to_string (timeTm->tm_mday);
         }
 
