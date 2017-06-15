@@ -244,6 +244,7 @@ namespace Air_Conditioner
             state.lastRequest.timeBeg = time;
             state.lastRequest.tempBeg = state.current;
             state.lastRequest.costBeg = state.cost;
+            state.lastRequest.wind = state.wind;
         }
 
         static void HandleReqEnd (const RoomId &room,
