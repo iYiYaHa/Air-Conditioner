@@ -9,6 +9,7 @@
 
 #include "client-controller.h"
 #include "client-view-cli.h"
+#include "../common/cli-helper.h"
 
 namespace Air_Conditioner
 {
@@ -30,5 +31,11 @@ namespace Air_Conditioner
             guestInfo, serverInfo,
             std::bind (&ClientFacadeController::Pulse, controller, _1),
             std::bind (&ClientFacadeController::Simulate, controller, _1, _2));
+    }
+
+    void ClientViewManager::PromptErr (const std::string &msg)
+    {
+        std::cout << msg << " (Press Enter to Quit)\n";
+        InputHelper::GetLine ();
     }
 }

@@ -4,7 +4,6 @@
 // BOT Man, 2017
 //
 
-#include <iostream>
 #include <string>
 
 #include "client-protocol.h"
@@ -21,6 +20,9 @@ int main (int argc, char *argv[])
     auto serverIp = IPADDR;
     auto serverPort = PORT;
 
+    // Init viewManager
+    ClientViewManager viewManager;
+
     try
     {
         if (argc > 1) serverIp = argv[1];
@@ -28,31 +30,21 @@ int main (int argc, char *argv[])
     }
     catch (...)
     {
-        // TODO: prompt in Qt
-        std::cerr << "Invalid command line args" << std::endl;
+        viewManager.PromptErr ("Invalid command line args");
         return 1;
     }
 
-    try
-    {
-        // Dependency Injection
-        ProtocolClient::Init (serverIp, (unsigned short) serverPort);
-
-        // Start the view
-        ClientViewManager viewManager;
-        viewManager.ToAuthView ();
-        viewManager.Start ();
-    }
+    // Dependency Injection
+    try { ProtocolClient::Init (serverIp, (unsigned short) serverPort); }
     catch (const std::exception &ex)
     {
-        std::cerr << ex.what () << std::endl;
+        viewManager.PromptErr (ex.what ());
         return 2;
     }
-    catch (...)
-    {
-        std::cerr << "Unknown Error" << std::endl;
-        return 3;
-    }
+
+    // Start the view
+    viewManager.ToAuthView ();
+    viewManager.Start ();
 
     return 0;
 }
