@@ -107,10 +107,12 @@ namespace Air_Conditioner
                 std::chrono::system_clock::now () :
                 std::chrono::system_clock::from_time_t (minTime.Value ());
             auto timeEnd = (maxTime == nullptr) ?
-                std::chrono::system_clock::now () + std::chrono::hours { 24 } :
+                std::chrono::system_clock::now () :
                 std::chrono::system_clock::from_time_t (maxTime.Value ());
 
-            return std::make_pair (std::move (timeBeg), std::move (timeEnd));
+            return std::make_pair (
+                std::move (timeBeg) - std::chrono::hours { 24 },
+                std::move (timeEnd) + std::chrono::hours { 24 });
         }
 
         static LogOnOffList GetOnOff (const TimePoint &from,
@@ -354,6 +356,7 @@ namespace Air_Conditioner
             std::chrono::duration<double> deltaTime = now - roomState.pulse;
             roomState.pulse = now;
 
+            // TODO: verify this
             // Handle Beg/End Request
             if (!hasWindBefore && roomState.hasWind)
                 HandleReqBeg (req.room, now, roomState);
