@@ -19,7 +19,6 @@ namespace Air_Conditioner
         void Auth (const GuestInfo &guest)
         {
             GuestManager::AuthGuest (guest);
-            ScheduleManager::AddClient (guest);
         }
 
         void Pulse (const RoomRequest &req)

@@ -46,11 +46,15 @@ namespace Air_Conditioner
                 }
                 catch (const std::exception &ex)
                 {
-                    std::cerr << ex.what () << std::endl;
+                    std::cout << "Login Failed: "
+                        << ex.what () << std::endl;
                 }
                 catch (int)
                 {
-                    throw std::runtime_error ("Server Close the connection");
+                    std::cout << "Server Close the connection"
+                        " (Press Enter to Quit)\n";
+                    InputHelper::GetLine ();
+                    return;
                 }
             }
         }
@@ -157,7 +161,7 @@ namespace Air_Conditioner
                 << " Energy: " << _clientInfo.energy
                 << " Cost: " << _clientInfo.cost
                 << " Wind: " << windStr.at (wind)
-                << "        ";
+                << "     ";
         }
 
         OnPulse _onPulse;
@@ -179,7 +183,6 @@ namespace Air_Conditioner
         {
             constexpr auto sleepTime = std::chrono::seconds { 1 };
 
-            std::string errMsg;
             auto isQuit = false;
             auto isPause = false;
 
@@ -204,8 +207,8 @@ namespace Air_Conditioner
                     }
                     catch (const std::exception &ex)
                     {
-                        std::cerr << "\n" << ex.what () << " (Press Enter to stop)";
-                        errMsg = ex.what ();
+                        std::cout << "\nPulse Failed: "
+                            << ex.what () << " (Press Enter to Quit)\n";
                         isQuit = true;
                     }
 
@@ -248,9 +251,6 @@ namespace Air_Conditioner
                 isPause = false;
             }
             if (thread.joinable ()) thread.join ();
-
-            if (!errMsg.empty ())
-                throw std::runtime_error (errMsg.c_str ());
         }
     };
 }

@@ -7,6 +7,8 @@
 #ifndef AC_CLIENT_VIEW_H
 #define AC_CLIENT_VIEW_H
 
+#include <string>
+
 #include "client-model.h"
 #include "../common/common-view.h"
 
@@ -34,6 +36,8 @@ namespace Air_Conditioner
         void ToAuthView ();
         void ToControlView (const GuestInfo &guestInfo,
                             const ServerInfo &serverInfo);
+
+        void PromptErr (const std::string &msg);
     };
 }
 

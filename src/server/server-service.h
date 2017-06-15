@@ -17,65 +17,30 @@
 
 #include "ormlite/ormlite.h"
 #include "server-model.h"
-
-#include <iostream>
+#include "time-helper.h"
 
 namespace Air_Conditioner
 {
     class LogManager
     {
-    public:
-        static void TurnOn (const RoomId &room)
+        struct OnOffEntity
         {
-            // TODO: impl turn on
-        }
-        static void TurnOff (const RoomId &room,
-                             const TimePoint &time)
-        {
-            // TODO: impl turn off
-        }
+            int id; RoomId room;
+            time_t timeBeg, timeEnd;
 
-        static void BegRequest (const RoomId &room,
-                                const ClientState &state)
-        {
-            // TODO: impl beg req
-        }
-        static void EndRequest (const RoomId &room)
-        {
-            // TODO: impl end req
-        }
+            ORMAP ("OnOffLog", id, room, timeBeg, timeEnd);
+        };
 
-        static std::pair<TimePoint, TimePoint> GetTimeRange ()
+        struct RequestEntity
         {
-            // TODO: impl here
-            return std::make_pair (std::chrono::system_clock::now (),
-                                   std::chrono::system_clock::now () + std::chrono::hours { 24 });
-        }
-        static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
-        {
-            // TODO: impl here
-            LogOnOffList ret;
-            ret["john"].emplace_back (LogOnOff {
-                std::chrono::system_clock::now (),
-                std::chrono::system_clock::now () + std::chrono::hours { 1 }
-            });
-            ret["lee"];
-            return ret;
-        }
-        static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
-        {
-            // TODO: impl here
-            return LogRequestList {};
-        }
-    };
+            int id; RoomId room;
+            time_t timeBeg, timeEnd;
+            Temperature tempBeg, tempEnd;
+            Cost costBeg, costEnd;
+            Wind wind;
 
-    class GuestManager
-    {
-        struct GuestEntity
-        {
-            RoomId room;
-            GuestId guest;
-            ORMAP ("Guest", room, guest);
+            ORMAP ("RequestLog", id, room, timeBeg, timeEnd,
+                   tempBeg, tempEnd, wind, costBeg, costEnd);
         };
 
         // In Database
@@ -86,7 +51,9 @@ namespace Air_Conditioner
 
             if (!hasInit)
             {
-                try { mapper.CreateTbl (GuestEntity {}); }
+                try { mapper.CreateTbl (OnOffEntity {}); }
+                catch (...) {}
+                try { mapper.CreateTbl (RequestEntity {}); }
                 catch (...) {}
                 hasInit = true;
             }
@@ -94,56 +61,107 @@ namespace Air_Conditioner
         }
 
     public:
-        static void AddGuest (const GuestInfo &guest)
+        static void WriteOnOff (const RoomId &room,
+                                const LogOnOff &entry)
         {
+            // TODO: time conversion
             auto &mapper = _mapper ();
-            try
-            {
-                mapper.Insert (GuestEntity { guest.room, guest.guest });
-            }
-            catch (...)
-            {
-                throw std::runtime_error (
-                    "The room has already been registered");
-            }
-        }
-        static void RemoveGuest (const RoomId &room)
-        {
-            auto &mapper = _mapper ();
-            mapper.Delete (GuestEntity { room, GuestId {} });
+            mapper.Insert (OnOffEntity {
+                0, room,
+                std::chrono::system_clock::to_time_t (entry.timeBeg),
+                std::chrono::system_clock::to_time_t (entry.timeEnd)
+            }, false);
         }
 
-        static void AuthGuest (const GuestInfo &guest)
+        static void WriteRequest (const RoomId &room,
+                                  const LogRequest &entry)
         {
-            static GuestEntity entity;
+            // TODO: time conversion
+            auto &mapper = _mapper ();
+            mapper.Insert (RequestEntity {
+                0, room,
+                std::chrono::system_clock::to_time_t (entry.timeBeg),
+                std::chrono::system_clock::to_time_t (entry.timeEnd),
+                entry.tempBeg, entry.tempEnd,
+                entry.costBeg, entry.costEnd,
+                entry.wind
+            }, false);
+        }
+
+        static std::pair<TimePoint, TimePoint> GetTimeRange ()
+        {
+            static OnOffEntity onOffEntity;
+            static RequestEntity requestEntity;
+            static auto field = BOT_ORM::FieldExtractor {
+                onOffEntity, requestEntity };
+
+            auto &mapper = _mapper ();
+            auto minTime = mapper.Query (onOffEntity)
+                .Aggregate (BOT_ORM::Expression::Min (
+                    field (onOffEntity.timeBeg)));
+            auto maxTime = mapper.Query (onOffEntity)
+                .Aggregate (BOT_ORM::Expression::Max (
+                    field (onOffEntity.timeEnd)));
+
+            auto timeBeg = (minTime == nullptr) ?
+                std::chrono::system_clock::now () :
+                std::chrono::system_clock::from_time_t (minTime.Value ());
+            auto timeEnd = (maxTime == nullptr) ?
+                std::chrono::system_clock::now () + std::chrono::hours { 24 } :
+                std::chrono::system_clock::from_time_t (maxTime.Value ());
+
+            return std::make_pair (std::move (timeBeg), std::move (timeEnd));
+        }
+
+        static LogOnOffList GetOnOff (const TimePoint &from,
+                                      const TimePoint &to)
+        {
+            static OnOffEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
             auto &mapper = _mapper ();
-            auto count = mapper.Query (entity)
+            auto result = mapper.Query (entity)
                 .Where (
-                    field (entity.room) == guest.room &&
-                    field (entity.guest) == guest.guest)
-                .Aggregate (
-                    BOT_ORM::Expression::Count ());
+                    field (entity.timeBeg) >= std::chrono::system_clock::to_time_t (from) &&
+                    field (entity.timeEnd) < std::chrono::system_clock::to_time_t (to)
+                )
+                .ToList ();
 
-            if (count == nullptr || count == size_t { 0 })
-                throw std::runtime_error ("Invalid Room ID or Guest ID");
+            LogOnOffList ret;
+            for (const auto &entry : result)
+            {
+                ret[entry.room].emplace_back (LogOnOff {
+                    std::chrono::system_clock::from_time_t (entry.timeBeg),
+                    std::chrono::system_clock::from_time_t (entry.timeEnd)
+                });
+            }
+            return ret;
         }
 
-        static std::list<GuestInfo> GetGuestList ()
+        static LogRequestList GetRequest (const TimePoint &from,
+                                          const TimePoint &to)
         {
-            static GuestEntity entity;
+            static RequestEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
             auto &mapper = _mapper ();
-            auto list = mapper.Query (entity).ToList ();
+            auto result = mapper.Query (entity)
+                .Where (
+                    field (entity.timeBeg) >= std::chrono::system_clock::to_time_t (from) &&
+                    field (entity.timeEnd) < std::chrono::system_clock::to_time_t (to)
+                )
+                .ToList ();
 
-            std::list<GuestInfo> ret;
-            for (auto &entry : list)
+            LogRequestList ret;
+            for (const auto &entry : result)
             {
-                ret.emplace_back (GuestInfo {
-                    std::move (entry.room),
-                    std::move (entry.guest) });
+                ret[entry.room].emplace_back (LogRequest {
+                    std::chrono::system_clock::from_time_t (entry.timeBeg),
+                    std::chrono::system_clock::from_time_t (entry.timeEnd),
+                    entry.tempBeg, entry.tempEnd,
+                    entry.costBeg, entry.costEnd,
+                    entry.wind
+                });
             }
             return ret;
         }
@@ -219,6 +237,46 @@ namespace Air_Conditioner
                 client.second.hasWind = hasWindList[client.first];
         }
 
+        static void HandleReqBeg (const RoomId &room,
+                                  const TimePoint &time,
+                                  ClientState &state)
+        {
+            state.lastRequest.timeBeg = time;
+            state.lastRequest.tempBeg = state.current;
+            state.lastRequest.costBeg = state.cost;
+            state.lastRequest.wind = state.wind;
+        }
+
+        static void HandleReqEnd (const RoomId &room,
+                                  const TimePoint &time,
+                                  ClientState &state)
+        {
+            state.lastRequest.timeEnd = time;
+            state.lastRequest.tempEnd = state.current;
+            state.lastRequest.costEnd = state.cost;
+
+            LogManager::WriteRequest (room, state.lastRequest);
+        }
+
+        static void HandleTurnOn (const RoomId &room,
+                                  const TimePoint &time,
+                                  ClientState &state)
+        {
+            state.lastOnOff.timeBeg = time;
+        }
+
+        static void HandleTurnOff (const RoomId &room,
+                                   const TimePoint &time,
+                                   ClientState &state)
+        {
+            if (state.lastRequest.costBeg != state.cost)
+                HandleReqEnd (room, time, state);
+
+            state.lastOnOff.timeEnd = state.pulse;
+
+            LogManager::WriteOnOff (room, state.lastOnOff);
+        }
+
         static void CheckAlive ()
         {
             auto now = std::chrono::system_clock::now ();
@@ -228,12 +286,8 @@ namespace Air_Conditioner
             for (auto p = clients.begin (); p != clients.end ();)
                 if (p->second.pulse < deadTime)
                 {
-                    auto room = p->first;
+                    HandleTurnOff (p->first, now, p->second);
                     p = clients.erase (p);
-
-                    // Write to log
-                    LogManager::TurnOff (room, now + std::chrono::seconds { 1 });
-                    LogManager::EndRequest (room);
                 }
                 else ++p;
         }
@@ -241,6 +295,9 @@ namespace Air_Conditioner
     public:
         static void AddClient (const GuestInfo &room)
         {
+            // Check Alive
+            CheckAlive ();
+
             auto &clients = _clients ();
 
             // Login already
@@ -248,14 +305,27 @@ namespace Air_Conditioner
                 throw std::runtime_error ("Login already");
 
             // New Login
-            clients.emplace (room.room, ClientState {
-                room.guest, Temperature { 0 }, Temperature { 0 },
-                Wind { 0 }, Energy { 0 }, Cost { 0 }, false,
-                std::chrono::system_clock::now ()
-            });
+            auto now = std::chrono::system_clock::now ();
+            auto state = ClientState {
+                room.guest, Temperature { 0 }, Temperature { 0 }, Wind { 0 },
+                false, Energy { 0 }, Cost { 0 }, now
+            };
+            HandleTurnOn (room.room, now, state);
+            clients.emplace (room.room, std::move (state));
+        }
 
-            // Write to log
-            LogManager::TurnOn (room.room);
+        static void RemoveClient (const RoomId &room)
+        {
+            try
+            {
+                auto &clients = _clients ();
+                auto &roomState = GetClient (room);
+                auto now = std::chrono::system_clock::now ();
+
+                HandleTurnOff (room, now, roomState);
+                clients.erase (room);
+            }
+            catch (...) {}
         }
 
         static void Pulse (const RoomRequest &req)
@@ -264,18 +334,17 @@ namespace Air_Conditioner
             CheckAlive ();
 
             auto &roomState = GetClient (req.room);
+
+            // Track traits for Beg/End Request
             auto isChanged =
-                roomState.current != req.current ||
                 roomState.target != req.target ||
                 roomState.wind != req.wind;
+            auto hasWindBefore = roomState.hasWind;
 
+            // Update Client State
             roomState.current = req.current;
             roomState.target = req.target;
             roomState.wind = req.wind;
-
-            // Write to log
-            if (isChanged)
-                LogManager::BegRequest (req.room, roomState);
 
             // Schedule
             Schedule ();
@@ -284,6 +353,17 @@ namespace Air_Conditioner
             auto now = std::chrono::system_clock::now ();
             std::chrono::duration<double> deltaTime = now - roomState.pulse;
             roomState.pulse = now;
+
+            // Handle Beg/End Request
+            if (!hasWindBefore && roomState.hasWind)
+                HandleReqBeg (req.room, now, roomState);
+            else if (hasWindBefore && roomState.hasWind)
+                HandleReqEnd (req.room, now, roomState);
+            else if (isChanged)
+            {
+                HandleReqEnd (req.room, now, roomState);
+                HandleReqBeg (req.room, now, roomState);
+            }
 
             // Calc Energy and Cost
             if (roomState.hasWind)
@@ -304,7 +384,7 @@ namespace Air_Conditioner
         static ClientState &GetClient (const RoomId &room)
         {
             try { return _clients ().at (room); }
-            catch (...) { throw std::runtime_error ("No such active room, try login again"); }
+            catch (...) { throw std::runtime_error ("Logout already"); }
         }
 
         static const ClientList &GetClientList ()
@@ -313,6 +393,90 @@ namespace Air_Conditioner
             CheckAlive ();
 
             return _clients ();
+        }
+    };
+
+    class GuestManager
+    {
+        struct GuestEntity
+        {
+            RoomId room;
+            GuestId guest;
+            ORMAP ("Guest", room, guest);
+        };
+
+        // In Database
+        static BOT_ORM::ORMapper &_mapper ()
+        {
+            static BOT_ORM::ORMapper mapper (DBNAME);
+            static auto hasInit = false;
+
+            if (!hasInit)
+            {
+                try { mapper.CreateTbl (GuestEntity {}); }
+                catch (...) {}
+                hasInit = true;
+            }
+            return mapper;
+        }
+
+    public:
+        static void AddGuest (const GuestInfo &guest)
+        {
+            auto &mapper = _mapper ();
+            try
+            {
+                mapper.Insert (GuestEntity { guest.room, guest.guest });
+            }
+            catch (...)
+            {
+                throw std::runtime_error (
+                    "The room has already been registered");
+            }
+        }
+        static void RemoveGuest (const RoomId &room)
+        {
+            auto &mapper = _mapper ();
+            mapper.Delete (GuestEntity { room, GuestId {} });
+
+            ScheduleManager::RemoveClient (room);
+        }
+
+        static void AuthGuest (const GuestInfo &guest)
+        {
+            static GuestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
+            auto &mapper = _mapper ();
+            auto count = mapper.Query (entity)
+                .Where (
+                    field (entity.room) == guest.room &&
+                    field (entity.guest) == guest.guest)
+                .Aggregate (
+                    BOT_ORM::Expression::Count ());
+
+            if (count == nullptr || count == size_t { 0 })
+                throw std::runtime_error ("Invalid Room ID or Guest ID");
+
+            ScheduleManager::AddClient (guest);
+        }
+
+        static std::list<GuestInfo> GetGuestList ()
+        {
+            static GuestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
+            auto &mapper = _mapper ();
+            auto list = mapper.Query (entity).ToList ();
+
+            std::list<GuestInfo> ret;
+            for (auto &entry : list)
+            {
+                ret.emplace_back (GuestInfo {
+                    std::move (entry.room),
+                    std::move (entry.guest) });
+            }
+            return ret;
         }
     };
 }
