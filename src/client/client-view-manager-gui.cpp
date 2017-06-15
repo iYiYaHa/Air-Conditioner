@@ -21,13 +21,22 @@ namespace Air_Conditioner
     }
 
     void ClientViewManager::ToControlView (
-        const GuestInfo &guestInfo)
+        const GuestInfo &guestInfo,
+        const ServerInfo &serverInfo)
     {
         using namespace std::placeholders;
         auto controller = std::make_shared<ClientFacadeController> (*this);
         _Navigate<ControlViewGUI> (
-            guestInfo,
+            guestInfo, serverInfo,
             std::bind (&ClientFacadeController::Pulse, controller, _1),
             std::bind (&ClientFacadeController::Simulate, controller, _1, _2));
+    }
+    void ClientViewManager::PromptErr (const std::string &msg)
+    {
+        int tmpArgc = 0;
+        char **tmpArgv = nullptr;
+        QApplication _app(tmpArgc,tmpArgv);
+        QMessageBox::critical(NULL,"Fatal Error",QString::fromStdString(msg),QStringLiteral("确定"));
+        _app.exec();
     }
 }

@@ -32,55 +32,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="styleSheet">
-         <string notr="true">border:None
-</string>
-        </property>
-        <property name="title">
-         <string/>
-        </property>
-        <widget class="QRadioButton" name="OnBtn">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>20</y>
-           <width>80</width>
-           <height>16</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>开机</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-         <property name="autoExclusive">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="OffBtn">
-         <property name="geometry">
-          <rect>
-           <x>60</x>
-           <y>20</y>
-           <width>122</width>
-           <height>16</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>关机</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <property name="autoExclusive">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
@@ -167,6 +118,59 @@
     </item>
    </layout>
   </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>401</width>
+     <height>301</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/background/background.jpg);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QRadioButton" name="OnBtn">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>60</y>
+      <width>111</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QRadioButton::indicator {
+   width: 0px;
+   height: 0px;
+}
+QRadioButton:checked{
+border-image: url(:/switch/SlideOn.png);
+}
+QRadioButton:!checked{
+border-image: url(:/switch/SlideOff.png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <zorder>frame</zorder>
+  <zorder>verticalLayoutWidget</zorder>
+  <zorder>horizontalLayoutWidget_2</zorder>
  </widget>
  <resources/>
  <connections/>

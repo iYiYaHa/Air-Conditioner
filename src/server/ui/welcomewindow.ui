@@ -6,59 +6,173 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>354</width>
+    <height>302</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>WelcomeWindow</string>
+  <property name="font">
+   <font>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
   </property>
-  <widget class="QWidget" name="verticalLayoutWidget">
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle">
+   <string>分布式温控系统主控机</string>
+  </property>
+  <property name="windowOpacity">
+   <double>0.900000000000000</double>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">WelcomeWindow{
+	border-image: url(:/background.jpg);
+}
+</string>
+  </property>
+  <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>80</y>
-     <width>160</width>
-     <height>141</height>
+     <x>0</x>
+     <y>0</y>
+     <width>361</width>
+     <height>301</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QPushButton" name="ConfigBtn">
-      <property name="text">
-       <string>配置管理</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="GuestBtn">
-      <property name="text">
-       <string>房客管理</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="StatisticBtn">
-      <property name="text">
-       <string>报表</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="ClientBtn">
-      <property name="text">
-       <string>从控机监控</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="QuitBtn">
-      <property name="text">
-       <string>退出</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <property name="styleSheet">
+    <string notr="true">
+border-image: url(:/background/background.jpg);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="QuitBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>210</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{ 
+border-image: url(:/icon/QuitBtn);
+}
+QPushButton:hover{
+border-image: url(:/icon/QuitHover);
+}
+QPushButton:pressed{
+border-image: url(:/icon/QuitPressed.png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ConfigBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>50</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-image: url(:/icon/ConfigBtn);
+}
+QPushButton:hover{
+border-image: url(:/icon/ConfigHover)
+}
+QPushButton:pressed{
+border-image: url(:/icon/ConfigPressed.png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="GuestBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>90</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-image: url(:/icon/GuestBtn);
+}
+QPushButton:hover{
+border-image: url(:/icon/GuestHover);
+}
+QPushButton:pressed{
+border-image: url(:/icon/GuestPressed.png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ClientBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>130</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-image: url(:/icon/clientBtn);
+}
+QPushButton:hover{
+border-image: url(:/icon/ClientHover);
+}
+QPushButton:pressed{
+border-image: url(:/icon/ClientPressed.png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StatisticBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>170</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-image: url(:/icon/LogBtn);
+}
+QPushButton:hover{
+border-image: url(:/icon/LogHover);
+}
+QPushButton:pressed{
+border-image: url(:/icon/LogPressed.png);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

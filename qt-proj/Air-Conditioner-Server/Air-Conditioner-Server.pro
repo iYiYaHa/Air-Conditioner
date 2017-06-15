@@ -60,3 +60,6 @@ DISTFILES += \
     ../../src/server/ormlite/sqlite3.c.zip \
     ../../src/server/ormlite/sqlite3.h.zip \
     ../../src/common/json/json.zip \
+
+RESOURCES += \
+    ../../src/server/ui/resource.qrc

@@ -8,6 +8,7 @@ AuthWindow::AuthWindow(QWidget *parent) :
     ui(new Ui::AuthWindow)
 {
     ui->setupUi(this);
+    this->setWindowFlags(Qt::FramelessWindowHint);
 }
 
 AuthWindow::~AuthWindow()
@@ -31,6 +32,11 @@ void AuthWindow::on_LogOnBtn_clicked()
                          QStringLiteral("登录失败"),
                          QString(ex.what()));
     }
+    catch(int){
+         QMessageBox::critical(this,QStringLiteral("无法连接"),
+                               QStringLiteral("无法连接到服务器。请重启程序！"),QStringLiteral("确定"));
+         this->close();
+    }
 
 }
 
@@ -48,7 +54,8 @@ ControlWindow::ControlWindow(QWidget *parent) :
     ui(new Ui::ControlWindow)
 {
     ui->setupUi(this);
-    ui->LowWind->setChecked(true);
+    this->setWindowFlags(Qt::FramelessWindowHint);
+    ui->MidWind->setChecked(true);
 }
 
 ControlWindow::~ControlWindow()
@@ -65,6 +72,7 @@ void ControlWindow::ShowState(Air_Conditioner::ServerInfo _serverInfo,
                               Air_Conditioner::ClientInfo _clientInfo,
                               Air_Conditioner::RoomRequest _roomRequest)
 {
+    //ClientInfo And roomRequest
     ui->Cost->setText(QString::number(_clientInfo.cost,'g',3));
     ui->Energy->setText(QString::number(_clientInfo.energy,'g',3));
 
@@ -92,6 +100,21 @@ void ControlWindow::ShowState(Air_Conditioner::ServerInfo _serverInfo,
    }
    ui->CurrTemp->setText(QString::number(_roomRequest.current,'g',3));
    ui->TargetTemp->setText(QString::number(_roomRequest.target,'g',3));
+
+   //ServerInfo
+   if(_serverInfo.isOn == true){
+       ui->ServerState->setText(QStringLiteral("开机"));
+   }
+   else{
+       ui->ServerState->setText(QStringLiteral("关机"));
+   }
+   if(_serverInfo.mode == 0){
+       ui->WorkingMode->setText(QStringLiteral("夏天"));
+   }
+   else{
+       ui->WorkingMode->setText(QStringLiteral("冬天"));
+   }
+
 }
 void ControlWindow::LoadGuestInfo(Air_Conditioner::GuestInfo guest)
 {

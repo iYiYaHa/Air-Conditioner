@@ -22,6 +22,7 @@ WelcomeWindow::WelcomeWindow(QWidget *parent) :
     ui(new Ui::WelcomeWindow)
 {
     ui->setupUi(this);
+    this->setWindowFlags(Qt::FramelessWindowHint);
 }
 
 WelcomeWindow::~WelcomeWindow()
@@ -318,8 +319,8 @@ void ClientWindow::UpdateClient(){
         _itemModel->setItem(row,1,new QStandardItem(QString::fromStdString(state.guest)));
 
         //TODO: Fix the precision of display temperature.
-        _itemModel->setItem(row,2,new QStandardItem(QString::number(state.current)));
-        _itemModel->setItem(row,3,new QStandardItem(QString::number(state.target)));
+        _itemModel->setItem(row,2,new QStandardItem(QString::number(state.current,'g',3)));
+        _itemModel->setItem(row,3,new QStandardItem(QString::number(state.target,'g',3)));
         auto wind = state.hasWind ? state.wind : 0;
         switch(wind){
         case 0:
@@ -393,7 +394,7 @@ void ConfigWindow::ShowConfig(){
    if(_config.isOn)
        ui->OnBtn->setChecked(true);
    else
-       ui->OffBtn->setChecked(true);
+       ui->OnBtn->setChecked(false);
 
    if(_config.mode == 0)
        ui->SummerBtn->setChecked(true);
@@ -416,4 +417,3 @@ void ConfigWindow::on_CancelBtn_clicked()
     this->close();
     _onBack();
 }
-

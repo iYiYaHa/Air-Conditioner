@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QTimer>
 
 #include <functional>
 #include "client-model.h"
@@ -39,6 +40,7 @@ class ControlWindow : public QWidget
     Q_OBJECT
     using OnTempChanged = std::function<void (const Air_Conditioner::Temperature _temp)>;
     using OnWindChanged = std::function<void (const Air_Conditioner::Wind _wind)>;
+    using OnClock = std::function<void ()>;
 public:
     explicit ControlWindow(QWidget *parent = 0);
     ~ControlWindow();
@@ -57,6 +59,21 @@ public:
                    Air_Conditioner::ClientInfo,
                    Air_Conditioner::RoomRequest);
     void LoadGuestInfo(Air_Conditioner::GuestInfo guest);
+
+    void SetOnClock(OnClock && onClock){
+        QObject::connect(&_timer,SIGNAL(timeout()),this,SLOT(clockAlarmed()));
+        _onClock = onClock;
+    }
+
+    void start(){
+        _timer.setInterval(1000);
+        _timer.start();
+    }
+protected slots:
+    void clockAlarmed(){
+        _onClock();
+    }
+
 private slots:
 
     void on_StopWind_clicked();
@@ -77,5 +94,7 @@ private:
     Ui::ControlWindow *ui;
     OnTempChanged _onTempChanged;
     OnWindChanged _onWindChanged;
+    OnClock _onClock;
+    QTimer _timer;
 };
 #endif // CLIENTVIEWGUI_H

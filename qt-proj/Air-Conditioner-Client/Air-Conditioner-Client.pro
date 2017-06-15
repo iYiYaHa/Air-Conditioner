@@ -48,3 +48,6 @@ FORMS += \
 
 DISTFILES += \
     ../../src/common/json/json.zip
+
+RESOURCES += \
+    ../../src/client/ui/resource.qrc

@@ -246,19 +246,6 @@ namespace Air_Conditioner
             });
 
             app.exec();
-//            _PrintTimeRange ();
-
-//            auto timeBeg = _GetTimeBeg ();
-//            auto timeEnd = _GetTimeEnd (timeBeg);
-
-//            auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
-//            auto requestList = _onQueryRequest (timeBeg, timeEnd);
-
-//            // TODO: save to csv file
-//            _PrintLog (onOffList, requestList);
-//            std::cout << std::endl;
-
-//            if (_onBack) _onBack ();
         }
     };
 

@@ -122,32 +122,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="UpBtn">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>110</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>升高</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="DownBtn">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>140</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>降低</string>
-   </property>
-  </widget>
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
@@ -220,6 +194,131 @@
     </property>
    </widget>
   </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>401</width>
+     <height>301</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame{
+border-image: url(:/background/background2.png);
+}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QFrame" name="frame_2">
+    <property name="geometry">
+     <rect>
+      <x>-20</x>
+      <y>30</y>
+      <width>381</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame{
+border-image: url(:/background/backgroundShadow.png);
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="ServerStateLabel">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>40</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>主控机状态</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="WorkingModeLabel">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>70</y>
+       <width>61</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>工作模式</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="DownBtn">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>150</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>降低</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="UpBtn">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>120</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>升高</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="ServerState">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>40</y>
+       <width>61</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="WorkingMode">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>70</y>
+       <width>61</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <zorder>groupBox</zorder>
+    <zorder>ServerStateLabel</zorder>
+    <zorder>WorkingModeLabel</zorder>
+    <zorder>DownBtn</zorder>
+    <zorder>UpBtn</zorder>
+    <zorder>ServerState</zorder>
+    <zorder>WorkingMode</zorder>
+   </widget>
+  </widget>
+  <zorder>frame</zorder>
+  <zorder>QuitBtn</zorder>
+  <zorder>verticalLayoutWidget</zorder>
+  <zorder>groupBox</zorder>
  </widget>
  <resources/>
  <connections/>

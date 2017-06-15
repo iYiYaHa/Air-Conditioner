@@ -61,6 +61,17 @@ namespace Air_Conditioner
                 return std::make_pair (DefaultRoomTemp, MaxTemp);
         }
 
+        void _UpdateWorkingMode ()
+        {
+            auto tempRange = _GetTempRange ();
+            if (_roomRequest.target < tempRange.first ||
+                _roomRequest.target > tempRange.second)
+            {
+                _roomRequest.target = _serverInfo.mode == 0 ?
+                    DefaultSummerTemp : DefaultWinterTemp;
+            }
+        }
+
         void _UpdateTemp (const Air_Conditioner::Temperature temp)
         {
             std::lock_guard<std::mutex> lg { _mtxData };
@@ -102,14 +113,9 @@ namespace Air_Conditioner
             _clientInfo = ret.first;
             _serverInfo = ret.second;
 
-            // Handle server update working mode
-            auto tempRange = _GetTempRange ();
-            if (_roomRequest.target < tempRange.first ||
-                _roomRequest.target > tempRange.second)
-            {
-                _roomRequest.target = _serverInfo.mode == 0 ?
-                    DefaultSummerTemp : DefaultWinterTemp;
-            }
+            _UpdateWorkingMode ();
+            if (!_serverInfo.isOn)
+                _clientInfo.hasWind = false;
         }
 
         OnPulse _onPulse;
@@ -118,11 +124,15 @@ namespace Air_Conditioner
 
     public:
         ControlViewGUI (const GuestInfo &guestInfo,
+                        const ServerInfo &serverInfo,
                         OnPulse &&onPulse,
                         OnSim &&onSim)
-            : _guestInfo (guestInfo), _onPulse (onPulse), _onSim (onSim),
+            : _guestInfo (guestInfo), _serverInfo (serverInfo),
+            _onPulse (onPulse), _onSim (onSim),
             _roomRequest { guestInfo.room, DefaultRoomTemp, 0, Wind { 2 } }
-        {}
+        {
+            _UpdateWorkingMode ();
+        }
 
         virtual void Show () override
         {
@@ -132,35 +142,31 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             ControlWindow control;
-
-            auto isQuit = false;
-
-            std::thread thread ([&] {
-                auto lastHit = std::chrono::system_clock::now ();
-                while (!isQuit)
+            control.SetOnClock([&]{
+                try
                 {
-                    try
+                    std::lock_guard<std::mutex> lg { _mtxData };
+
+                    try { _Pulse (); }
+                    catch (int)
                     {
-                      std::lock_guard<std::mutex> lg { _mtxData };
-                      if(_onPulse) _Pulse();
-                      if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
-                      control.ShowState(_serverInfo,_clientInfo,_roomRequest);
-                    }
-                    catch (const std::exception &ex)
-                    {
-                      std::cerr << ex.what () << std::endl;
-                      control.Message(QString(ex.what()));
+                        throw std::runtime_error ("Server Close the connection");
+                        control.Message("Server Close the connection");
+                        control.close();
                     }
 
-                    // Prevent over sleep :-)
-                    auto timeWasted = std::chrono::system_clock::now () - lastHit;
-                    if (timeWasted < sleepTime)
-                        std::this_thread::sleep_for (sleepTime - timeWasted);
-                    lastHit = std::chrono::system_clock::now ();
+                    if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
+
+                    control.ShowState(_serverInfo,_clientInfo,_roomRequest);
+                }
+                catch (const std::exception &ex)
+                {
+                    control.Message(QString::fromStdString(ex.what()));
+                    control.close();
                 }
             });
-
             control.LoadGuestInfo(_guestInfo);
+
             control.SetOnTempChanged([&](const Temperature temp){
                 try{
                     _UpdateTemp(temp);
@@ -179,12 +185,9 @@ namespace Air_Conditioner
                 }
             });
 
+            control.start();
             control.show();
             app.exec();
-            isQuit = true;
-
-            if (thread.joinable ()) thread.join ();
-
         }
     };
 }

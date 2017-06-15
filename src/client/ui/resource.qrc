@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/background">
+        <file>background2.png</file>
+        <file>backgroundShadow.png</file>
+    </qresource>
+    <qresource prefix="/button"/>
+</RCC>

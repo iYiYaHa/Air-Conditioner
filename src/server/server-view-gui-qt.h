@@ -208,6 +208,7 @@ private slots:
 
     void on_CancelBtn_clicked();
 
+
 private:
     Ui::ConfigWindow *ui;
     OnBack _onBack;
