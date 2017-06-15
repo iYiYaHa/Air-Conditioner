@@ -253,15 +253,20 @@ namespace Air_Conditioner
             // Check Alive
             CheckAlive ();
 
-            // Update Client State
             auto &roomState = GetClient (req.room);
+
+            // Track traits for Beg/End Request
+            auto isChanged =
+                roomState.target != req.target ||
+                roomState.wind != req.wind;
+            auto hasWindBefore = roomState.hasWind;
+
+            // Update Client State
             roomState.current = req.current;
             roomState.target = req.target;
             roomState.wind = req.wind;
 
             // Schedule
-            auto hasWindBefore = roomState.hasWind;
-            auto costBefore = roomState.cost;
             Schedule ();
 
             // Get Delta Time and Pulse
@@ -269,11 +274,17 @@ namespace Air_Conditioner
             std::chrono::duration<double> deltaTime = now - roomState.pulse;
             roomState.pulse = now;
 
+            // TODO: to be tested
             // Handle Beg/End Request
             if (!hasWindBefore && roomState.hasWind)
                 HandleReqBeg (req.room, now, roomState);
             else if (hasWindBefore && roomState.hasWind)
                 HandleReqEnd (req.room, now, roomState);
+            else if (isChanged)
+            {
+                HandleReqEnd (req.room, now, roomState);
+                HandleReqBeg (req.room, now, roomState);
+            }
 
             // Calc Energy and Cost
             if (roomState.hasWind)
