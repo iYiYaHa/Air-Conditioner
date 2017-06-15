@@ -8,6 +8,7 @@
 #define AC_SERVER_VIEW_CLI_H
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <unordered_map>
@@ -15,7 +16,10 @@
 
 #include "server-view.h"
 #include "../common/cli-helper.h"
-#include "time-helper.h"
+#include "log-helper.h"
+
+#define ONOFFLOGFILE "on-off-log.csv"
+#define REQUESTLOGFILE "request-log.csv"
 
 namespace Air_Conditioner
 {
@@ -40,7 +44,7 @@ namespace Air_Conditioner
                     continue;
 
                 try { return viewStr.at (cmd); }
-                catch (...) { std::cerr << "Invalid Command\n"; }
+                catch (...) { std::cout << "Invalid Command\n"; }
             }
         }
 
@@ -162,7 +166,7 @@ namespace Air_Conditioner
             }
             catch (const std::exception &ex)
             {
-                std::cerr << ex.what () << std::endl;
+                std::cout << ex.what () << std::endl;
             }
         }
 
@@ -189,7 +193,7 @@ namespace Air_Conditioner
             }
             catch (const std::exception &ex)
             {
-                std::cerr << ex.what () << std::endl;
+                std::cout << ex.what () << std::endl;
             }
         }
 
@@ -229,7 +233,7 @@ namespace Air_Conditioner
                 if (cmd == "list") _List ();
                 else if (cmd == "add") _Add ();
                 else if (cmd == "del") _Del ();
-                else std::cerr << "Invalid Command\n";
+                else std::cout << "Invalid Command\n";
             }
         }
     };
@@ -294,43 +298,37 @@ namespace Air_Conditioner
         void _PrintLog (const LogOnOffList &onOffList,
                         const LogRequestList &requestList)
         {
-            std::cout << std::endl;
             if (onOffList.empty ())
                 std::cout << "No On-Off records\n";
             else
             {
-                std::cout << "On-Off records:\n";
-                for (const auto &item : onOffList)
+                try
                 {
-                    std::cout << " - Room " << item.first
-                        << " has " << item.second.size ()
-                        << " On-Off records\n";
+                    std::ofstream ofs (ONOFFLOGFILE);
+                    ofs << LogHelper::LogOnOffListToCsv (onOffList);
+                    std::cout << "On-Off records has been saved to '"
+                        ONOFFLOGFILE "'\n";
+                }
+                catch (...)
+                {
+                    std::cout << "Unable to write to log file\n";
                 }
             }
 
-            std::cout << std::endl;
             if (requestList.empty ())
                 std::cout << "No Request records\n";
             else
             {
-                std::cout << "Request records:\n";
-                for (const auto &item : requestList)
+                try
                 {
-                    std::cout << " - Room " << item.first
-                        << " has " << item.second.size ()
-                        << " Request records\n";
-                    for (const auto &entry : item.second)
-                    {
-                        std::cout << "  - ["
-                            << TimeHelper::TimeToString (entry.timeBeg)
-                            << " ~ "
-                            << TimeHelper::TimeToString (entry.timeEnd)
-                            << "] Temp: " << entry.tempBeg
-                            << " -> " << entry.tempEnd
-                            << " Wind: " << entry.wind
-                            << " Cost: " << entry.costEnd - entry.costBeg
-                            << std::endl;
-                    }
+                    std::ofstream ofs (REQUESTLOGFILE);
+                    ofs << LogHelper::LogRequestListToCsv (requestList);
+                    std::cout << "Reuqest records has been saved to '"
+                        REQUESTLOGFILE "'\n";
+                }
+                catch (...)
+                {
+                    std::cout << "Unable to write to log file\n";
                 }
             }
         }
@@ -362,7 +360,6 @@ namespace Air_Conditioner
             auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
             auto requestList = _onQueryRequest (timeBeg, timeEnd);
 
-            // TODO: save to csv file
             _PrintLog (onOffList, requestList);
             std::cout << std::endl;
 
@@ -444,7 +441,7 @@ namespace Air_Conditioner
                     }
                     catch (const std::exception &ex)
                     {
-                        std::cerr << ex.what () << std::endl;
+                        std::cout << ex.what () << std::endl;
                     }
 
                     // Prevent over sleep :-)
