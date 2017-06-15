@@ -74,18 +74,37 @@ class StatisticWindow : public QWidget
 {
     Q_OBJECT
     using OnBack = std::function<void ()>;
+    using OnTimeBegin = std::function<std::pair<TimePoint,TimePoint> (const std::string &time)>;
+    using OnExport = std::function<void (TimePoint,TimePoint)>;
 public:
     explicit StatisticWindow(QWidget *parent = 0);
     ~StatisticWindow();
     void SetOnBack(OnBack && onBack){
         _onBack = onBack;
     }
+    void SetOnTimeBegin(OnTimeBegin && onTimeBegin){
+        _onTimeBegin = onTimeBegin;
+    }
+    void SetOnExport(OnExport &&onExport){
+        _onExport = onExport;
+    }
 
 protected:
     void closeEvent(QCloseEvent *event);
+private slots:
+    void on_QueryBtn_clicked();
+
+    void on_StartTime_dateChanged(const QDate &date);
+
+    void on_QuitBtn_clicked();
+
 private:
     Ui::StatisticWindow *ui;
     OnBack _onBack;
+    OnTimeBegin _onTimeBegin;
+    OnExport  _onExport;
+    TimePoint _timeBegin;
+    TimePoint _timeEnd;
 };
 
 class ClientWindow : public QWidget

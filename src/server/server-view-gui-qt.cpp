@@ -369,8 +369,8 @@ StatisticWindow::StatisticWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->StartTime->setCalendarPopup(true);
     ui->EndTime->setCalendarPopup(true);
-    ui->StartTime->setDisplayFormat("yyyy-MM");
-    ui->EndTime->setDisplayFormat("yyyy-mm");
+    ui->StartTime->setDisplayFormat("yyyy-MM-dd");
+    ui->EndTime->setDisplayFormat("yyyy-mm-dd");
     ui->StartTime->setDateTime(QDateTime::currentDateTime());
     ui->EndTime->setDateTime(QDateTime::currentDateTime());
 
@@ -413,6 +413,37 @@ void ConfigWindow::on_ConfirmBtn_clicked()
 }
 
 void ConfigWindow::on_CancelBtn_clicked()
+{
+    this->close();
+    _onBack();
+}
+
+void StatisticWindow::on_QueryBtn_clicked()
+{
+    if(_onExport){
+        _onExport(_timeBegin,_timeEnd);
+        QMessageBox::information(this,QStringLiteral("成功"),
+                                 QStringLiteral("报表导出成功"),QStringLiteral("确定"));
+        }
+}
+
+void StatisticWindow::on_StartTime_dateChanged(const QDate &date)
+{
+   QString begin = date.toString("yyyy-MM-dd");
+   try{
+      if(_onTimeBegin){
+        auto duration = _onTimeBegin(begin.toStdString());
+        _timeBegin = duration.first;
+        _timeEnd = duration.second;
+     }
+   }
+   catch(std::exception &ex){
+       QMessageBox::warning(this,QStringLiteral("时间取值错误"),QString::fromStdString(ex.what()),
+                   QStringLiteral("确定"));
+   }
+}
+
+void StatisticWindow::on_QuitBtn_clicked()
 {
     this->close();
     _onBack();

@@ -8,6 +8,7 @@
 #define AC_SERVER_VIEW_GUI_H
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <unordered_map>
@@ -15,7 +16,15 @@
 #include <chrono>
 
 #include <QApplication>
+
+
 #include "server-view-gui-qt.h"
+#include "server-view.h"
+#include "../common/cli-helper.h"
+#include "log-helper.h"
+
+#define ONOFFLOGFILE "on-off-log.csv"
+#define REQUESTLOGFILE "request-log.csv"
 
 namespace Air_Conditioner
 {
@@ -167,32 +176,62 @@ namespace Air_Conditioner
 
     class LogViewGUI : public LogView
     {
+        TimePoint _GetTimeEnd (const TimePoint &tBeg) const
+        {
+            std::cout << "Select a Log Type (day/week/month)\n";
+            while (true)
+            {
+                //auto type = InputHelper::Get<std::string> ("Log Mode");
+                auto type = "day";
+                if (type == "day")
+                    return tBeg + std::chrono::hours { 24 };
+                else if (type == "week")
+                    return tBeg + std::chrono::hours { 24 * 7 };
+                else if (type == "month")
+                    return tBeg + std::chrono::hours { 24 * 30 };
+                else
+                    std::cout << "Invalid Log Mode\n";
+            }
+        }
 
-//        void _PrintTimeRange () const
-//        {
-//            std::cout << "Log starts from "
-//                << TimeHelper::TimeToString (_timeBeg)
-//                << " to " << TimeHelper::TimeToString (_timeEnd)
-//                << std::endl;
-//        }
+        void _PrintLog (const LogOnOffList &onOffList,
+                        const LogRequestList &requestList)
+        {
+            if (onOffList.empty ())
+                std::cout << "No On-Off records\n";
+            else
+            {
+                try
+                {
+                    std::ofstream ofs (ONOFFLOGFILE);
+                    ofs << LogHelper::LogOnOffListToCsv (onOffList);
+                    std::cout << "On-Off records has been saved to '"
+                        ONOFFLOGFILE "'\n";
+                }
+                catch (...)
+                {
+                    std::cout << "Unable to write to log file\n";
+                }
+            }
 
+            if (requestList.empty ())
+                std::cout << "No Request records\n";
+            else
+            {
+                try
+                {
+                    std::ofstream ofs (REQUESTLOGFILE);
+                    ofs << LogHelper::LogRequestListToCsv (requestList);
+                    std::cout << "Reuqest records has been saved to '"
+                        REQUESTLOGFILE "'\n";
+                }
+                catch (...)
+                {
+                    std::cout << "Unable to write to log file\n";
+                }
+            }
+        }
 
-//        TimePoint _GetTimeEnd (const TimePoint &tBeg) const
-//        {
-//            std::cout << "Select a Log Type (day/week/month)\n";
-//            while (true)
-//            {
-//                auto type = InputHelper::Get<std::string> ("Log Mode");
-//                if (type == "day")
-//                    return tBeg + std::chrono::hours { 24 };
-//                else if (type == "week")
-//                    return tBeg + std::chrono::hours { 24 * 7 };
-//                else if (type == "month")
-//                    return tBeg + std::chrono::hours { 24 * 30 };
-//                else
-//                    std::cout << "Invalid Log Mode\n";
-//            }
-//        }
 
         TimePoint _timeBeg, _timeEnd;
         OnQueryOnOff _onQueryOnOff;
@@ -217,48 +256,39 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             StatisticWindow log;
-            log.show();
-            log.SetOnTimeBegin([&](std::string time)->(TimePoint,TimePoint){
-                    try
+            log.SetOnBack(std::move(_onBack));
+            log.SetOnTimeBegin([&](const std::string &time) -> std::pair<TimePoint,TimePoint>
                     {
-                        auto ret = TimeHelper::TimeFromString (str);
+                        auto begin = TimeHelper::TimeFromString (time);
                         // Range Validation
-                        if (ret < _timeBeg - std::chrono::hours { 24 } ||
-                            ret > _timeEnd + std::chrono::hours { 24 })
+                        if (begin < _timeBeg - std::chrono::hours { 24 } ||
+                            begin > _timeEnd + std::chrono::hours { 24 })
                         {
                             std::cout << "Time "
-                                << TimeHelper::TimeToString (time)
+                                << TimeHelper::TimeToString (begin)
                                 << " out of range\n";
-                            _PrintTimeRange ();
+                            QString prompt = QStringLiteral("报表由 ") + QString::fromStdString(TimeHelper::TimeToString (_timeBeg))+
+                                    QStringLiteral(" 至 ")+QString::fromStdString(TimeHelper::TimeToString (_timeEnd));
+                            throw std::runtime_error(prompt.toStdString());
                         }
-                        _GetTime
-                        else return ret;
-                    }
-                    catch (const std::exception &ex)
-                    {
-                        std::cout << ex.what () << std::endl;
-                    }
+                        else {
+                            auto end = _GetTimeEnd(begin);
+
+                            std::string haha1 = TimeHelper::TimeToString(begin);
+                           std::string haha2 = TimeHelper::TimeToString(end);
+                            return std::make_pair(begin,end);
+                        }
+                   }
+            );
+            log.SetOnExport([&](TimePoint timeBeg,TimePoint timeEnd){
+                std::string haha1 = TimeHelper::TimeToString(timeBeg);
+               std::string haha2 = TimeHelper::TimeToString(timeEnd);
+                auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
+                auto requestList = _onQueryRequest (timeBeg, timeEnd);
+                _PrintLog(onOffList, requestList);
             });
-
-            log.SetOnExport([&](TimePoint TimeBegin,TimePoint TimeEnd){
-                    _csv(TimeBegin,TimeEnd);
-
-            });
-
+            log.show();
             app.exec();
-//            _PrintTimeRange ();
-
-//            auto timeBeg = _GetTimeBeg ();
-//            auto timeEnd = _GetTimeEnd (timeBeg);
-
-//            auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
-//            auto requestList = _onQueryRequest (timeBeg, timeEnd);
-
-//            // TODO: save to csv file
-//            _PrintLog (onOffList, requestList);
-//            std::cout << std::endl;
-
-//            if (_onBack) _onBack ();
         }
     };
 

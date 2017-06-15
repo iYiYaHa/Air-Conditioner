@@ -46,7 +46,9 @@ HEADERS += \
     ../../src/common/common-view.h \
     ../../src/common/json/json.hpp \
     ../../src/server/server-view-gui.h \
-    ../../src/server/server-view-gui-qt.h
+    ../../src/server/server-view-gui-qt.h \
+    ../../src/server/log-helper.h \
+    ../../src/server/time-helper.h
 
 FORMS += \
     ../../src/server/ui/configwindow.ui \
