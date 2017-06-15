@@ -17,8 +17,7 @@
 
 #include "ormlite/ormlite.h"
 #include "server-model.h"
-
-#include <iostream>
+#include "time-helper.h"
 
 namespace Air_Conditioner
 {
@@ -26,17 +25,21 @@ namespace Air_Conditioner
     {
         struct OnOffEntity
         {
-            std::string timeBeg, timeEnd;
-            ORMAP ("OnOffLog", timeBeg, timeEnd);
+            int id; RoomId room;
+            time_t timeBeg, timeEnd;
+
+            ORMAP ("OnOffLog", id, room, timeBeg, timeEnd);
         };
 
         struct RequestEntity
         {
-            std::string timeBeg, timeEnd;
+            int id; RoomId room;
+            time_t timeBeg, timeEnd;
             Temperature tempBeg, tempEnd;
-            Wind wind;
             Cost costBeg, costEnd;
-            ORMAP ("RequestLog", timeBeg, timeEnd,
+            Wind wind;
+
+            ORMAP ("RequestLog", id, room, timeBeg, timeEnd,
                    tempBeg, tempEnd, wind, costBeg, costEnd);
         };
 
@@ -61,29 +64,66 @@ namespace Air_Conditioner
         static void WriteOnOff (const RoomId &room,
                                 const LogOnOff &entry)
         {
-            // TODO
+            auto &mapper = _mapper ();
+            mapper.Insert (OnOffEntity {
+                0, room,
+                std::chrono::system_clock::to_time_t (entry.timeBeg),
+                std::chrono::system_clock::to_time_t (entry.timeEnd)
+            }, false);
         }
 
         static void WriteRequest (const RoomId &room,
                                   const LogRequest &entry)
         {
-            // TODO
+            auto &mapper = _mapper ();
+            mapper.Insert (RequestEntity {
+                0, room,
+                std::chrono::system_clock::to_time_t (entry.timeBeg),
+                std::chrono::system_clock::to_time_t (entry.timeEnd),
+                entry.tempBeg, entry.tempEnd,
+                entry.costBeg, entry.costEnd,
+                entry.wind
+            }, false);
         }
 
         static std::pair<TimePoint, TimePoint> GetTimeRange ()
         {
-            // TODO
-            return std::make_pair (std::chrono::system_clock::now (),
-                                   std::chrono::system_clock::now () + std::chrono::hours { 24 });
+            static OnOffEntity onOffEntity;
+            static RequestEntity requestEntity;
+            static auto field = BOT_ORM::FieldExtractor {
+                onOffEntity, requestEntity };
+
+            auto &mapper = _mapper ();
+            auto minTime = mapper.Query (onOffEntity)
+                .Aggregate (BOT_ORM::Expression::Min (
+                    field (onOffEntity.timeBeg)));
+            auto maxTime = mapper.Query (onOffEntity)
+                .Aggregate (BOT_ORM::Expression::Max (
+                    field (onOffEntity.timeEnd)));
+
+            auto timeBeg = (minTime == nullptr) ?
+                std::chrono::system_clock::now () :
+                std::chrono::system_clock::from_time_t (minTime.Value ());
+            auto timeEnd = (maxTime == nullptr) ?
+                std::chrono::system_clock::now () + std::chrono::hours { 24 } :
+                std::chrono::system_clock::from_time_t (maxTime.Value ());
+
+            return std::make_pair (std::move (timeBeg), std::move (timeEnd));
         }
+
         static LogOnOffList GetOnOff (const TimePoint &from, const TimePoint &to)
         {
-            // TODO
+            static OnOffEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
             return LogOnOffList {};
         }
+
         static LogRequestList GetRequest (const TimePoint &from, const TimePoint &to)
         {
-            // TODO
+            static RequestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
             return LogRequestList {};
         }
     };

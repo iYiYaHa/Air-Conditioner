@@ -12,10 +12,10 @@
 #include <string>
 #include <unordered_map>
 #include <thread>
-#include <chrono>
 
 #include "server-view.h"
 #include "../common/cli-helper.h"
+#include "time-helper.h"
 
 namespace Air_Conditioner
 {
@@ -236,22 +236,12 @@ namespace Air_Conditioner
 
     class LogViewCLI : public LogView
     {
-        void _PrintTime (const TimePoint &timePoint) const
-        {
-            auto timeT = std::chrono::system_clock::to_time_t (timePoint);
-            auto timeTm = std::localtime (&timeT);
-            std::cout << timeTm->tm_year + 1900
-                << "-" << timeTm->tm_mon + 1
-                << "-" << timeTm->tm_mday;
-        }
-
         void _PrintTimeRange () const
         {
-            std::cout << "Log starts from ";
-            _PrintTime (_timeBeg);
-            std::cout << " to ";
-            _PrintTime (_timeEnd);
-            std::cout << std::endl;
+            std::cout << "Log starts from "
+                << TimeHelper::TimeToString (_timeBeg)
+                << " to " << TimeHelper::TimeToString (_timeEnd)
+                << std::endl;
         }
 
         TimePoint _GetTimeBeg () const
@@ -261,54 +251,25 @@ namespace Air_Conditioner
 
             while (true)
             {
-                auto str = InputHelper::Get<std::string> ("Time String");
-                for (auto &ch : str) if (ch == '-') ch = ' ';
-                std::istringstream iss (str);
-
                 try
                 {
-                    std::tm timeTm { 0 };
-                    auto count = 0;
-                    while (iss >> str)
-                    {
-                        auto num = std::stoi (str);
-                        if (!num) throw 0;
-
-                        if (!timeTm.tm_year) timeTm.tm_year = num - 1900;
-                        else if (!timeTm.tm_mon) timeTm.tm_mon = num - 1;
-                        else if (!timeTm.tm_mday) timeTm.tm_mday = num;
-
-                        ++count;
-                    }
-
-                    // Validation
-                    if (count != 3 ||
-                        timeTm.tm_year < 0 ||
-                        timeTm.tm_mon < 0 ||
-                        timeTm.tm_mon > 11 ||
-                        timeTm.tm_mday < 1 ||
-                        timeTm.tm_mday > 31)
-                        throw 0;
-                    auto timeT = mktime (&timeTm);
-                    if (localtime (&timeT) == nullptr)
-                        throw 0;
-
-                    auto ret = std::chrono::system_clock::from_time_t (timeT);
+                    auto str = InputHelper::Get<std::string> ("Time String");
+                    auto ret = TimeHelper::TimeFromString (str);
 
                     // Range Validation
                     if (ret < _timeBeg - std::chrono::hours { 24 } ||
                         ret > _timeEnd + std::chrono::hours { 24 })
                     {
-                        std::cout << "Time ";
-                        _PrintTime (ret);
-                        std::cout << " out of range\n";
+                        std::cout << "Time "
+                            << TimeHelper::TimeToString (ret)
+                            << " out of range\n";
                         _PrintTimeRange ();
                     }
                     else return ret;
                 }
-                catch (...)
+                catch (const std::exception &ex)
                 {
-                    std::cout << "Invalid Time Format\n";
+                    std::cout << ex.what () << std::endl;
                 }
             }
         }
@@ -360,11 +321,11 @@ namespace Air_Conditioner
                         << " Request records\n";
                     for (const auto &entry : item.second)
                     {
-                        std::cout << "  - [";
-                        _PrintTime (entry.timeBeg);
-                        std::cout << " ~ ";
-                        _PrintTime (entry.timeEnd);
-                        std::cout << "] Temp: " << entry.tempBeg
+                        std::cout << "  - ["
+                            << TimeHelper::TimeToString (entry.timeBeg)
+                            << " ~ "
+                            << TimeHelper::TimeToString (entry.timeEnd)
+                            << "] Temp: " << entry.tempBeg
                             << " -> " << entry.tempEnd
                             << " Wind: " << entry.wind
                             << " Cost: " << entry.costEnd - entry.costBeg
