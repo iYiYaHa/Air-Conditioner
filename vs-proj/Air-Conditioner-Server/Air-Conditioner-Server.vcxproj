@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\server\server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\server\log-helper.h" />
     <ClInclude Include="..\..\src\server\server-protocol-controller.h" />
     <ClInclude Include="..\..\src\server\server-view-controller.h" />
     <ClInclude Include="..\..\src\server\server-model.h" />

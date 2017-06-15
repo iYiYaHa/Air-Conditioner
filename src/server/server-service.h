@@ -60,28 +60,45 @@ namespace Air_Conditioner
             return mapper;
         }
 
+        static const TimePoint &GetStartTime ()
+        {
+            static const auto startTime = std::chrono::system_clock::now ();
+            return startTime;
+        }
+
+        static TimePoint GetFakeTime (const TimePoint &realTime)
+        {
+            const auto &startTime = GetStartTime ();
+            std::chrono::duration<double> deltaTime = realTime - startTime;
+            return startTime + std::chrono::hours { int (deltaTime.count ()) };
+        }
+
     public:
         static void WriteOnOff (const RoomId &room,
                                 const LogOnOff &entry)
         {
-            // TODO: time conversion
+            auto begTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (entry.timeBeg));
+            auto endTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (entry.timeEnd));
+
             auto &mapper = _mapper ();
             mapper.Insert (OnOffEntity {
-                0, room,
-                std::chrono::system_clock::to_time_t (entry.timeBeg),
-                std::chrono::system_clock::to_time_t (entry.timeEnd)
+                0, room, begTime, endTime
             }, false);
         }
 
         static void WriteRequest (const RoomId &room,
                                   const LogRequest &entry)
         {
-            // TODO: time conversion
+            auto begTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (entry.timeBeg));
+            auto endTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (entry.timeEnd));
+
             auto &mapper = _mapper ();
             mapper.Insert (RequestEntity {
-                0, room,
-                std::chrono::system_clock::to_time_t (entry.timeBeg),
-                std::chrono::system_clock::to_time_t (entry.timeEnd),
+                0, room, begTime, endTime,
                 entry.tempBeg, entry.tempEnd,
                 entry.costBeg, entry.costEnd,
                 entry.wind
@@ -121,11 +138,16 @@ namespace Air_Conditioner
             static OnOffEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
+            auto begTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (from));
+            auto endTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (to));
+
             auto &mapper = _mapper ();
             auto result = mapper.Query (entity)
                 .Where (
-                    field (entity.timeBeg) >= std::chrono::system_clock::to_time_t (from) &&
-                    field (entity.timeEnd) < std::chrono::system_clock::to_time_t (to)
+                    field (entity.timeBeg) >= begTime &&
+                    field (entity.timeEnd) < endTime
                 )
                 .ToList ();
 
@@ -146,11 +168,16 @@ namespace Air_Conditioner
             static RequestEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
+            auto begTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (from));
+            auto endTime = std::chrono::system_clock::to_time_t (
+                GetFakeTime (to));
+
             auto &mapper = _mapper ();
             auto result = mapper.Query (entity)
                 .Where (
-                    field (entity.timeBeg) >= std::chrono::system_clock::to_time_t (from) &&
-                    field (entity.timeEnd) < std::chrono::system_clock::to_time_t (to)
+                    field (entity.timeBeg) >= begTime &&
+                    field (entity.timeEnd) < endTime
                 )
                 .ToList ();
 
@@ -257,7 +284,9 @@ namespace Air_Conditioner
             state.lastRequest.tempEnd = state.current;
             state.lastRequest.costEnd = state.cost;
 
-            LogManager::WriteRequest (room, state.lastRequest);
+            // TODO: hack this code here :-)
+            if (state.lastRequest.wind != 0)
+                LogManager::WriteRequest (room, state.lastRequest);
         }
 
         static void HandleTurnOn (const RoomId &room,
@@ -356,11 +385,10 @@ namespace Air_Conditioner
             std::chrono::duration<double> deltaTime = now - roomState.pulse;
             roomState.pulse = now;
 
-            // TODO: verify this
             // Handle Beg/End Request
             if (!hasWindBefore && roomState.hasWind)
                 HandleReqBeg (req.room, now, roomState);
-            else if (hasWindBefore && roomState.hasWind)
+            else if (hasWindBefore && !roomState.hasWind)
                 HandleReqEnd (req.room, now, roomState);
             else if (isChanged)
             {
