@@ -66,9 +66,10 @@ namespace Air_Conditioner
         {
             GuestManager::AddGuest (guest);
         }
-        void RemoveGuest (const RoomId &guest)
+        void RemoveGuest (const RoomId &room)
         {
-            GuestManager::RemoveGuest (guest);
+            ScheduleManager::RemoveClient (room);
+            GuestManager::RemoveGuest (room);
         }
 
         // For GuestView
