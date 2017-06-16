@@ -5,7 +5,8 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QTimer>
-
+#include <QPainter>
+#include <QPaintEvent>
 #include <functional>
 #include "client-model.h"
 
@@ -18,7 +19,7 @@ class AuthWindow : public QWidget
 {
     Q_OBJECT
    using OnAuth = std::function<void (const Air_Conditioner::GuestInfo &)>;
-
+    void paintEvent(QPaintEvent *);
 public:
     explicit AuthWindow(QWidget *parent = 0);
     ~AuthWindow();
@@ -75,20 +76,14 @@ protected slots:
     }
 
 private slots:
-
-    void on_StopWind_clicked();
-    
-    void on_LowWind_clicked();
-    
-    void on_MidWind_clicked();
-    
-    void on_StrongWind_clicked();
     
     void on_UpBtn_clicked();
 
     void on_DownBtn_clicked();
 
     void on_QuitBtn_clicked();
+
+    void on_WindBtn_clicked();
 
 private:
     Ui::ControlWindow *ui;

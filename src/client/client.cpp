@@ -27,7 +27,6 @@ int main (int argc, char *argv[])
     {
         if (argc > 1) serverIp = argv[1];
         if (argc > 2) serverPort = std::stoi (argv[2]);
-        std::cout<<argc<<std::endl;
     }
     catch (...)
     {

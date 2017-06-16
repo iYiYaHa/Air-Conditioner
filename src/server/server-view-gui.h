@@ -176,18 +176,17 @@ namespace Air_Conditioner
 
     class LogViewGUI : public LogView
     {
-        TimePoint _GetTimeEnd (const TimePoint &tBeg) const
+        TimePoint _GetTimeEnd (int mode, const TimePoint &tBeg) const
         {
             std::cout << "Select a Log Type (day/week/month)\n";
             while (true)
             {
-                //auto type = InputHelper::Get<std::string> ("Log Mode");
-                auto type = "week";
-                if (type == "day")
+
+                if (mode == 0)
                     return tBeg + std::chrono::hours { 24 };
-                else if (type == "week")
+                else if (mode == 1)
                     return tBeg + std::chrono::hours { 24 * 7 };
-                else if (type == "month")
+                else if (mode == 2)
                     return tBeg + std::chrono::hours { 24 * 30 };
                 else
                     std::cout << "Invalid Log Mode\n";
@@ -256,8 +255,10 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             StatisticWindow log;
+            log.SetTimeRange(TimeHelper::TimeToString(_timeBeg),
+                             TimeHelper::TimeToString(_timeEnd));
             log.SetOnBack(std::move(_onBack));
-            log.SetOnTimeBegin([&](const std::string &time) -> std::pair<TimePoint,TimePoint>
+            log.SetOnTimeBegin([&](const int mode,const std::string &time) -> std::pair<TimePoint,TimePoint>
                     {
                         auto begin = TimeHelper::TimeFromString (time);
                         // Range Validation
@@ -272,17 +273,23 @@ namespace Air_Conditioner
                             throw std::runtime_error(prompt.toStdString());
                         }
                         else {
-                            auto end = _GetTimeEnd(begin);
-
-                            std::string haha1 = TimeHelper::TimeToString(begin);
-                           std::string haha2 = TimeHelper::TimeToString(end);
+                            auto end = _GetTimeEnd(mode,begin);
                             return std::make_pair(begin,end);
                         }
                    }
             );
             log.SetOnExport([&](TimePoint timeBeg,TimePoint timeEnd){
-                std::string haha1 = TimeHelper::TimeToString(timeBeg);
-               std::string haha2 = TimeHelper::TimeToString(timeEnd);
+                // Range Validation
+                if (timeBeg < _timeBeg - std::chrono::hours { 24 } ||
+                    timeBeg > _timeEnd + std::chrono::hours { 24 })
+                {
+                    std::cout << "Time "
+                        << TimeHelper::TimeToString (timeBeg)
+                        << " out of range\n";
+                    QString prompt = QStringLiteral("报表由 ") + QString::fromStdString(TimeHelper::TimeToString (_timeBeg))+
+                            QStringLiteral(" 至 ")+QString::fromStdString(TimeHelper::TimeToString (_timeEnd));
+                    throw std::runtime_error(prompt.toStdString());
+                }
                 auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
                 auto requestList = _onQueryRequest (timeBeg, timeEnd);
                 _PrintLog(onOffList, requestList);

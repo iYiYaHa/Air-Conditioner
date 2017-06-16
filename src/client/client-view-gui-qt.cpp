@@ -9,11 +9,21 @@ AuthWindow::AuthWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground);
+    this->setTabOrder(ui->RoomId,ui->GuestId);
 }
 
 AuthWindow::~AuthWindow()
 {
     delete ui;
+}
+
+void AuthWindow::paintEvent(QPaintEvent *)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void AuthWindow::on_LogOnBtn_clicked()
@@ -55,7 +65,9 @@ ControlWindow::ControlWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
-    ui->MidWind->setChecked(true);
+    ui->WindBtn->setFlat(true);
+    ui->WindBtn->setAutoFillBackground(true);
+    ui->WindBtn->setStyleSheet("QPushButton{border-image: url(:/button/Mid.png);}");
 }
 
 ControlWindow::~ControlWindow()
@@ -121,31 +133,6 @@ void ControlWindow::LoadGuestInfo(Air_Conditioner::GuestInfo guest)
      ui->RoomId->setText(QString::fromStdString(guest.room));
 }
 
-void ControlWindow::on_StopWind_clicked()
-{
-    if(ui->StopWind->isChecked())
-        _onWindChanged(Air_Conditioner::Wind{0});
-}
-
-void ControlWindow::on_LowWind_clicked()
-{
-    if(ui->LowWind->isChecked())
-        _onWindChanged(Air_Conditioner::Wind{1});
-    
-}
-
-void ControlWindow::on_MidWind_clicked()
-{
-    if(ui->MidWind->isChecked())
-        _onWindChanged(Air_Conditioner::Wind{2});   
-}
-
-void ControlWindow::on_StrongWind_clicked()
-{
-    if(ui->StrongWind->isChecked())
-        _onWindChanged(Air_Conditioner::Wind{3});
-}
-
 void ControlWindow::on_UpBtn_clicked()
 {
     Air_Conditioner::Temperature temp = ui->TargetTemp->text().toDouble();
@@ -165,4 +152,22 @@ void ControlWindow::on_DownBtn_clicked()
 void ControlWindow::on_QuitBtn_clicked()
 {
     this->close();
+}
+
+void ControlWindow::on_WindBtn_clicked()
+{
+    static int windLevel = 1;
+     windLevel = ((windLevel+1)%4) == 0? 1:((windLevel+1)%4);
+    switch(windLevel){
+    case 1:
+        ui->WindBtn->setStyleSheet("QPushButton{border-image: url(:/button/Low.png);}");
+        break;
+    case 2:
+        ui->WindBtn->setStyleSheet("QPushButton{border-image: url(:/button/Mid.png);}");
+        break;
+    case 3:
+        ui->WindBtn->setStyleSheet("QPushButton{border-image: url(:/button/Strong.png);}");
+        break;
+    }
+    _onWindChanged(Air_Conditioner::Wind{windLevel});
 }

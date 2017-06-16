@@ -16,7 +16,7 @@
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include "server-view.h"
-
+#include "time-helper.h"
 namespace Ui {
 class WelcomeWindow;
 class StatisticWindow;
@@ -74,7 +74,7 @@ class StatisticWindow : public QWidget
 {
     Q_OBJECT
     using OnBack = std::function<void ()>;
-    using OnTimeBegin = std::function<std::pair<TimePoint,TimePoint> (const std::string &time)>;
+    using OnTimeBegin = std::function<std::pair<TimePoint,TimePoint> (const int mode, const std::string &time)>;
     using OnExport = std::function<void (TimePoint,TimePoint)>;
 public:
     explicit StatisticWindow(QWidget *parent = 0);
@@ -88,6 +88,7 @@ public:
     void SetOnExport(OnExport &&onExport){
         _onExport = onExport;
     }
+    void SetTimeRange(std::string _timeBeg,std::string _timeEnd);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -226,7 +227,6 @@ private slots:
     void on_ConfirmBtn_clicked();
 
     void on_CancelBtn_clicked();
-
 
 private:
     Ui::ConfigWindow *ui;

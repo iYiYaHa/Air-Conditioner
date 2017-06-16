@@ -2,6 +2,15 @@
     <qresource prefix="/background">
         <file>background2.png</file>
         <file>backgroundShadow.png</file>
+        <file>background2.jpg</file>
+        <file>LogIn.png</file>
+        <file>LogIn2.png</file>
+        <file>dotC.png</file>
     </qresource>
-    <qresource prefix="/button"/>
+    <qresource prefix="/button">
+        <file>Low.png</file>
+        <file>Mid.png</file>
+        <file>Strong.png</file>
+        <file>WindSpeed.png</file>
+    </qresource>
 </RCC>

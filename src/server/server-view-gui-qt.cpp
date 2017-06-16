@@ -370,10 +370,13 @@ StatisticWindow::StatisticWindow(QWidget *parent) :
     ui->StartTime->setCalendarPopup(true);
     ui->EndTime->setCalendarPopup(true);
     ui->StartTime->setDisplayFormat("yyyy-MM-dd");
-    ui->EndTime->setDisplayFormat("yyyy-mm-dd");
+    ui->EndTime->setDisplayFormat("yyyy-MM-dd");
     ui->StartTime->setDateTime(QDateTime::currentDateTime());
-    ui->EndTime->setDateTime(QDateTime::currentDateTime());
-
+    ui->EndTime->setDateTime(ui->StartTime->dateTime());
+    ui->DayBtn->setChecked(true);
+    ui->EndTime->setHidden(true);
+    ui->label_2->setHidden(true);
+  //  ui->EndTime->setReadOnly(true);
 }
 
 StatisticWindow::~StatisticWindow()
@@ -421,10 +424,16 @@ void ConfigWindow::on_CancelBtn_clicked()
 void StatisticWindow::on_QueryBtn_clicked()
 {
     if(_onExport){
+        try{
         _onExport(_timeBegin,_timeEnd);
         QMessageBox::information(this,QStringLiteral("成功"),
                                  QStringLiteral("报表导出成功"),QStringLiteral("确定"));
         }
+        catch(std::exception &ex){
+            QMessageBox::warning(this,QStringLiteral("开始时间取值错误，请重新选择"),QString::fromStdString(ex.what()),
+                        QStringLiteral("确定"));
+        }
+    }
 }
 
 void StatisticWindow::on_StartTime_dateChanged(const QDate &date)
@@ -432,9 +441,19 @@ void StatisticWindow::on_StartTime_dateChanged(const QDate &date)
    QString begin = date.toString("yyyy-MM-dd");
    try{
       if(_onTimeBegin){
-        auto duration = _onTimeBegin(begin.toStdString());
+        int mode = 0;
+        if(ui->DayBtn->isChecked())
+            mode = 0;
+        else if(ui->WeekBtn->isChecked())
+            mode = 1;
+        else
+            mode = 2;
+        auto duration = _onTimeBegin(mode,begin.toStdString());
         _timeBegin = duration.first;
         _timeEnd = duration.second;
+        ui->EndTime->setTime(QTime::fromString
+                       (QString::fromStdString(TimeHelper::TimeToString(_timeEnd)),
+                        "yyyy-mm-dd"));
      }
    }
    catch(std::exception &ex){
@@ -447,4 +466,12 @@ void StatisticWindow::on_QuitBtn_clicked()
 {
     this->close();
     _onBack();
+}
+
+void StatisticWindow::SetTimeRange(std::string _timeBeg,std::string _timeEnd){
+    ui->StartTime->setMinimumDate(QDate::fromString(
+                                      QString::fromStdString(_timeBeg),"yyyy-mm-dd"));
+
+    ui->StartTime->setMaximumDate(QDate::fromString(
+                                      QString::fromStdString(_timeEnd),"yyyy-mm-dd"));
 }
