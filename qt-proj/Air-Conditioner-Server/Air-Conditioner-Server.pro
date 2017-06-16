@@ -46,7 +46,9 @@ HEADERS += \
     ../../src/common/common-view.h \
     ../../src/common/json/json.hpp \
     ../../src/server/server-view-gui.h \
-    ../../src/server/server-view-gui-qt.h
+    ../../src/server/server-view-gui-qt.h \
+    ../../src/server/log-helper.h \
+    ../../src/server/time-helper.h
 
 FORMS += \
     ../../src/server/ui/configwindow.ui \
@@ -60,3 +62,6 @@ DISTFILES += \
     ../../src/server/ormlite/sqlite3.c.zip \
     ../../src/server/ormlite/sqlite3.h.zip \
     ../../src/common/json/json.zip \
+
+RESOURCES += \
+    ../../src/server/ui/resource.qrc

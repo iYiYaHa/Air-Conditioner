@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/background">
+        <file>background2.png</file>
+        <file>backgroundShadow.png</file>
+        <file>background2.jpg</file>
+        <file>LogIn.png</file>
+        <file>LogIn2.png</file>
+        <file>dotC.png</file>
+    </qresource>
+    <qresource prefix="/button">
+        <file>Low.png</file>
+        <file>Mid.png</file>
+        <file>Strong.png</file>
+        <file>WindSpeed.png</file>
+        <file>Wave.png</file>
+        <file>Off.png</file>
+        <file>On.png</file>
+        <file>AddHover.png</file>
+        <file>AddNormal.png</file>
+        <file>AddPressed.png</file>
+        <file>MinusHover.png</file>
+        <file>MinusNormal.png</file>
+        <file>MinusPressed.png</file>
+        <file>QuitBtn.png</file>
+    </qresource>
+</RCC>

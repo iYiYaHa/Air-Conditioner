@@ -1,4 +1,4 @@
-
+﻿
 //
 // Air Conditioner - Server MVC View (GUI View)
 // Youjie Zhang, 2017
@@ -8,6 +8,7 @@
 #define AC_SERVER_VIEW_GUI_H
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <unordered_map>
@@ -15,7 +16,15 @@
 #include <chrono>
 
 #include <QApplication>
+
+
 #include "server-view-gui-qt.h"
+#include "server-view.h"
+#include "../common/cli-helper.h"
+#include "log-helper.h"
+
+#define ONOFFLOGFILE "on-off-log.csv"
+#define REQUESTLOGFILE "request-log.csv"
 
 namespace Air_Conditioner
 {
@@ -46,8 +55,10 @@ namespace Air_Conditioner
             });
 
             welcome.setOnLog([&]{
+                welcome.close();
                 _onNav(ViewType::LogView);
             });
+
             welcome.setOnClient([&]{
                 welcome.close();
                 _onNav(ViewType::ClientView);
@@ -66,15 +77,6 @@ namespace Air_Conditioner
 
     class ConfigViewGUI : public ConfigView
     {
-//        void _PrintInfo () const
-//        {
-//            std::cout << "Current Config:"
-//                << "\n - Master is " << (_config.isOn ? "ON" : "OFF")
-//                << "\n - Mode: " << (!_config.mode ? "Summer" : "Winter")
-//                << "\n - Slave Pulse Frequency: " << _config.pulseFreq
-//                << " s\n";
-//        }
-
         ServerInfo _config;
         OnSet _onSet;
         OnBack _onBack;
@@ -99,50 +101,7 @@ namespace Air_Conditioner
     };
 
     class GuestViewGUI : public GuestView
-    {
-        GuestInfo _GetGuestInfo () const
-        {
-            RoomId roomId;
-            GuestId guestId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-            std::cout << "Guest ID: ";
-            std::cin >> guestId;
-
-            return GuestInfo {
-                roomId, guestId
-            };
-        }
-
-        RoomId _GetRoomId () const
-        {
-            RoomId roomId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-
-            return roomId;
-        }
-
-        void _PrintList () const
-        {
-            if (_list.empty ())
-            {
-                std::cout << "No guest is registered...\n";
-                return;
-            }
-
-            std::cout << "Guest on the list:\n";
-            for (const auto &guest : _list)
-            {
-                std::cout
-                    << " - Room: " << guest.room
-                    << " Guest: " << guest.guest
-                    << "\n";
-            }
-        }
-
+    {   
         std::list<GuestInfo> _list;
         OnAdd _onAdd;
         OnDel _onDel;
@@ -162,10 +121,11 @@ namespace Air_Conditioner
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
             GuestWindow guest;
-            guest.SetOnBack([&]{
-                _onBack();
-            });
-
+            guest.SetOnBack(std::move(_onBack));
+            guest.LoadGuest(_list);
+            guest.SetOnAdd(std::move(_onAdd));
+            guest.SetOnDel(std::move(_onDel));
+            guest.SetOnBack(std::move(_onBack));
             guest.show();
             app.exec();
         }
@@ -173,112 +133,153 @@ namespace Air_Conditioner
 
     class LogViewGUI : public LogView
     {
+        TimePoint _GetTimeEnd (int mode, const TimePoint &tBeg) const
+        {
+            std::cout << "Select a Log Type (day/week/month)\n";
+            while (true)
+            {
+
+                if (mode == 0)
+                    return tBeg + std::chrono::hours { 24 };
+                else if (mode == 1)
+                    return tBeg + std::chrono::hours { 24 * 7 };
+                else if (mode == 2)
+                    return tBeg + std::chrono::hours { 24 * 30 };
+                else
+                    std::cout << "Invalid Log Mode\n";
+            }
+        }
+
+        void _PrintLog (const LogOnOffList &onOffList,
+                        const LogRequestList &requestList)
+        {
+            if (onOffList.empty ())
+                std::cout << "No On-Off records\n";
+            else
+            {
+                try
+                {
+                    std::ofstream ofs (ONOFFLOGFILE);
+                    ofs << LogHelper::LogOnOffListToCsv (onOffList);
+                    std::cout << "On-Off records has been saved to '"
+                        ONOFFLOGFILE "'\n";
+                }
+                catch (...)
+                {
+                    std::cout << "Unable to write to log file\n";
+                }
+            }
+
+            if (requestList.empty ())
+                std::cout << "No Request records\n";
+            else
+            {
+                try
+                {
+                    std::ofstream ofs (REQUESTLOGFILE);
+                    ofs << LogHelper::LogRequestListToCsv (requestList);
+                    std::cout << "Reuqest records has been saved to '"
+                        REQUESTLOGFILE "'\n";
+                }
+                catch (...)
+                {
+                    std::cout << "Unable to write to log file\n";
+                }
+            }
+        }
+
+
+        TimePoint _timeBeg, _timeEnd;
+        OnQueryOnOff _onQueryOnOff;
+        OnQueryRequest _onQueryRequest;
         OnBack _onBack;
 
     public:
-        // TODO: impl log view
+        LogViewGUI (TimePoint timeBeg,
+                    TimePoint timeEnd,
+                    OnQueryOnOff &&onQueryOnOff,
+                    OnQueryRequest &&onQueryRequest,
+                    OnBack &&onBack)
+            : _timeBeg (timeBeg), _timeEnd (timeEnd),
+            _onQueryOnOff (onQueryOnOff),
+            _onQueryRequest (onQueryRequest),
+            _onBack (onBack)
+        {}
 
         virtual void Show () override
         {
-            if (_onBack) _onBack ();
             int tmpArgc = 0;
             char ** tmpArgv = nullptr;
             QApplication app(tmpArgc,tmpArgv);
-            StatisticWindow statistic;
-
-            statistic.show();
+            StatisticWindow log;
+            log.SetTimeRange(TimeHelper::TimeToString(_timeBeg),
+                             TimeHelper::TimeToString(_timeEnd));
+            log.SetOnBack(std::move(_onBack));
+            log.SetOnTimeBegin([&](const int mode,const std::string &time) -> std::pair<TimePoint,TimePoint>
+                    {
+                        auto begin = TimeHelper::TimeFromString (time);
+                        // Range Validation
+                        if (begin < _timeBeg - std::chrono::hours { 24 } ||
+                            begin > _timeEnd + std::chrono::hours { 24 })
+                        {
+                            std::cout << "Time "
+                                << TimeHelper::TimeToString (begin)
+                                << " out of range\n";
+                            QString prompt = QStringLiteral("报表由 ") + QString::fromStdString(TimeHelper::TimeToString (_timeBeg))+
+                                    QStringLiteral(" 至 ")+QString::fromStdString(TimeHelper::TimeToString (_timeEnd));
+                            throw std::runtime_error(prompt.toStdString());
+                        }
+                        else {
+                            auto end = _GetTimeEnd(mode,begin);
+                            return std::make_pair(begin,end);
+                        }
+                   }
+            );
+            log.SetOnExport([&](TimePoint timeBeg,TimePoint timeEnd){
+                // Range Validation
+                if (timeBeg < _timeBeg - std::chrono::hours { 24 } ||
+                    timeBeg > _timeEnd + std::chrono::hours { 24 })
+                {
+                    std::cout << "Time "
+                        << TimeHelper::TimeToString (timeBeg)
+                        << " out of range\n";
+                    QString prompt = QStringLiteral("报表由 ") + QString::fromStdString(TimeHelper::TimeToString (_timeBeg))+
+                            QStringLiteral(" 至 ")+QString::fromStdString(TimeHelper::TimeToString (_timeEnd));
+                    throw std::runtime_error(prompt.toStdString());
+                }
+                auto onOffList = _onQueryOnOff (timeBeg, timeEnd);
+                auto requestList = _onQueryRequest (timeBeg, timeEnd);
+                _PrintLog(onOffList, requestList);
+            });
+            log.show();
             app.exec();
         }
     };
 
     class ClientViewGUI : public ClientView
     {
-        void _PrintInfo () const
-        {
-            if (_clients.empty ())
-            {
-                std::cout << "No slave is connecting...\n";
-                return;
-            }
-
-            static std::unordered_map<Wind, std::string> windStr
-            {
-                { 0, "Stop" },
-                { 1, "Weak" },
-                { 2, "Mid" },
-                { 3, "Strong" }
-            };
-
-            std::cout << "Client List:\n";
-            for (const auto &client : _clients)
-            {
-                std::cout << std::fixed
-                    << std::setprecision (2)
-                    << " - Room: " << client.first
-                    << " Guest: " << client.second.guest
-                    << " Cur Temp: " << client.second.curTemp
-                    << " Target Temp: " << client.second.targetTemp
-                    << " Wind: " << client.second.wind
-                    << " Energy: " << client.second.energy
-                    << " Cost: " << client.second.cost
-                    << "\n";
-            }
-        }
-
         ClientList _clients;
-        PulseFreq _freq;
         OnUpdate _onUpdate;
         OnBack _onBack;
 
     public:
-        ClientViewGUI (PulseFreq freq,
-                       OnUpdate &&onUpdate, OnBack &&onBack)
-            : _freq (freq), _onUpdate (onUpdate), _onBack (onBack)
+        ClientViewGUI (OnUpdate &&onUpdate, OnBack &&onBack)
+            : _onUpdate (onUpdate), _onBack (onBack)
         {}
 
         virtual void Show () override
-        {
-            std::cout << "Press 'Enter' to Back to the Welcome Page\n";
+           {
+               int tmpArgc = 0;
+               char ** tmpArgv = nullptr;
+               QApplication app(tmpArgc,tmpArgv);
+               ClientWindow client;
+               client.SetOnBack(std::move(_onBack));
+               client.SetOnUpdate(std::move(_onUpdate));
+               client.show();
+               app.exec();
+           }
 
-            auto sleepTime = std::chrono::seconds { _freq };
-            auto isQuit = false;
 
-            std::thread thread ([&] {
-                auto lastHit = std::chrono::system_clock::now ();
-                while (!isQuit)
-                {
-                    try
-                    {
-                        if (_onUpdate) _clients = _onUpdate ();
-                        _PrintInfo ();
-                    }
-                    catch (const std::exception &ex)
-                    {
-                        std::cerr << ex.what () << std::endl;
-                    }
-
-                    // To prevent over sleep :-)
-                    auto timeWasted = std::chrono::system_clock::now () - lastHit;
-                    if (timeWasted < sleepTime)
-                        std::this_thread::sleep_for (sleepTime - timeWasted);
-                    lastHit = std::chrono::system_clock::now ();
-                }
-            });
-            int tmpArgc = 0;
-            char ** tmpArgv = nullptr;
-            QApplication app(tmpArgc,tmpArgv);
-            ClientWindow client;
-            client.SetOnBack([&]{
-                _onBack();
-            });
-            client.show();
-            app.exec();
-//            // TODO: handle invalid input
-//            getchar (); getchar ();
-//            if (_onBack) _onBack ();
-            isQuit = true;
-            if (thread.joinable ()) thread.join ();
-        }
     };
 }
 

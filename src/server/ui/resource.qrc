@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="on1">1.png</file>
+        <file alias="off1">off1.png</file>
+        <file alias="off2">off2.png</file>
+        <file alias="on2">on2.png</file>
+        <file alias="clientBtn">client.png</file>
+        <file alias="LogBtn">Log.png</file>
+        <file alias="GuestBtn">GuestBtn.png</file>
+        <file alias="ConfigBtn">ConfigBtn.png</file>
+        <file alias="QuitBtn">QuitBtn.png</file>
+        <file alias="ClientHover">ClientHover.png</file>
+        <file alias="ConfigHover">ConfigBtnHover.png</file>
+        <file alias="GuestHover">GuestHover.png</file>
+        <file alias="LogHover">LogHover.png</file>
+        <file alias="QuitHover">QuitBtnHover.png</file>
+        <file>ConfigPressed.png</file>
+        <file>ClientPressed.png</file>
+        <file>GuestPressed.png</file>
+        <file>LogPressed.png</file>
+        <file>QuitPressed.png</file>
+    </qresource>
+    <qresource prefix="/background">
+        <file>background.jpg</file>
+    </qresource>
+    <qresource prefix="/switch">
+        <file>SlideOff.png</file>
+        <file>SlideOn.png</file>
+    </qresource>
+</RCC>

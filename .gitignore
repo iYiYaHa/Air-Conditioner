@@ -223,4 +223,4 @@ log.txt
 *.csv
 
 # QT
-ui_*.h
+qt-proj/build-*/*
