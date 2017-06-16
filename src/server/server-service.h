@@ -82,10 +82,17 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (entry.timeEnd));
 
-            auto &mapper = _mapper ();
-            mapper.Insert (OnOffEntity {
-                0, room, begTime, endTime
-            }, false);
+            try
+            {
+                auto &mapper = _mapper ();
+                mapper.Insert (OnOffEntity {
+                    0, room, begTime, endTime
+                }, false);
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static void WriteRequest (const RoomId &room,
@@ -96,13 +103,20 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (entry.timeEnd));
 
-            auto &mapper = _mapper ();
-            mapper.Insert (RequestEntity {
-                0, room, begTime, endTime,
-                entry.tempBeg, entry.tempEnd,
-                entry.costBeg, entry.costEnd,
-                entry.wind
-            }, false);
+            try
+            {
+                auto &mapper = _mapper ();
+                mapper.Insert (RequestEntity {
+                    0, room, begTime, endTime,
+                    entry.tempBeg, entry.tempEnd,
+                    entry.costBeg, entry.costEnd,
+                    entry.wind
+                }, false);
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static std::pair<TimePoint, TimePoint> GetTimeRange ()
@@ -112,24 +126,31 @@ namespace Air_Conditioner
             static auto field = BOT_ORM::FieldExtractor {
                 onOffEntity, requestEntity };
 
-            auto &mapper = _mapper ();
-            auto minTime = mapper.Query (onOffEntity)
-                .Aggregate (BOT_ORM::Expression::Min (
-                    field (onOffEntity.timeBeg)));
-            auto maxTime = mapper.Query (onOffEntity)
-                .Aggregate (BOT_ORM::Expression::Max (
-                    field (onOffEntity.timeEnd)));
+            try
+            {
+                auto &mapper = _mapper ();
+                auto minTime = mapper.Query (onOffEntity)
+                    .Aggregate (BOT_ORM::Expression::Min (
+                        field (onOffEntity.timeBeg)));
+                auto maxTime = mapper.Query (onOffEntity)
+                    .Aggregate (BOT_ORM::Expression::Max (
+                        field (onOffEntity.timeEnd)));
 
-            auto timeBeg = (minTime == nullptr) ?
-                std::chrono::system_clock::now () :
-                std::chrono::system_clock::from_time_t (minTime.Value ());
-            auto timeEnd = (maxTime == nullptr) ?
-                std::chrono::system_clock::now () :
-                std::chrono::system_clock::from_time_t (maxTime.Value ());
+                auto timeBeg = (minTime == nullptr) ?
+                    std::chrono::system_clock::now () :
+                    std::chrono::system_clock::from_time_t (minTime.Value ());
+                auto timeEnd = (maxTime == nullptr) ?
+                    std::chrono::system_clock::now () :
+                    std::chrono::system_clock::from_time_t (maxTime.Value ());
 
-            return std::make_pair (
-                std::move (timeBeg) - std::chrono::hours { 24 },
-                std::move (timeEnd) + std::chrono::hours { 24 });
+                return std::make_pair (
+                    std::move (timeBeg) - std::chrono::hours { 24 },
+                    std::move (timeEnd) + std::chrono::hours { 24 });
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static LogOnOffList GetOnOff (const TimePoint &from,
@@ -143,23 +164,30 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (to));
 
-            auto &mapper = _mapper ();
-            auto result = mapper.Query (entity)
-                .Where (
-                    field (entity.timeBeg) >= begTime &&
-                    field (entity.timeEnd) < endTime
-                )
-                .ToList ();
-
-            LogOnOffList ret;
-            for (const auto &entry : result)
+            try
             {
-                ret[entry.room].emplace_back (LogOnOff {
-                    std::chrono::system_clock::from_time_t (entry.timeBeg),
-                    std::chrono::system_clock::from_time_t (entry.timeEnd)
-                });
+                auto &mapper = _mapper ();
+                auto result = mapper.Query (entity)
+                    .Where (
+                        field (entity.timeBeg) >= begTime &&
+                        field (entity.timeEnd) < endTime
+                    )
+                    .ToList ();
+
+                LogOnOffList ret;
+                for (const auto &entry : result)
+                {
+                    ret[entry.room].emplace_back (LogOnOff {
+                        std::chrono::system_clock::from_time_t (entry.timeBeg),
+                        std::chrono::system_clock::from_time_t (entry.timeEnd)
+                    });
+                }
+                return ret;
             }
-            return ret;
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static LogRequestList GetRequest (const TimePoint &from,
@@ -173,26 +201,33 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (to));
 
-            auto &mapper = _mapper ();
-            auto result = mapper.Query (entity)
-                .Where (
-                    field (entity.timeBeg) >= begTime &&
-                    field (entity.timeEnd) < endTime
-                )
-                .ToList ();
-
-            LogRequestList ret;
-            for (const auto &entry : result)
+            try
             {
-                ret[entry.room].emplace_back (LogRequest {
-                    std::chrono::system_clock::from_time_t (entry.timeBeg),
-                    std::chrono::system_clock::from_time_t (entry.timeEnd),
-                    entry.tempBeg, entry.tempEnd,
-                    entry.costBeg, entry.costEnd,
-                    entry.wind
-                });
+                auto &mapper = _mapper ();
+                auto result = mapper.Query (entity)
+                    .Where (
+                        field (entity.timeBeg) >= begTime &&
+                        field (entity.timeEnd) < endTime
+                    )
+                    .ToList ();
+
+                LogRequestList ret;
+                for (const auto &entry : result)
+                {
+                    ret[entry.room].emplace_back (LogRequest {
+                        std::chrono::system_clock::from_time_t (entry.timeBeg),
+                        std::chrono::system_clock::from_time_t (entry.timeEnd),
+                        entry.tempBeg, entry.tempEnd,
+                        entry.costBeg, entry.costEnd,
+                        entry.wind
+                    });
+                }
+                return ret;
             }
-            return ret;
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
     };
 
@@ -246,9 +281,9 @@ namespace Air_Conditioner
     public:
         static void AddGuest (const GuestInfo &guest)
         {
-            auto &mapper = _mapper ();
             try
             {
+                auto &mapper = _mapper ();
                 mapper.Insert (GuestEntity {
                     guest.room, guest.guest,
                     Energy { 0 }, Cost { 0 }
@@ -272,14 +307,22 @@ namespace Air_Conditioner
             static GuestEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
-            auto &mapper = _mapper ();
-            auto guestFound = mapper.Query (entity)
-                .Where (
-                    field (entity.room) == guest.room &&
-                    field (entity.guest) == guest.guest)
-                .ToList ();
+            auto notFound = true;
+            try
+            {
+                auto &mapper = _mapper ();
+                notFound = mapper.Query (entity)
+                    .Where (
+                        field (entity.room) == guest.room &&
+                        field (entity.guest) == guest.guest)
+                    .ToList ().empty ();
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
 
-            if (guestFound.empty ())
+            if (notFound)
                 throw std::runtime_error ("Invalid Room ID or Guest ID");
         }
 
