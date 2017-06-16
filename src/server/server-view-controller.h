@@ -53,7 +53,7 @@ namespace Air_Conditioner
         }
 
         // For ConfigView
-        const ServerInfo &GetConfig () const
+        ServerInfo GetConfig () const
         {
             return ConfigManager::GetConfig ();
         }
@@ -82,15 +82,16 @@ namespace Air_Conditioner
     class LogController
     {
     public:
+        // For LogView
         std::pair<TimePoint, TimePoint> GetTimeRange () const
         {
             return LogManager::GetTimeRange ();
         }
-        LogOnOffList GetLogOnOff (const TimePoint &from, const TimePoint &to)
+        LogOnOffList GetLogOnOff (const TimePoint &from, const TimePoint &to) const
         {
             return LogManager::GetOnOff (from, to);
         }
-        LogRequestList GetLogRequest (const TimePoint &from, const TimePoint &to)
+        LogRequestList GetLogRequest (const TimePoint &from, const TimePoint &to) const
         {
             return LogManager::GetRequest (from, to);
         }
@@ -99,8 +100,8 @@ namespace Air_Conditioner
     class ClientController
     {
     public:
-        // For ClientView
-        const ClientList &GetClientList () const
+        // For ClientView callback
+        ClientList GetClientList () const
         {
             return ScheduleManager::GetClientList ();
         }
