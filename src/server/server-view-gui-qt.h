@@ -1,12 +1,11 @@
 ﻿
 //
-// Air Conditioner - Server MVC View (GUI View - QT)
+// Air Conditioner - Server MVC View (GUI View - Qt Interface)
 // Youjie Zhang, 2017
 //
 
 #ifndef AC_SERVER_VIEW_GUI_QT_H
 #define AC_SERVER_VIEW_GUI_QT_H
-
 
 #include <functional>
 
@@ -15,8 +14,10 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QStandardItemModel>
+
 #include "server-view.h"
 #include "time-helper.h"
+
 namespace Ui {
 class WelcomeWindow;
 class StatisticWindow;
@@ -235,4 +236,4 @@ private:
     ServerInfo _config;
 };
 
-#endif AC_SERVER_VIEW_GUI_QT_H
+#endif // AC_SERVER_VIEW_GUI_QT_H

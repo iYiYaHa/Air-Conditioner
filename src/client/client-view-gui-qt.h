@@ -1,5 +1,13 @@
-﻿#ifndef CLIENTVIEWGUI_H
-#define CLIENTVIEWGUI_H
+﻿
+//
+// Air Conditioner - Client MVC View (GUI View - Qt Interface)
+// Youjie Zhang, 2017
+//
+
+#ifndef AC_CLIENT_VIEW_GUI_QT_H
+#define AC_CLIENT_VIEW_GUI_QT_H
+
+#include <functional>
 
 #include <QWidget>
 #include <QCloseEvent>
@@ -7,7 +15,7 @@
 #include <QTimer>
 #include <QPainter>
 #include <QPaintEvent>
-#include <functional>
+
 #include "client-model.h"
 
 namespace Ui {
@@ -92,4 +100,5 @@ private:
     OnClock _onClock;
     QTimer _timer;
 };
-#endif // CLIENTVIEWGUI_H
+
+#endif // AC_CLIENT_VIEW_GUI_QT_H

@@ -1,6 +1,6 @@
 ﻿
 //
-// Air Conditioner - Server MVC View (GUI View - QT Implementation)
+// Air Conditioner - Server MVC View (GUI View - Qt Implementation)
 // Youjie Zhang, 2017
 //
 
@@ -9,6 +9,7 @@
 #include "ui_clientwindow.h"
 #include "ui_configwindow.h"
 #include "ui_guestwindow.h"
+
 #include "server-view-gui-qt.h"
 
 #include <QHeaderView>

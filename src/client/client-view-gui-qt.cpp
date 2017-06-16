@@ -1,7 +1,13 @@
-﻿#include "client-view-gui-qt.h"
+﻿
+//
+// Air Conditioner - Client MVC View (GUI View - Qt Implementation)
+// Youjie Zhang, 2017
+//
 
 #include "ui_authwindow.h"
 #include "ui_controlwindow.h"
+
+#include "client-view-gui-qt.h"
 
 AuthWindow::AuthWindow(QWidget *parent) :
     QWidget(parent),
