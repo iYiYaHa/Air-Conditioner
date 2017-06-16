@@ -112,7 +112,7 @@ class ClientWindow : public QWidget
 {
     Q_OBJECT
     using OnBack = std::function<void ()>;
-    using OnUpdate = std::function<const ClientList &()>;
+    using OnUpdate = std::function<ClientList ()>;
 
 public:
     explicit ClientWindow(QWidget *parent = 0);

@@ -151,7 +151,7 @@ border-image: url(:/button/Off.png);
       <x>30</x>
       <y>210</y>
       <width>181</width>
-      <height>121</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -302,7 +302,8 @@ border-bottom-right-radius:30px;
     </property>
     <property name="styleSheet">
      <string notr="true">#RoomId{
-background-color:transparent
+background-color:transparent;
+	font: 14pt &quot;幼圆&quot;;
 }</string>
     </property>
     <property name="frame">
@@ -315,7 +316,7 @@ background-color:transparent
       <x>210</x>
       <y>210</y>
       <width>271</width>
-      <height>121</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -349,10 +350,10 @@ border-bottom-right-radius:30px;
     <widget class="QPushButton" name="WindBtn">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>141</width>
-       <height>131</height>
+       <x>10</x>
+       <y>30</y>
+       <width>131</width>
+       <height>111</height>
       </rect>
      </property>
      <property name="autoFillBackground">
@@ -377,8 +378,8 @@ border-bottom-right-radius:30px;
     <widget class="QLineEdit" name="Wind">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>70</y>
+       <x>130</x>
+       <y>80</y>
        <width>111</width>
        <height>31</height>
       </rect>
