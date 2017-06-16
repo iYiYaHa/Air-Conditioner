@@ -1,4 +1,4 @@
-﻿
+
 //
 // Air Conditioner - Client
 // BOT Man, 2017
