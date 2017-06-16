@@ -100,7 +100,7 @@ namespace Air_Conditioner
     class ClientController
     {
     public:
-        // For ClientView
+        // For ClientView callback
         ClientList GetClientList () const
         {
             return ScheduleManager::GetClientList ();
