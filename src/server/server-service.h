@@ -8,8 +8,9 @@
 #define AC_SERVER_SERVICE_H
 
 #include <exception>
+#include <mutex>
 
-#define MAXCLIENT 2
+#define MAXCLIENT 3
 #define THRESHOLD 1.0
 #define DEADTIME 3
 #define DBNAME "ac.db"
@@ -81,10 +82,17 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (entry.timeEnd));
 
-            auto &mapper = _mapper ();
-            mapper.Insert (OnOffEntity {
-                0, room, begTime, endTime
-            }, false);
+            try
+            {
+                auto &mapper = _mapper ();
+                mapper.Insert (OnOffEntity {
+                    0, room, begTime, endTime
+                }, false);
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static void WriteRequest (const RoomId &room,
@@ -95,13 +103,20 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (entry.timeEnd));
 
-            auto &mapper = _mapper ();
-            mapper.Insert (RequestEntity {
-                0, room, begTime, endTime,
-                entry.tempBeg, entry.tempEnd,
-                entry.costBeg, entry.costEnd,
-                entry.wind
-            }, false);
+            try
+            {
+                auto &mapper = _mapper ();
+                mapper.Insert (RequestEntity {
+                    0, room, begTime, endTime,
+                    entry.tempBeg, entry.tempEnd,
+                    entry.costBeg, entry.costEnd,
+                    entry.wind
+                }, false);
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static std::pair<TimePoint, TimePoint> GetTimeRange ()
@@ -111,24 +126,31 @@ namespace Air_Conditioner
             static auto field = BOT_ORM::FieldExtractor {
                 onOffEntity, requestEntity };
 
-            auto &mapper = _mapper ();
-            auto minTime = mapper.Query (onOffEntity)
-                .Aggregate (BOT_ORM::Expression::Min (
-                    field (onOffEntity.timeBeg)));
-            auto maxTime = mapper.Query (onOffEntity)
-                .Aggregate (BOT_ORM::Expression::Max (
-                    field (onOffEntity.timeEnd)));
+            try
+            {
+                auto &mapper = _mapper ();
+                auto minTime = mapper.Query (onOffEntity)
+                    .Aggregate (BOT_ORM::Expression::Min (
+                        field (onOffEntity.timeBeg)));
+                auto maxTime = mapper.Query (onOffEntity)
+                    .Aggregate (BOT_ORM::Expression::Max (
+                        field (onOffEntity.timeEnd)));
 
-            auto timeBeg = (minTime == nullptr) ?
-                std::chrono::system_clock::now () :
-                std::chrono::system_clock::from_time_t (minTime.Value ());
-            auto timeEnd = (maxTime == nullptr) ?
-                std::chrono::system_clock::now () :
-                std::chrono::system_clock::from_time_t (maxTime.Value ());
+                auto timeBeg = (minTime == nullptr) ?
+                    std::chrono::system_clock::now () :
+                    std::chrono::system_clock::from_time_t (minTime.Value ());
+                auto timeEnd = (maxTime == nullptr) ?
+                    std::chrono::system_clock::now () :
+                    std::chrono::system_clock::from_time_t (maxTime.Value ());
 
-            return std::make_pair (
-                std::move (timeBeg) - std::chrono::hours { 24 },
-                std::move (timeEnd) + std::chrono::hours { 24 });
+                return std::make_pair (
+                    std::move (timeBeg) - std::chrono::hours { 24 },
+                    std::move (timeEnd) + std::chrono::hours { 24 });
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static LogOnOffList GetOnOff (const TimePoint &from,
@@ -142,23 +164,30 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (to));
 
-            auto &mapper = _mapper ();
-            auto result = mapper.Query (entity)
-                .Where (
-                    field (entity.timeBeg) >= begTime &&
-                    field (entity.timeEnd) < endTime
-                )
-                .ToList ();
-
-            LogOnOffList ret;
-            for (const auto &entry : result)
+            try
             {
-                ret[entry.room].emplace_back (LogOnOff {
-                    std::chrono::system_clock::from_time_t (entry.timeBeg),
-                    std::chrono::system_clock::from_time_t (entry.timeEnd)
-                });
+                auto &mapper = _mapper ();
+                auto result = mapper.Query (entity)
+                    .Where (
+                        field (entity.timeBeg) >= begTime &&
+                        field (entity.timeEnd) < endTime
+                    )
+                    .ToList ();
+
+                LogOnOffList ret;
+                for (const auto &entry : result)
+                {
+                    ret[entry.room].emplace_back (LogOnOff {
+                        std::chrono::system_clock::from_time_t (entry.timeBeg),
+                        std::chrono::system_clock::from_time_t (entry.timeEnd)
+                    });
+                }
+                return ret;
             }
-            return ret;
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
 
         static LogRequestList GetRequest (const TimePoint &from,
@@ -172,26 +201,33 @@ namespace Air_Conditioner
             auto endTime = std::chrono::system_clock::to_time_t (
                 GetFakeTime (to));
 
-            auto &mapper = _mapper ();
-            auto result = mapper.Query (entity)
-                .Where (
-                    field (entity.timeBeg) >= begTime &&
-                    field (entity.timeEnd) < endTime
-                )
-                .ToList ();
-
-            LogRequestList ret;
-            for (const auto &entry : result)
+            try
             {
-                ret[entry.room].emplace_back (LogRequest {
-                    std::chrono::system_clock::from_time_t (entry.timeBeg),
-                    std::chrono::system_clock::from_time_t (entry.timeEnd),
-                    entry.tempBeg, entry.tempEnd,
-                    entry.costBeg, entry.costEnd,
-                    entry.wind
-                });
+                auto &mapper = _mapper ();
+                auto result = mapper.Query (entity)
+                    .Where (
+                        field (entity.timeBeg) >= begTime &&
+                        field (entity.timeEnd) < endTime
+                    )
+                    .ToList ();
+
+                LogRequestList ret;
+                for (const auto &entry : result)
+                {
+                    ret[entry.room].emplace_back (LogRequest {
+                        std::chrono::system_clock::from_time_t (entry.timeBeg),
+                        std::chrono::system_clock::from_time_t (entry.timeEnd),
+                        entry.tempBeg, entry.tempEnd,
+                        entry.costBeg, entry.costEnd,
+                        entry.wind
+                    });
+                }
+                return ret;
             }
-            return ret;
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
         }
     };
 
@@ -209,7 +245,7 @@ namespace Air_Conditioner
         {
             _config () = config;
         }
-        static const ServerInfo &GetConfig ()
+        static ServerInfo GetConfig ()
         {
             return _config ();
         }
@@ -245,9 +281,9 @@ namespace Air_Conditioner
     public:
         static void AddGuest (const GuestInfo &guest)
         {
-            auto &mapper = _mapper ();
             try
             {
+                auto &mapper = _mapper ();
                 mapper.Insert (GuestEntity {
                     guest.room, guest.guest,
                     Energy { 0 }, Cost { 0 }
@@ -271,14 +307,22 @@ namespace Air_Conditioner
             static GuestEntity entity;
             static auto field = BOT_ORM::FieldExtractor { entity };
 
-            auto &mapper = _mapper ();
-            auto guestFound = mapper.Query (entity)
-                .Where (
-                    field (entity.room) == guest.room &&
-                    field (entity.guest) == guest.guest)
-                .ToList ();
+            auto notFound = true;
+            try
+            {
+                auto &mapper = _mapper ();
+                notFound = mapper.Query (entity)
+                    .Where (
+                        field (entity.room) == guest.room &&
+                        field (entity.guest) == guest.guest)
+                    .ToList ().empty ();
+            }
+            catch (...)
+            {
+                throw std::runtime_error ("Database is busy");
+            }
 
-            if (guestFound.empty ())
+            if (notFound)
                 throw std::runtime_error ("Invalid Room ID or Guest ID");
         }
 
@@ -334,14 +378,8 @@ namespace Air_Conditioner
         }
     };
 
-    class ScheduleManager
+    class ScheduleHelper
     {
-        static ClientList &_clients ()
-        {
-            static ClientList clients;
-            return clients;
-        }
-
         static bool HasWind (const ClientState &state,
                              const ServerInfo &config)
         {
@@ -364,11 +402,10 @@ namespace Air_Conditioner
             return state.hasWind;
         }
 
-        static void Schedule ()
+    public:
+        static void Schedule (ClientList &clients,
+                              const ServerInfo &config)
         {
-            auto &clients = _clients ();
-            const auto &config = ConfigManager::GetConfig ();
-
             auto count = 0;
             std::unordered_map<RoomId, bool> hasWindList;
             for (auto &client : clients)
@@ -383,7 +420,11 @@ namespace Air_Conditioner
             for (auto &client : clients)
                 client.second.hasWind = hasWindList[client.first];
         }
+    };
 
+    class PulseHelper
+    {
+    public:
         static void HandleReqBeg (const RoomId &room,
                                   const TimePoint &time,
                                   ClientState &state)
@@ -402,7 +443,8 @@ namespace Air_Conditioner
             state.lastRequest.tempEnd = state.current;
             state.lastRequest.costEnd = state.cost;
 
-            // TODO: hack this code here :-)
+            // hack the code here :-)
+            // TODO: to fix
             if (state.lastRequest.wind != 0)
                 LogManager::WriteRequest (room, state.lastRequest);
         }
@@ -429,12 +471,11 @@ namespace Air_Conditioner
             LogManager::WriteOnOff (room, state.lastOnOff);
         }
 
-        static void CheckAlive ()
+        static void CheckAlive (ClientList &clients)
         {
             auto now = std::chrono::system_clock::now ();
             auto deadTime = now - std::chrono::seconds { DEADTIME };
 
-            auto &clients = _clients ();
             for (auto p = clients.begin (); p != clients.end ();)
                 if (p->second.pulse < deadTime)
                 {
@@ -443,14 +484,38 @@ namespace Air_Conditioner
                 }
                 else ++p;
         }
+    };
+
+    class ScheduleManager
+    {
+        // In Memory
+        static ClientList &_clients ()
+        {
+            static ClientList clients;
+            return clients;
+        }
+        static std::mutex &_clientsMtx ()
+        {
+            static std::mutex mtx;
+            return mtx;
+        }
+
+        // Helper
+        static ClientInfo StateToInfo (const ClientState &state)
+        {
+            return ClientInfo {
+                state.hasWind, state.energy, state.cost
+            };
+        }
 
     public:
-        static void AddClient (const GuestInfo &room)
+        // Called by Protocol Controller
+        static ClientInfo AddClient (const GuestInfo &room)
         {
             // Check Alive
-            CheckAlive ();
-
+            std::lock_guard<std::mutex> lg (_clientsMtx ());
             auto &clients = _clients ();
+            PulseHelper::CheckAlive (clients);
 
             // Login already
             if (clients.find (room.room) != clients.end ())
@@ -466,89 +531,101 @@ namespace Air_Conditioner
                 Wind { 0 }, false, lastState.first, lastState.second, now
             };
 
-            HandleTurnOn (room.room, now, state);
+            PulseHelper::HandleTurnOn (room.room, now, state);
             clients.emplace (room.room, std::move (state));
+
+            return StateToInfo (state);
         }
 
+        // Called by View Controller
         static void RemoveClient (const RoomId &room)
         {
             try
             {
+                std::lock_guard<std::mutex> lg (_clientsMtx ());
                 auto &clients = _clients ();
-                auto &roomState = GetClient (room);
+
+                auto &state = clients.at (room);  // throw
                 auto now = std::chrono::system_clock::now ();
 
-                HandleTurnOff (room, now, roomState);
+                PulseHelper::HandleTurnOff (room, now, state);
                 clients.erase (room);
             }
             catch (...) {}
         }
 
-        static void Pulse (const RoomRequest &req)
+        // Called by Protocol Controller
+        static ClientInfo Pulse (const RoomRequest &req)
         {
             // Check Alive
-            CheckAlive ();
+            std::lock_guard<std::mutex> lg (_clientsMtx ());
+            auto &clients = _clients ();
+            PulseHelper::CheckAlive (clients);
 
-            auto &roomState = GetClient (req.room);
+            // Logout already
+            auto pState = clients.find (req.room);
+            if (pState == clients.end ())
+                throw std::runtime_error ("Logout already");
+            auto &state = clients.at (req.room);
 
-            // Track traits for Beg/End Request
+            // Record states before scheduling
             auto isChanged =
-                roomState.target != req.target ||
-                roomState.wind != req.wind;
-            auto hasWindBefore = roomState.hasWind;
+                state.target != req.target ||
+                state.wind != req.wind;
+            auto hasWindBefore = state.hasWind;
 
             // Update Client State
-            roomState.current = req.current;
-            roomState.target = req.target;
-            roomState.wind = req.wind;
+            state.current = req.current;
+            state.target = req.target;
+            state.wind = req.wind;
 
             // Schedule
-            Schedule ();
+            const auto &config = ConfigManager::GetConfig ();
+            ScheduleHelper::Schedule (clients, config);
 
             // Get Delta Time and Pulse
             auto now = std::chrono::system_clock::now ();
-            std::chrono::duration<double> deltaTime = now - roomState.pulse;
-            roomState.pulse = now;
+            std::chrono::duration<double> deltaTime = now - state.pulse;
+            state.pulse = now;
 
             // Handle Beg/End Request
-            if (!hasWindBefore && roomState.hasWind)
-                HandleReqBeg (req.room, now, roomState);
-            else if (hasWindBefore && !roomState.hasWind)
-                HandleReqEnd (req.room, now, roomState);
+            if (!hasWindBefore && state.hasWind)
+                PulseHelper::HandleReqBeg (req.room, now, state);
+            else if (hasWindBefore && !state.hasWind)
+                PulseHelper::HandleReqEnd (req.room, now, state);
             else if (isChanged)
             {
-                HandleReqEnd (req.room, now, roomState);
-                HandleReqBeg (req.room, now, roomState);
+                PulseHelper::HandleReqEnd (req.room, now, state);
+                PulseHelper::HandleReqBeg (req.room, now, state);
             }
 
             // Calc Energy and Cost
-            if (roomState.hasWind)
+            if (state.hasWind)
             {
                 // Get Delta Energy
                 auto deltaEnergy = Energy { deltaTime.count () / 60.0 };
-                if (roomState.wind == 1)
+                if (state.wind == 1)
                     deltaEnergy = deltaEnergy * 0.8;
-                else if (roomState.wind == 3)
+                else if (state.wind == 3)
                     deltaEnergy = deltaEnergy * 1.3;
 
                 // Add up energy
-                roomState.energy += deltaEnergy;
-                roomState.cost = roomState.energy * 5;
+                state.energy += deltaEnergy;
+                state.cost = state.energy * 5;
             }
+
+            return StateToInfo (state);
         }
 
-        static ClientState &GetClient (const RoomId &room)
-        {
-            try { return _clients ().at (room); }
-            catch (...) { throw std::runtime_error ("Logout already"); }
-        }
-
-        static const ClientList &GetClientList ()
+        // Called by View Controller
+        static ClientList GetClientList ()
         {
             // Check Alive
-            CheckAlive ();
+            std::lock_guard<std::mutex> lg (_clientsMtx ());
+            auto &clients = _clients ();
+            PulseHelper::CheckAlive (clients);
 
-            return _clients ();
+            return clients;
         }
     };
 }

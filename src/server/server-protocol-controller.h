@@ -16,26 +16,21 @@ namespace Air_Conditioner
     class ProtocolController
     {
     public:
-        void Auth (const GuestInfo &guest)
+        using ReturnFormat = std::pair<ClientInfo, ServerInfo>;
+
+        ReturnFormat Auth (const GuestInfo &guest)
         {
             GuestManager::AuthGuest (guest);
-            ScheduleManager::AddClient (guest);
+            auto clientInfo = ScheduleManager::AddClient (guest);
+            auto serverInfo = ConfigManager::GetConfig ();
+            return std::make_pair (clientInfo, serverInfo);
         }
 
-        void Pulse (const RoomRequest &req)
+        ReturnFormat Pulse (const RoomRequest &req)
         {
-            ScheduleManager::Pulse (req);
-        }
-
-        std::pair<ClientInfo, ServerInfo> GetInfo (const RoomId &room) const
-        {
-            const auto &serverInfo = ConfigManager::GetConfig ();
-            const auto &clientState = ScheduleManager::GetClient (room);
-            ClientInfo clientInfo {
-                clientState.hasWind, clientState.energy, clientState.cost
-            };
-            return std::make_pair (std::move (clientInfo),
-                                   serverInfo);
+            auto clientInfo = ScheduleManager::Pulse (req);
+            auto serverInfo = ConfigManager::GetConfig ();
+            return std::make_pair (clientInfo, serverInfo);
         }
     };
 }

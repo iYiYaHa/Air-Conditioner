@@ -26,16 +26,14 @@ namespace Air_Conditioner
             SetHandler (AUTH, [&] (json &response, const json &request)
             {
                 auto req = Protocol::JsonToGuestInfo (request);
-                controller.Auth (req);
-                auto ret = controller.GetInfo (req.room);
+                auto ret = controller.Auth (req);
                 response = Protocol::ClientServerInfoToJson (ret.first, ret.second);
             });
 
             SetHandler (PULSE, [&] (json &response, const json &request)
             {
                 auto req = Protocol::JsonToRoomRequest (request);
-                controller.Pulse (req);
-                auto ret = controller.GetInfo (req.room);
+                auto ret = controller.Pulse (req);
                 response = Protocol::ClientServerInfoToJson (ret.first, ret.second);
             });
         }

@@ -49,7 +49,7 @@ namespace Air_Conditioner
     class ClientView : public ViewBase
     {
     public:
-        using OnUpdate = std::function<const ClientList &()>;
+        using OnUpdate = std::function<ClientList ()>;
         using OnBack = std::function<void ()>;
     };
 
