@@ -12,5 +12,15 @@
         <file>Mid.png</file>
         <file>Strong.png</file>
         <file>WindSpeed.png</file>
+        <file>Wave.png</file>
+        <file>Off.png</file>
+        <file>On.png</file>
+        <file>AddHover.png</file>
+        <file>AddNormal.png</file>
+        <file>AddPressed.png</file>
+        <file>MinusHover.png</file>
+        <file>MinusNormal.png</file>
+        <file>MinusPressed.png</file>
+        <file>QuitBtn.png</file>
     </qresource>
 </RCC>

@@ -65,6 +65,7 @@ ControlWindow::ControlWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground);
     ui->WindBtn->setFlat(true);
     ui->WindBtn->setAutoFillBackground(true);
     ui->WindBtn->setStyleSheet("QPushButton{border-image: url(:/button/Mid.png);}");
@@ -89,7 +90,7 @@ void ControlWindow::ShowState(Air_Conditioner::ServerInfo _serverInfo,
     ui->Energy->setText(QString::number(_clientInfo.energy,'g',3));
 
     if (!_serverInfo.isOn)
-        ui->Wind->setText(QStringLiteral("主控机关机"));
+        ui->Wind->setText(QStringLiteral("主控关机"));
     else if (!_clientInfo.hasWind)
         ui->Wind->setText(QStringLiteral("停止送风"));
     else{
@@ -115,10 +116,10 @@ void ControlWindow::ShowState(Air_Conditioner::ServerInfo _serverInfo,
 
    //ServerInfo
    if(_serverInfo.isOn == true){
-       ui->ServerState->setText(QStringLiteral("开机"));
+       ui->ServerState->setChecked(true);
    }
    else{
-       ui->ServerState->setText(QStringLiteral("关机"));
+       ui->ServerState->setChecked(false);
    }
    if(_serverInfo.mode == 0){
        ui->WorkingMode->setText(QStringLiteral("夏天"));

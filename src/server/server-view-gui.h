@@ -101,50 +101,7 @@ namespace Air_Conditioner
     };
 
     class GuestViewGUI : public GuestView
-    {
-        GuestInfo _GetGuestInfo () const
-        {
-            RoomId roomId;
-            GuestId guestId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-            std::cout << "Guest ID: ";
-            std::cin >> guestId;
-
-            return GuestInfo {
-                roomId, guestId
-            };
-        }
-
-        RoomId _GetRoomId () const
-        {
-            RoomId roomId;
-
-            std::cout << "Room ID: ";
-            std::cin >> roomId;
-
-            return roomId;
-        }
-
-        void _PrintList () const
-        {
-            if (_list.empty ())
-            {
-                std::cout << "No guest is registered...\n";
-                return;
-            }
-
-            std::cout << "Guest on the list:\n";
-            for (const auto &guest : _list)
-            {
-                std::cout
-                    << " - Room: " << guest.room
-                    << " Guest: " << guest.guest
-                    << "\n";
-            }
-        }
-
+    {   
         std::list<GuestInfo> _list;
         OnAdd _onAdd;
         OnDel _onDel;
