@@ -8,7 +8,6 @@
 #define AC_SERVER_SERVICE_H
 
 #include <exception>
-#include <queue>
 
 #define MAXCLIENT 2
 #define THRESHOLD 1.0
@@ -216,6 +215,125 @@ namespace Air_Conditioner
         }
     };
 
+    class GuestManager
+    {
+        struct GuestEntity
+        {
+            RoomId room;
+            GuestId guest;
+            Energy lastEnergy;
+            Cost lastCost;
+
+            ORMAP ("Guest", room, guest, lastEnergy, lastCost);
+        };
+
+        // In Database
+        static BOT_ORM::ORMapper &_mapper ()
+        {
+            static BOT_ORM::ORMapper mapper (DBNAME);
+            static auto hasInit = false;
+
+            if (!hasInit)
+            {
+                try { mapper.CreateTbl (GuestEntity {}); }
+                catch (...) {}
+                hasInit = true;
+            }
+            return mapper;
+        }
+
+    public:
+        static void AddGuest (const GuestInfo &guest)
+        {
+            auto &mapper = _mapper ();
+            try
+            {
+                mapper.Insert (GuestEntity {
+                    guest.room, guest.guest,
+                    Energy { 0 }, Cost { 0 }
+                });
+            }
+            catch (...)
+            {
+                throw std::runtime_error (
+                    "The room has already been registered");
+            }
+        }
+
+        static void RemoveGuest (const RoomId &room)
+        {
+            auto &mapper = _mapper ();
+            mapper.Delete (GuestEntity { room, GuestId {} });
+        }
+
+        static void AuthGuest (const GuestInfo &guest)
+        {
+            static GuestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
+            auto &mapper = _mapper ();
+            auto guestFound = mapper.Query (entity)
+                .Where (
+                    field (entity.room) == guest.room &&
+                    field (entity.guest) == guest.guest)
+                .ToList ();
+
+            if (guestFound.empty ())
+                throw std::runtime_error ("Invalid Room ID or Guest ID");
+        }
+
+        static std::pair<Energy, Cost> ReadLastState (const RoomId &room)
+        {
+            static GuestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
+            auto &mapper = _mapper ();
+            auto guestFound = mapper.Query (entity)
+                .Where (field (entity.room) == room)
+                .ToList ();
+
+            if (guestFound.empty ())
+                throw std::runtime_error ("Invalid Room ID or Guest ID");
+
+            auto energy = guestFound.front ().lastEnergy;
+            auto cost = guestFound.front ().lastCost;
+            return std::make_pair (energy, cost);
+        }
+
+        static void WriteLastState (const RoomId &room,
+                                    const Energy &energy,
+                                    const Cost &cost)
+        {
+            static GuestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
+            auto &mapper = _mapper ();
+            mapper.Update (
+                entity,
+                (field (entity.lastEnergy) = energy) &&
+                (field (entity.lastCost) = cost),
+                field (entity.room) == room);
+        }
+
+        static std::list<GuestInfo> GetGuestList ()
+        {
+            static GuestEntity entity;
+            static auto field = BOT_ORM::FieldExtractor { entity };
+
+            auto &mapper = _mapper ();
+            auto list = mapper.Query (entity).ToList ();
+
+            std::list<GuestInfo> ret;
+            for (auto &entry : list)
+            {
+                ret.emplace_back (GuestInfo {
+                    std::move (entry.room),
+                    std::move (entry.guest) });
+            }
+            return ret;
+        }
+    };
+
     class ScheduleManager
     {
         static ClientList &_clients ()
@@ -305,6 +423,9 @@ namespace Air_Conditioner
 
             state.lastOnOff.timeEnd = state.pulse;
 
+            // Log down previous state of client
+            GuestManager::WriteLastState (room, state.energy, state.cost);
+
             LogManager::WriteOnOff (room, state.lastOnOff);
         }
 
@@ -335,12 +456,16 @@ namespace Air_Conditioner
             if (clients.find (room.room) != clients.end ())
                 throw std::runtime_error ("Login already");
 
+            // Restore previous state of client
+            auto lastState = GuestManager::ReadLastState (room.room);
+
             // New Login
             auto now = std::chrono::system_clock::now ();
             auto state = ClientState {
-                room.guest, Temperature { 0 }, Temperature { 0 }, Wind { 0 },
-                false, Energy { 0 }, Cost { 0 }, now
+                room.guest, Temperature { 0 }, Temperature { 0 },
+                Wind { 0 }, false, lastState.first, lastState.second, now
             };
+
             HandleTurnOn (room.room, now, state);
             clients.emplace (room.room, std::move (state));
         }
@@ -424,90 +549,6 @@ namespace Air_Conditioner
             CheckAlive ();
 
             return _clients ();
-        }
-    };
-
-    class GuestManager
-    {
-        struct GuestEntity
-        {
-            RoomId room;
-            GuestId guest;
-            ORMAP ("Guest", room, guest);
-        };
-
-        // In Database
-        static BOT_ORM::ORMapper &_mapper ()
-        {
-            static BOT_ORM::ORMapper mapper (DBNAME);
-            static auto hasInit = false;
-
-            if (!hasInit)
-            {
-                try { mapper.CreateTbl (GuestEntity {}); }
-                catch (...) {}
-                hasInit = true;
-            }
-            return mapper;
-        }
-
-    public:
-        static void AddGuest (const GuestInfo &guest)
-        {
-            auto &mapper = _mapper ();
-            try
-            {
-                mapper.Insert (GuestEntity { guest.room, guest.guest });
-            }
-            catch (...)
-            {
-                throw std::runtime_error (
-                    "The room has already been registered");
-            }
-        }
-        static void RemoveGuest (const RoomId &room)
-        {
-            auto &mapper = _mapper ();
-            mapper.Delete (GuestEntity { room, GuestId {} });
-
-            ScheduleManager::RemoveClient (room);
-        }
-
-        static void AuthGuest (const GuestInfo &guest)
-        {
-            static GuestEntity entity;
-            static auto field = BOT_ORM::FieldExtractor { entity };
-
-            auto &mapper = _mapper ();
-            auto count = mapper.Query (entity)
-                .Where (
-                    field (entity.room) == guest.room &&
-                    field (entity.guest) == guest.guest)
-                .Aggregate (
-                    BOT_ORM::Expression::Count ());
-
-            if (count == nullptr || count == size_t { 0 })
-                throw std::runtime_error ("Invalid Room ID or Guest ID");
-
-            ScheduleManager::AddClient (guest);
-        }
-
-        static std::list<GuestInfo> GetGuestList ()
-        {
-            static GuestEntity entity;
-            static auto field = BOT_ORM::FieldExtractor { entity };
-
-            auto &mapper = _mapper ();
-            auto list = mapper.Query (entity).ToList ();
-
-            std::list<GuestInfo> ret;
-            for (auto &entry : list)
-            {
-                ret.emplace_back (GuestInfo {
-                    std::move (entry.room),
-                    std::move (entry.guest) });
-            }
-            return ret;
         }
     };
 }
