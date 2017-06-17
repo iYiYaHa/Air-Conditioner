@@ -27,6 +27,8 @@
   - gcc/clang（命令行 Linux）
   - Visual Studio 2017 - MSVC 15（命令行 Windows）
   - Qt 5（图形化）
+- 数据库
+  - [sqlite 3](https://sqlite.org/)（由 ORM-Lite 提供）
 
 ### 项目文件
 
