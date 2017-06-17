@@ -1,10 +1,10 @@
 # 分布式温控系统设计与实现
 
 > 2017 BUPT 软件工程大作业
+>
+> 工程代码及相关文档 基于 [MIT 协议](LICENSE) 发行
 
 ## 工程说明
-
-> 工程代码 基于 [MIT 协议](LICENSE) 发行
 
 ### 开发环境
 
@@ -21,7 +21,7 @@
   - gcc/clang（命令行 Linux）
   - Visual Studio 2017 - MSVC 15（命令行 Windows）
   - Qt 5（图形化）
-- 数据库
+- 数据库：
   - [sqlite 3](https://sqlite.org/)（由 ORM-Lite 提供）
 
 ### 项目文件
@@ -94,9 +94,7 @@
 
 #### 模块依赖图
 
-![Dependency](docs/dependency.png)
-
-<!--![dependency](docs/dependency.svg)-->
+[![Dependency](docs/dependency.png)](docs/dependency.svg)
 
 <!--
 [common-protocol{bg:lightpink}]->[common-model{bg:palegoldenrod}]
@@ -211,3 +209,11 @@ MODE = 0 | 1
 3. [结构化需求分析](docs/Requirements-Spec.md)
 4. [面向对象设计](docs/OO-Design.md)
 5. [结构化设计](docs/Structural.md)
+
+## 贡献者
+
+- [John Lee](https://github.com/BOT-Man-JL)
+- [@WalkerJG](https://github.com/WalkerJG)
+- [@xtdong1001](https://github.com/xtdong1001)
+- [@xiaokeZuo](https://github.com/xiaokeZuo)
+- [@ZL96](https://github.com/ZL96)
