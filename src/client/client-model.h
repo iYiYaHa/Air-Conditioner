@@ -19,4 +19,4 @@ namespace Air_Conditioner
     constexpr Temperature MaxTemp = Temperature { 30 };
 }
 
-#endif AC_CLIENT_MODEL_H
+#endif // !AC_CLIENT_MODEL_H

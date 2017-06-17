@@ -58,4 +58,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_CLIENT_PROTOCOL_H
+#endif // !AC_CLIENT_PROTOCOL_H

@@ -101,4 +101,4 @@ private:
     QTimer _timer;
 };
 
-#endif // AC_CLIENT_VIEW_GUI_QT_H
+#endif // !AC_CLIENT_VIEW_GUI_QT_H

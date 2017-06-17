@@ -298,8 +298,11 @@ namespace Air_Conditioner
 
         static void RemoveGuest (const RoomId &room)
         {
+            static GuestEntity entity;
             auto &mapper = _mapper ();
-            mapper.Delete (GuestEntity { room, GuestId {} });
+
+            entity.room = room;
+            mapper.Delete (entity);
         }
 
         static void AuthGuest (const GuestInfo &guest)
@@ -425,8 +428,7 @@ namespace Air_Conditioner
     class PulseHelper
     {
     public:
-        static void HandleReqBeg (const RoomId &room,
-                                  const TimePoint &time,
+        static void HandleReqBeg (const TimePoint &time,
                                   ClientState &state)
         {
             state.lastRequest.timeBeg = time;
@@ -449,8 +451,7 @@ namespace Air_Conditioner
                 LogManager::WriteRequest (room, state.lastRequest);
         }
 
-        static void HandleTurnOn (const RoomId &room,
-                                  const TimePoint &time,
+        static void HandleTurnOn (const TimePoint &time,
                                   ClientState &state)
         {
             state.lastOnOff.timeBeg = time;
@@ -528,10 +529,11 @@ namespace Air_Conditioner
             auto now = std::chrono::system_clock::now ();
             auto state = ClientState {
                 room.guest, Temperature { 0 }, Temperature { 0 },
-                Wind { 0 }, false, lastState.first, lastState.second, now
+                Wind { 0 }, false, lastState.first, lastState.second,
+                now, LogOnOff {}, LogRequest {}
             };
 
-            PulseHelper::HandleTurnOn (room.room, now, state);
+            PulseHelper::HandleTurnOn (now, state);
             clients.emplace (room.room, std::move (state));
 
             return StateToInfo (state);
@@ -590,13 +592,13 @@ namespace Air_Conditioner
 
             // Handle Beg/End Request
             if (!hasWindBefore && state.hasWind)
-                PulseHelper::HandleReqBeg (req.room, now, state);
+                PulseHelper::HandleReqBeg (now, state);
             else if (hasWindBefore && !state.hasWind)
                 PulseHelper::HandleReqEnd (req.room, now, state);
             else if (isChanged)
             {
                 PulseHelper::HandleReqEnd (req.room, now, state);
-                PulseHelper::HandleReqBeg (req.room, now, state);
+                PulseHelper::HandleReqBeg (now, state);
             }
 
             // Calc Energy and Cost
@@ -630,4 +632,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_SERVER_SERVICE_H
+#endif // !AC_SERVER_SERVICE_H

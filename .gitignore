@@ -224,3 +224,8 @@ log.txt
 
 # QT
 qt-proj/build-*/*
+
+# Make obj
+*.o
+/makefile/server
+/makefile/client

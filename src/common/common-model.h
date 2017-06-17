@@ -52,4 +52,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_COMMON_MODEL_H
+#endif // !AC_COMMON_MODEL_H

@@ -64,9 +64,9 @@ namespace Air_Conditioner
     {
         std::mutex _mtxData;
         GuestInfo _guestInfo;
-        RoomRequest _roomRequest;
         ClientInfo _clientInfo;
         ServerInfo _serverInfo;
+        RoomRequest _roomRequest;
 
         std::pair<Temperature, Temperature> _GetTempRange () const
         {
@@ -155,13 +155,13 @@ namespace Air_Conditioner
 
             std::cout << std::fixed
                 << std::setprecision (2)
-                << "\rRoom: " << _guestInfo.room
+                << "Room: " << _guestInfo.room
                 << " Current: " << _roomRequest.current
                 << " Target: " << _roomRequest.target
                 << " Energy: " << _clientInfo.energy
                 << " Cost: " << _clientInfo.cost
                 << " Wind: " << windStr.at (wind)
-                << "     ";
+                << "\n";
         }
 
         OnPulse _onPulse;
@@ -173,8 +173,10 @@ namespace Air_Conditioner
                         OnPulse &&onPulse,
                         OnSim &&onSim)
             : _guestInfo (guestInfo), _serverInfo (serverInfo),
-            _onPulse (onPulse), _onSim (onSim),
-            _roomRequest { guestInfo.room, DefaultRoomTemp, 0, Wind { 2 } }
+            _roomRequest { guestInfo.room, DefaultRoomTemp,
+                serverInfo.mode == 0 ? DefaultSummerTemp : DefaultWinterTemp,
+                Wind { 2 } },
+            _onPulse (onPulse), _onSim (onSim)
         {
             _UpdateWorkingMode ();
         }
@@ -200,7 +202,9 @@ namespace Air_Conditioner
 
                         try { _Pulse (); }
                         catch (int)
-                        { throw std::runtime_error ("Server Close the connection"); }
+                        {
+                            throw std::runtime_error ("Server Close the connection");
+                        }
 
                         if (_onSim) _onSim (_roomRequest, _clientInfo.hasWind);
                         if (!isPause) _PrintInfo ();
@@ -255,4 +259,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_CLIENT_VIEW_CLI_H
+#endif // !AC_CLIENT_VIEW_CLI_H

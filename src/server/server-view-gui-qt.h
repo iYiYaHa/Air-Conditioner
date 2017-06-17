@@ -236,4 +236,4 @@ private:
     ServerInfo _config;
 };
 
-#endif // AC_SERVER_VIEW_GUI_QT_H
+#endif // !AC_SERVER_VIEW_GUI_QT_H

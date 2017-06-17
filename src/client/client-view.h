@@ -41,4 +41,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_CLIENT_VIEW_H
+#endif // !AC_CLIENT_VIEW_H

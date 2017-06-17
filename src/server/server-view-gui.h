@@ -283,4 +283,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_SERVER_VIEW_GUI_H
+#endif // !AC_SERVER_VIEW_GUI_H

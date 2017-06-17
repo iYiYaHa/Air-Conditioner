@@ -55,4 +55,4 @@ namespace Air_Conditioner
     using ClientList = std::unordered_map<RoomId, ClientState>;
 }
 
-#endif AC_SERVER_MODEL_H
+#endif // !AC_SERVER_MODEL_H

@@ -64,4 +64,4 @@ namespace Air_Conditioner
     };
 }
 
-#endif AC_TIME_HELPER_H
+#endif // !AC_TIME_HELPER_H

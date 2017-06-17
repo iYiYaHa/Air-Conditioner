@@ -116,4 +116,4 @@ namespace Air_Conditioner
 #undef WORKINGMODE
 #undef PULSEFREQ
 
-#endif AC_COMMON_PROTOCOL_H
+#endif // !AC_COMMON_PROTOCOL_H
