@@ -1,16 +1,10 @@
-# Air-Conditioner-6-F
+# 分布式温控系统设计与实现
 
-> 2017 软件工程大作业
-
-## 文档
-
-1. [需求获取](docs/Requirements.md)
-2. [面向对象需求分析](docs/User-cases.md)
-3. [结构化需求分析](docs/Requirements-Spec.md)
-4. [面向对象设计](docs/OO-Design.md)
-5. [结构化设计](docs/Structural.md)
+> 2017 BUPT 软件工程大作业
 
 ## 工程说明
+
+> 工程代码 基于 [MIT 协议](LICENSE) 发行
 
 ### 开发环境
 
@@ -160,7 +154,7 @@
 
 ### 协议文档
 
-> 2017 中央空调 F 组 通信协议
+> 2017 分布式温控系统 F 组 通信协议
 
 #### Json 格式
 
@@ -209,3 +203,11 @@ COST = [double]
 SERVER_ON = true | false
 MODE = 0 | 1
 ```
+
+## 相关文档
+
+1. [需求获取](docs/Requirements.md)
+2. [面向对象需求分析](docs/User-cases.md)
+3. [结构化需求分析](docs/Requirements-Spec.md)
+4. [面向对象设计](docs/OO-Design.md)
+5. [结构化设计](docs/Structural.md)
